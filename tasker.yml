@@ -1,0 +1,10 @@
+up:
+  commands:
+    - cmd: make install
+    # terraform
+    - cmd: rm -rf examples/.terraform.lock.hcl
+    - cmd: terraform init
+      working_dir: examples
+    - cmd: terraform apply
+      working_dir: examples
+
