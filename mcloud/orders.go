@@ -1,4 +1,4 @@
-package hashicups
+package mcloud
 
 import (
 	"encoding/json"

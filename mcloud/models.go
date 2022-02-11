@@ -1,4 +1,4 @@
-package hashicups
+package mcloud
 
 // Order -
 type Order struct {

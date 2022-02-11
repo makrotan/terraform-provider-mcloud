@@ -1,4 +1,4 @@
-package hashicups
+package mcloud
 
 import (
 	"context"
@@ -29,7 +29,7 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"hashicups_order": resourceOrder(),
+			"hashicups_order":          resourceOrder(),
 			"hashicups_mcloud_ssh_key": resourceSshKey(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
