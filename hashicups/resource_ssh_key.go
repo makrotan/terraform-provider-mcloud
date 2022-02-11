@@ -4,14 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
-	"io/ioutil"
-	"net/http"
-	"strings"
-	"time"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"io"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"strings"
 )
 
 func resourceSshKey() *schema.Resource {
@@ -26,6 +25,7 @@ func resourceSshKey() *schema.Resource {
 				Optional: false,
 				Required: true,
 				Computed: false,
+				ForceNew: true,
 			},
 			"public_key": &schema.Schema{
 				Type:     schema.TypeString,
@@ -33,9 +33,10 @@ func resourceSshKey() *schema.Resource {
 				Computed: true,
 			},
 			"private_key": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:      schema.TypeString,
+				Optional:  true,
+				Computed:  true,
+				Sensitive: true,
 			},
 		},
 		Importer: &schema.ResourceImporter{
@@ -90,91 +91,106 @@ func resourceSshKeyCreate(ctx context.Context, d *schema.ResourceData, m interfa
 		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
 	}
 
-	//o, err := c.CreateOrder(ois)
-	//if err != nil {
-	//	return diag.FromErr(err)
-	//}
+	var sshKeyResponse SshKeyResponse
+	err = json.Unmarshal(body, &sshKeyResponse)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
-	//d.SetId(strconv.Itoa(o.ID))
+	if !sshKeyResponse.Success {
+		return diag.FromErr(fmt.Errorf(sshKeyResponse.Error))
+	}
+
 	d.SetId(name)
-
-	resourceSshKeyRead(ctx, d, m)
+	d.Set("public_key", sshKeyResponse.SshKey.PublicKey)
+	d.Set("private_key", sshKeyResponse.SshKey.PrivateKey)
 
 	return diags
 }
 
 func resourceSshKeyRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
+	client := c.HTTPClient
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	orderID := d.Id()
+	name := d.Id()
 
-	order, err := c.GetOrder(orderID)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/ssh-key/%s", strings.Trim(c.HostURL, "/"), name), nil)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	req.Header.Set("Authorization", c.Token)
+
+	res, err := client.Do(req)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	orderItems := flattenOrderItems(&order.Items)
-	if err := d.Set("items", orderItems); err != nil {
+	if res.StatusCode == 404 {
+		log.Printf("[WARN] ssh key %s not present", name)
+		d.SetId("")
+		return nil
+	} else if res.StatusCode != http.StatusOK {
+		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
+	}
+
+	var sshKeyResponse SshKeyResponse
+	err = json.Unmarshal(body, &sshKeyResponse)
+	//err = json.NewDecoder(resp.Body).Decode(sshKeyResponse)
+	if err != nil {
 		return diag.FromErr(err)
 	}
+
+	if !sshKeyResponse.Success {
+		return diag.FromErr(fmt.Errorf(sshKeyResponse.Error))
+	}
+
+	d.Set("public_key", sshKeyResponse.SshKey.PublicKey)
+	d.Set("private_key", sshKeyResponse.SshKey.PrivateKey)
 
 	return diags
 }
 
 func resourceSshKeyUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*Client)
-
-	orderID := d.Id()
-
-	if d.HasChange("items") {
-		items := d.Get("items").([]interface{})
-		ois := []OrderItem{}
-
-		for _, item := range items {
-			i := item.(map[string]interface{})
-
-			co := i["coffee"].([]interface{})[0]
-			coffee := co.(map[string]interface{})
-
-			oi := OrderItem{
-				Coffee: Coffee{
-					ID: coffee["id"].(int),
-				},
-				Quantity: i["quantity"].(int),
-			}
-			ois = append(ois, oi)
-		}
-
-		_, err := c.UpdateOrder(orderID, ois)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-
-		d.Set("last_updated", time.Now().Format(time.RFC850))
-	}
-
-	return resourceOrderRead(ctx, d, m)
+	return resourceSshKeyCreate(ctx, d, m)
 }
 
 func resourceSshKeyDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
+	client := c.HTTPClient
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	orderID := d.Id()
+	name := d.Id()
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/ssh-key/%s", strings.Trim(c.HostURL, "/"), name), nil)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	req.Header.Set("Authorization", c.Token)
 
-	err := c.DeleteOrder(orderID)
+	res, err := client.Do(req)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	// d.SetId("") is automatically called assuming delete returns no errors, but
-	// it is added here for explicitness.
-	d.SetId("")
+	if res.StatusCode != http.StatusOK {
+		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
+	}
 
 	return diags
 }

@@ -5,6 +5,8 @@ up:
     - cmd: rm -rf examples/.terraform.lock.hcl
     - cmd: terraform init
       working_dir: examples
-    - cmd: terraform apply
+    - cmd: terraform apply -auto-approve
       working_dir: examples
+#    - cmd: terraform plan
+#      working_dir: examples
 

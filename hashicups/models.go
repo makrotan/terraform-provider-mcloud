@@ -36,3 +36,9 @@ type SshKey struct {
 	PublicKey  string `json:"public_key"`
 	PrivateKey string `json:"private_key"`
 }
+
+type SshKeyResponse struct {
+	Success bool   `json:"success"`
+	Error   string `json:"error"`
+	SshKey  SshKey `json:"ssh_key"`
+}

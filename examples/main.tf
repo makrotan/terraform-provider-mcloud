@@ -17,7 +17,7 @@ provider "hashicups" {
 }
 
 resource hashicups_mcloud_ssh_key "foo" {
-  name = "foo"
+  name = "foo2"
 }
 
 #
