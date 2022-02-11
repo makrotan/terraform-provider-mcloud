@@ -2,7 +2,12 @@ package hashicups
 
 import (
 	"context"
-	"strconv"
+	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -45,33 +50,55 @@ func resourceSshKeyCreate(ctx context.Context, d *schema.ResourceData, m interfa
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	items := d.Get("items").([]interface{})
-	ois := []OrderItem{}
+	name := d.Get("name").(string)
+	public_key := d.Get("public_key").(string)
+	private_key := d.Get("private_key").(string)
 
-	for _, item := range items {
-		i := item.(map[string]interface{})
-
-		co := i["coffee"].([]interface{})[0]
-		coffee := co.(map[string]interface{})
-
-		oi := OrderItem{
-			Coffee: Coffee{
-				ID: coffee["id"].(int),
-			},
-			Quantity: i["quantity"].(int),
-		}
-
-		ois = append(ois, oi)
+	ssh_key := SshKey{
+		Name:       name,
+		PublicKey:  public_key,
+		PrivateKey: private_key,
 	}
 
-	o, err := c.CreateOrder(ois)
+	rb, err := json.Marshal(ssh_key)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	d.SetId(strconv.Itoa(o.ID))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/ssh-key/%s", strings.Trim(c.HostURL, "/"), name), strings.NewReader(string(rb)))
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	req.Header.Set("Authorization", c.Token)
 
-	resourceOrderRead(ctx, d, m)
+	res, err := c.HTTPClient.Do(req)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+		}
+	}(res.Body)
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
+	}
+
+	//o, err := c.CreateOrder(ois)
+	//if err != nil {
+	//	return diag.FromErr(err)
+	//}
+
+	//d.SetId(strconv.Itoa(o.ID))
+	d.SetId(name)
+
+	resourceSshKeyRead(ctx, d, m)
 
 	return diags
 }
