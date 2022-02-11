@@ -1,8 +1,8 @@
 terraform {
   required_providers {
-    hashicups = {
+    mcloud = {
       version = "0.3.1"
-      source = "hashicorp.com/edu/hashicups"
+      source = "makrotan.com/cloud/mcloud"
     }
   }
 }
@@ -10,12 +10,12 @@ terraform {
 variable "mcloud_username" {}
 variable "mcloud_password" {}
 
-provider "hashicups" {
+provider "mcloud" {
   username = var.mcloud_username
   password = var.mcloud_password
   host = "https://ip.makrotan.com/"
 }
 
-resource hashicups_mcloud_ssh_key "foo" {
-  name = "foo2"
+resource mcloud_ssh_key "foo" {
+  name = "foo3"
 }
