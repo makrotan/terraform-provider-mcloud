@@ -1,4 +1,4 @@
-module terraform-provider-hashicups
+module terraform-provider-mcloud
 
 go 1.17
 
