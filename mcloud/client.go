@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"time"
 )
 
 // HostURL - Default Mcloud URL
@@ -38,7 +37,9 @@ func NewClient(host, username, password *string) (*Client, error) {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	c := Client{
-		HTTPClient: &http.Client{Timeout: 10 * time.Second, Transport: tr},
+		HTTPClient: &http.Client{
+			//Timeout: 600 * time.Second,
+			Transport: tr},
 		// Default Mcloud URL
 		HostURL: HostURL,
 		Auth: AuthStruct{
