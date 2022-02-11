@@ -8,30 +8,30 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccHashicupsOrderBasic(t *testing.T) {
+func TestAccMcloudOrderBasic(t *testing.T) {
 	coffeeID := "1"
 	quantity := "2"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckHashicupsOrderDestroy,
+		CheckDestroy: testAccCheckMcloudOrderDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckHashicupsOrderConfigBasic(coffeeID, quantity),
+				Config: testAccCheckMcloudOrderConfigBasic(coffeeID, quantity),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckHashicupsOrderExists("hashicups_order.new"),
+					testAccCheckMcloudOrderExists("mcloud_order.new"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckHashicupsOrderDestroy(s *terraform.State) error {
+func testAccCheckMcloudOrderDestroy(s *terraform.State) error {
 	c := testAccProvider.Meta().(*Client)
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "hashicups_order" {
+		if rs.Type != "mcloud_order" {
 			continue
 		}
 
@@ -46,9 +46,9 @@ func testAccCheckHashicupsOrderDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckHashicupsOrderConfigBasic(coffeeID, quantity string) string {
+func testAccCheckMcloudOrderConfigBasic(coffeeID, quantity string) string {
 	return fmt.Sprintf(`
-	resource "hashicups_order" "new" {
+	resource "mcloud_order" "new" {
 		items {
 			coffee {
 				id = %s
@@ -59,7 +59,7 @@ func testAccCheckHashicupsOrderConfigBasic(coffeeID, quantity string) string {
 	`, coffeeID, quantity)
 }
 
-func testAccCheckHashicupsOrderExists(n string) resource.TestCheckFunc {
+func testAccCheckMcloudOrderExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 

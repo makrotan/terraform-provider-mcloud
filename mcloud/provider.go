@@ -14,28 +14,28 @@ func Provider() *schema.Provider {
 			"host": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("HASHICUPS_HOST", nil),
+				DefaultFunc: schema.EnvDefaultFunc("MCLOUD_HOST", nil),
 			},
 			"username": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("HASHICUPS_USERNAME", nil),
+				DefaultFunc: schema.EnvDefaultFunc("MCLOUD_USERNAME", nil),
 			},
 			"password": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				DefaultFunc: schema.EnvDefaultFunc("HASHICUPS_PASSWORD", nil),
+				DefaultFunc: schema.EnvDefaultFunc("MCLOUD_PASSWORD", nil),
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"hashicups_order":          resourceOrder(),
-			"hashicups_mcloud_ssh_key": resourceSshKey(),
+			"mcloud_order":   resourceOrder(),
+			"mcloud_ssh_key": resourceSshKey(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"hashicups_coffees":     dataSourceCoffees(),
-			"hashicups_order":       dataSourceOrder(),
-			"hashicups_ingredients": dataSourceIngredients(),
+			"mcloud_coffees":     dataSourceCoffees(),
+			"mcloud_order":       dataSourceOrder(),
+			"mcloud_ingredients": dataSourceIngredients(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
@@ -75,8 +75,8 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "Unable to create HashiCups client",
-			Detail:   "Unable to create anonymous HashiCups client",
+			Summary:  "Unable to create Mcloud client",
+			Detail:   "Unable to create anonymous Mcloud client",
 		})
 		return nil, diags
 	}

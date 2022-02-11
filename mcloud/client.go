@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// HostURL - Default Hashicups URL
+// HostURL - Default Mcloud URL
 const HostURL string = "http://localhost:19090"
 
 // Client -
@@ -39,7 +39,7 @@ func NewClient(host, username, password *string) (*Client, error) {
 	}
 	c := Client{
 		HTTPClient: &http.Client{Timeout: 10 * time.Second, Transport: tr},
-		// Default Hashicups URL
+		// Default Mcloud URL
 		HostURL: HostURL,
 		Auth: AuthStruct{
 			Username: *username,

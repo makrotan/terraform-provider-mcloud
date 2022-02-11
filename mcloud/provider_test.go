@@ -28,10 +28,10 @@ func TestProvider_impl(t *testing.T) {
 }
 
 func testAccPreCheck(t *testing.T) {
-	if err := os.Getenv("HASHICUPS_USERNAME"); err == "" {
-		t.Fatal("HASHICUPS_USERNAME must be set for acceptance tests")
+	if err := os.Getenv("MCLOUD_USERNAME"); err == "" {
+		t.Fatal("MCLOUD_USERNAME must be set for acceptance tests")
 	}
-	if err := os.Getenv("HASHICUPS_PASSWORD"); err == "" {
-		t.Fatal("HASHICUPS_PASSWORD must be set for acceptance tests")
+	if err := os.Getenv("MCLOUD_PASSWORD"); err == "" {
+		t.Fatal("MCLOUD_PASSWORD must be set for acceptance tests")
 	}
 }
