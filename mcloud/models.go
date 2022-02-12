@@ -40,5 +40,32 @@ type SshKey struct {
 type SshKeyResponse struct {
 	Success bool   `json:"success"`
 	Error   string `json:"error"`
-	SshKey  SshKey `json:"ssh_key"`
+	SshKey  SshKey `json:"SshKey"`
+}
+
+type ServerPoolHcloud struct {
+	Name          string `json:"name"`
+	InstanceType  string `json:"instance_type"`
+	InstanceCount int    `json:"instance_count"`
+}
+
+type ServerPoolHcloudRequest struct {
+	Name          string `json:"name"`
+	InstanceType  string `json:"instance_type"`
+	InstanceCount int    `json:"instance_count"`
+	RunSetup      bool   `json:"run_setup"`
+}
+
+type ServerPoolHcloudResponse struct {
+	Success          bool             `json:"success"`
+	Error            string           `json:"error"`
+	ServerPoolHcloud ServerPoolHcloud `json:"ServerPoolHcloud"`
+	Task             Task             `json:"Task"`
+}
+
+type Task struct {
+	Id      int    `json:"id"`
+	Type    string `json:"type"`
+	Status  string `json:"status"`
+	Created string `json:"created"`
 }
