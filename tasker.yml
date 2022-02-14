@@ -7,6 +7,8 @@ up:
       working_dir: examples
     - cmd: terraform apply -auto-approve
       working_dir: examples
+      env:
+        TF_LOG_PROVIDER: DEBUG
 #    - cmd: terraform plan
 #      working_dir: examples
 

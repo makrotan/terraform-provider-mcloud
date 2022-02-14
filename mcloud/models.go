@@ -69,3 +69,9 @@ type Task struct {
 	Status  string `json:"status"`
 	Created string `json:"created"`
 }
+
+type TaskResponse struct {
+	Success bool   `json:"success"`
+	Error   string `json:"error"`
+	Task    Task   `json:"Task"`
+}
