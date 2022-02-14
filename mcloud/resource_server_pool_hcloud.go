@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -103,6 +104,9 @@ func resourceServerPoolHcloudCreate(ctx context.Context, d *schema.ResourceData,
 	if !serverPoolHcloudResponse.Success {
 		return diag.FromErr(fmt.Errorf(serverPoolHcloudResponse.Error))
 	}
+
+	debug(strconv.Itoa(serverPoolHcloudResponse.Task.Id))
+	c.waitForTaskToFinish(serverPoolHcloudResponse.Task.Id)
 
 	d.SetId(name)
 	d.Set("instance_type", serverPoolHcloudResponse.ServerPoolHcloud.InstanceType)
