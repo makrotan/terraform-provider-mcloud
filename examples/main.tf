@@ -20,6 +20,12 @@ resource mcloud_ssh_key "foo" {
   name = "foo1"
 }
 
+resource "mcloud_server_pool_hcloud" "foo" {
+  name = "foo"
+  instance_type = "cpx11"
+  instance_count = 2
+}
+
 output "pubkey" {
   value = mcloud_ssh_key.foo.public_key
 }

@@ -29,8 +29,9 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"mcloud_order":   resourceOrder(),
-			"mcloud_ssh_key": resourceSshKey(),
+			"mcloud_order":              resourceOrder(),
+			"mcloud_server_pool_hcloud": resourceServerPoolHcloud(),
+			"mcloud_ssh_key":            resourceSshKey(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"mcloud_coffees":     dataSourceCoffees(),
