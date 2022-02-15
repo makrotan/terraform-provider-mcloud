@@ -23,7 +23,7 @@ resource mcloud_ssh_key "foo" {
 resource "mcloud_server_pool_hcloud" "foo" {
   name = "foo"
   instance_type = "cpx11"
-  instance_count = 1
+  instance_count = 2
 }
 
 output "pubkey" {
