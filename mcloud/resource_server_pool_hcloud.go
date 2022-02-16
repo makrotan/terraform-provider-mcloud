@@ -106,7 +106,10 @@ func resourceServerPoolHcloudCreate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	debug(strconv.Itoa(serverPoolHcloudResponse.Task.Id))
-	c.waitForTaskToFinish(serverPoolHcloudResponse.Task.Id)
+	err = c.waitForTaskToFinish(serverPoolHcloudResponse.Task.Id)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	d.SetId(name)
 	d.Set("instance_type", serverPoolHcloudResponse.ServerPoolHcloud.InstanceType)
@@ -142,7 +145,7 @@ func resourceServerPoolHcloudRead(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	if res.StatusCode == 404 {
-		log.Printf("[WARN] ssh key %s not present", name)
+		log.Printf("[WARN] server pool %s does not present", name)
 		d.SetId("")
 		return nil
 	} else if res.StatusCode != http.StatusOK {
@@ -178,7 +181,7 @@ func resourceServerPoolHcloudDelete(ctx context.Context, d *schema.ResourceData,
 	var diags diag.Diagnostics
 
 	name := d.Id()
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/ssh-key/%s", strings.Trim(c.HostURL, "/"), name), nil)
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/server-pool/hcloud/%s", strings.Trim(c.HostURL, "/"), name), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -201,33 +204,3 @@ func resourceServerPoolHcloudDelete(ctx context.Context, d *schema.ResourceData,
 
 	return diags
 }
-
-//func flattenOrderItems(orderItems *[]OrderItem) []interface{} {
-//	if orderItems != nil {
-//		ois := make([]interface{}, len(*orderItems), len(*orderItems))
-//
-//		for i, orderItem := range *orderItems {
-//			oi := make(map[string]interface{})
-//
-//			oi["coffee"] = flattenCoffee(orderItem.Coffee)
-//			oi["quantity"] = orderItem.Quantity
-//			ois[i] = oi
-//		}
-//
-//		return ois
-//	}
-//
-//	return make([]interface{}, 0)
-//}
-//
-//func flattenCoffee(coffee Coffee) []interface{} {
-//	c := make(map[string]interface{})
-//	c["id"] = coffee.ID
-//	c["name"] = coffee.Name
-//	c["teaser"] = coffee.Teaser
-//	c["description"] = coffee.Description
-//	c["price"] = coffee.Price
-//	c["image"] = coffee.Image
-//
-//	return []interface{}{c}
-//}
