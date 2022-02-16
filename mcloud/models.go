@@ -31,6 +31,36 @@ type Ingredient struct {
 	Unit     string `json:"unit"`
 }
 
+///
+
+type K3SCluster struct {
+	Name                  string `json:"name"`
+	Status                string `json:"status"`
+	SKU                   string `json:"sku"`
+	MasterServerPoolID    string `json:"master_server_pool_id"`
+	K3sVersion            string `json:"k3s_version"`
+	FirewallWhitelistIPv4 string `json:"firewall_whitelist_ipv4"`
+	AccessKeyPrimary      string `json:"access_key_primary"`
+}
+
+type K3SClusterRequest struct {
+	Name                  string `json:"name"`
+	Status                string `json:"status"`
+	SKU                   string `json:"sku"`
+	MasterServerPoolID    string `json:"master_server_pool_id"`
+	K3sVersion            string `json:"k3s_version"`
+	FirewallWhitelistIPv4 string `json:"firewall_whitelist_ipv4"`
+	AccessKeyPrimary      string `json:"access_key_primary"`
+	RunSetup              bool   `json:"run_setup"`
+}
+
+type K3sClusterResponse struct {
+	K3SCluster K3SCluster `json:"K3sCluster"`
+	Success    bool       `json:"success"`
+	Error      string     `json:"error"`
+	Task       Task       `json:"Task"`
+}
+
 type SshKey struct {
 	Name       string `json:"name"`
 	PublicKey  string `json:"public_key"`
