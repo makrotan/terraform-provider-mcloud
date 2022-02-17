@@ -3,7 +3,6 @@
 terraform-provider-hashicups
 bin
 vendor
-/docs
 
 # Local .terraform directories
 **/.terraform/*
