@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     mcloud = {
-      version = "0.3.1"
+      version = "0.1.0"
       source = "makrotan.com/cloud/mcloud"
     }
   }
