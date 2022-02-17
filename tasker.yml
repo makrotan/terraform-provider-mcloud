@@ -1,3 +1,6 @@
+docs:
+  commands:
+    - cmd: go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
 up:
   commands:
     - cmd: make install
