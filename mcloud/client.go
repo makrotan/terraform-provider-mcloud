@@ -2,24 +2,22 @@ package mcloud
 
 import (
 	"crypto/tls"
-	"encoding/json"
+// 	"encoding/json"
+// 	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strconv"
-	"strings"
+// 	"strconv"
+// 	"strings"
 	"time"
 )
-
-// HostURL - Default Mcloud URL
-const HostURL string = "http://localhost:19090"
 
 // Client -
 type Client struct {
 	HostURL    string
 	HTTPClient *http.Client
-	Token      string
 	Auth       AuthStruct
+    api_token  string
 }
 
 // AuthStruct -
@@ -36,38 +34,30 @@ type AuthResponse struct {
 }
 
 // NewClient -
-func NewClient(host, username, password *string) (*Client, error) {
+func NewClient(host, username, password *string, token *string) (*Client, error) {
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 	}
 	c := Client{
+	    HostURL: *host,
 		HTTPClient: &http.Client{
-			//Timeout: 600 * time.Second,
-			Transport: tr},
-		// Default Mcloud URL
-		HostURL: HostURL,
-		Auth: AuthStruct{
-			Username: *username,
-			Password: *password,
+			Timeout: 3600 * time.Second,
+			Transport: tr,
 		},
+		
 	}
 
 	if host != nil {
 		c.HostURL = *host
 	}
 
-	ar, err := c.SignIn()
-	if err != nil {
-		return nil, err
-	}
-
-	c.Token = ar.Token
-
 	return &c, nil
 }
 
 func (c *Client) doRequest(req *http.Request) ([]byte, error) {
-	req.Header.Set("Authorization", c.Token)
+    
+	req.Header.Set("Authorization", c.api_token)
+	
 
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
@@ -85,53 +75,4 @@ func (c *Client) doRequest(req *http.Request) ([]byte, error) {
 	}
 
 	return body, err
-}
-
-func (c *Client) waitForTaskToFinish(taskId int) error {
-	client := c.HTTPClient
-
-	var taskResponse TaskResponse
-
-	for {
-		req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/task/%s", strings.Trim(c.HostURL, "/"), strconv.Itoa(taskId)), nil)
-		if err != nil {
-			return err
-		}
-		req.Header.Set("Authorization", c.Token)
-
-		res, err := client.Do(req)
-		if err != nil {
-			return err
-		}
-		defer res.Body.Close()
-
-		body, err := ioutil.ReadAll(res.Body)
-		if err != nil {
-			return err
-		}
-
-		if res.StatusCode != http.StatusOK {
-			return fmt.Errorf("status: %d, body: %s", res.StatusCode, body)
-		}
-
-		err = json.Unmarshal(body, &taskResponse)
-		//err = json.NewDecoder(resp.Body).Decode(sshKeyResponse)
-		if err != nil {
-			return err
-		}
-
-		debug(taskResponse.Task.Status)
-
-		if taskResponse.Task.Status == "finished" {
-			return nil
-		} else if taskResponse.Task.Status == "failed" {
-			return fmt.Errorf("mCloud task '%d' failed", taskId)
-		} else if taskResponse.Task.Status != "running" {
-			break
-		} else {
-			time.Sleep(1 * time.Second)
-		}
-	}
-
-	return nil
 }
