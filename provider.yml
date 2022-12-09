@@ -1,0 +1,92 @@
+name: mcloud
+namespace: makrotan
+company_domain: makrotan.com
+
+provider_spec:
+#  auth_request:
+#    url: "/api/v1/signin"
+#    body_template: '{"username":"%s", "password":"%s"}'
+#    token_response_field: "token"
+  auth_type: bearer_token
+  fields: {}
+
+resources:
+  mcloud_ssh_key:
+    primary_key: name
+    description: SSH Key.
+    url:
+      template: /api/v1/ssh-key/%s
+      args: ["fields.name"]
+    fields:
+      name:
+        type: string
+      public_key:
+        type: string
+        description: "public key as givin in an authorized_hosts file, `ssh-rsa AAAAB3Nz...PCmXzzFLKoC0Agvc= hostname`"
+      private_key:
+        type: string
+        description: "private key in pem format: `-----BEGIN OPENSSH PRIVATE KEY-----\\nb3Bl...cgECAw==\\n-----END OPENSSH PRIVATE KEY-----\\n`"
+
+  mcloud_server_pool_dedicated:
+    primary_key: name
+    description: A collection of dedicated servers.
+    url:
+      template: /api/v1/server-pool/dedicated/%s
+      args: [ "fields.name" ]
+    fields:
+      name:
+        type: string
+      status:
+        type: string
+        computed: true
+        description: "`new`, `running`, `failed`, `deleting` or `deleted`"
+
+  mcloud_server_dedicated:
+    primary_key: name
+    description: A dedicated server.
+    url:
+      template: /api/v1/server-dedicated/%s
+      args: [ "fields.name" ]
+    fields:
+      name:
+        type: string
+      pool_name:
+        type: string
+      ipv4:
+        type: string
+      server_provider:
+        type: string
+        map_to: provider
+      server_provider_ref:
+        type: string
+        required: False
+        map_to: provider_ref
+      region:
+        type: string
+      az:
+        type: string
+
+  mcloud_erpnext:
+    primary_key: name
+    description: ERPNext Instance.
+    url:
+      template: /api/v1/erpnext/%s
+      args: [ "fields.name" ]
+    fields:
+      name:
+        type: string
+      fqdn:
+        type: string
+      sku:
+        type: string
+      version:
+        type: string
+      server_pool_id:
+        type: string
+        force_new: True
+      status:
+        type: string
+        computed: true
+      admin_password:
+        type: string
+        computed: true

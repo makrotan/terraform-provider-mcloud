@@ -13,25 +13,24 @@ func Provider() *schema.Provider {
 		Schema: map[string]*schema.Schema{
 			"host": &schema.Schema{
 				Type:        schema.TypeString,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("MCLOUD_HOST", nil),
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
 			},
-			"username": &schema.Schema{
+			"api_token": &schema.Schema{
 				Type:        schema.TypeString,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("MCLOUD_USERNAME", nil),
-			},
-			"password": &schema.Schema{
-				Type:        schema.TypeString,
-				Optional:    true,
-				Sensitive:   true,
-				DefaultFunc: schema.EnvDefaultFunc("MCLOUD_PASSWORD", nil),
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"mcloud_k3s_cluster":        resourceK3sCluster(),
-			"mcloud_server_pool_hcloud": resourceServerPoolHcloud(),
-			"mcloud_ssh_key":            resourceSshKey(),
+			"mcloud_ssh_key":        resourceMcloudSshKey(),
+			"mcloud_server_pool_dedicated":        resourceMcloudServerPoolDedicated(),
+			"mcloud_server_dedicated":        resourceMcloudServerDedicated(),
+			"mcloud_erpnext":        resourceMcloudErpnext(),
 		},
 		DataSourcesMap:       map[string]*schema.Resource{},
 		ConfigureContextFunc: providerConfigure,
@@ -39,44 +38,28 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	username := d.Get("username").(string)
-	password := d.Get("password").(string)
+    var host *string
 
-	var host *string
-
-	hVal, ok := d.GetOk("host")
+    hVal, ok := d.GetOk("host")
 	if ok {
 		tempHost := hVal.(string)
 		host = &tempHost
 	}
 
-	// Warning or errors can be collected in a slice type
+    // Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
-
-	if (username != "") && (password != "") {
-		c, err := NewClient(host, &username, &password)
-		if err != nil {
-			diags = append(diags, diag.Diagnostic{
-				Severity: diag.Error,
-				Summary:  "Unable to create mcloud client",
-				Detail:   "Unable to authenticate user for authenticated mcloud client: " + err.Error(),
-			})
-
-			return nil, diags
-		}
-
-		return c, diags
-	}
-
-	c, err := NewClient(host, nil, nil)
+    api_token := d.Get("api_token").(string)
+    c, err := NewClient(host, nil, nil, &api_token)
 	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "Unable to create Mcloud client",
-			Detail:   "Unable to create anonymous Mcloud client",
-		})
+        diags = append(diags, diag.Diagnostic{
+            Severity: diag.Error,
+            Summary:  "Unable to create mcloud client",
+            Detail:   "Unable to authenticate mcloud client using bearer_token: " + err.Error(),
+        })
+
 		return nil, diags
 	}
+    c.api_token = d.Get("api_token").(string)
 
 	return c, diags
 }
