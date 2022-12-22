@@ -90,3 +90,25 @@ resources:
       admin_password:
         type: string
         computed: true
+
+  mcloud_mattermost:
+    primary_key: name
+    description: Mattermost Instance.
+    url:
+      template: /api/v1/mattermost/%s
+      args: [ "fields.name" ]
+    fields:
+      name:
+        type: string
+      fqdn:
+        type: string
+      sku:
+        type: string
+      version:
+        type: string
+      server_pool_id:
+        type: string
+        force_new: True
+      status:
+        type: string
+        computed: true
