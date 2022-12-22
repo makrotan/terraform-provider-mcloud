@@ -31,6 +31,7 @@ func Provider() *schema.Provider {
 			"mcloud_server_pool_dedicated":        resourceMcloudServerPoolDedicated(),
 			"mcloud_server_dedicated":        resourceMcloudServerDedicated(),
 			"mcloud_erpnext":        resourceMcloudErpnext(),
+			"mcloud_mattermost":        resourceMcloudMattermost(),
 		},
 		DataSourcesMap:       map[string]*schema.Resource{},
 		ConfigureContextFunc: providerConfigure,
