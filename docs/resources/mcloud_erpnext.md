@@ -20,10 +20,10 @@ The following arguments are supported:
 - `sku` - (Required) [string] 
 - `version` - (Required) [string] 
 - `server_pool_id` - (Required) [string] 
+- `status` - [string] 
 
 ## Attributes Reference
 
 In addition to all the arguments above, the following attributes are exported:
 
-- `status` - [string] 
 - `admin_password` - [string] 
