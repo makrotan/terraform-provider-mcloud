@@ -1,13 +1,13 @@
 ---
-page_title: "mcloud_mattermost Resource - terraform-provider-mcloud"
+page_title: "mcloud_harbor Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  Mattermost Instance.
+  Harbor Instance.
 ---
 
-# Resource `mcloud_mattermost`
+# Resource `mcloud_harbor`
 
-Mattermost Instance.
+Harbor Instance.
 
 
 
@@ -25,3 +25,5 @@ The following arguments are supported:
 ## Attributes Reference
 
 In addition to all the arguments above, the following attributes are exported:
+
+- `admin_password` - [string] 

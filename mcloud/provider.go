@@ -30,6 +30,7 @@ func Provider() *schema.Provider {
 			"mcloud_consul_cluster":        resourceMcloudConsulCluster(),
 			"mcloud_cockroachdb":           resourceMcloudCockroachdb(),
 			"mcloud_erpnext":               resourceMcloudErpnext(),
+			"mcloud_harbor":                resourceMcloudHarbor(),
 			"mcloud_mattermost":            resourceMcloudMattermost(),
 			"mcloud_pki_ca":                resourceMcloudPkiCa(),
 			"mcloud_ssh_key":               resourceMcloudSshKey(),

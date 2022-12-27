@@ -15,13 +15,13 @@ CockroachDB Instance.
 
 The following arguments are supported:
 
-- `consul_cluster_id` - (Required) [string] 
-- `name` - (Required) [string] 
-- `version` - (Required) [string] 
-- `pki_ca_id` - (Required) [string] 
-- `server_pool_id` - (Required) [string] 
-- `status` - [string] 
-- `firewall_whitelist_ipv4` - (Required) [string] 
+- `consul_cluster_id` - (Required) [string]  
+- `name` - (Required) [string]  
+- `version` - (Required) [string]  
+- `pki_ca_id` - (Required) [string]  
+- `server_pool_id` - (Required) [string]  
+- `status` - [string]   (default: `running`)
+- `firewall_whitelist_ipv4` - (Required) [string]  
 
 ## Attributes Reference
 

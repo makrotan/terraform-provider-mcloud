@@ -111,8 +111,9 @@ func resourceMcloudPkiCa() *schema.Resource {
 				Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"key_priv": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: false, Computed: true, Optional: false, ForceNew: false,
+				Type:      schema.TypeString,
+				Sensitive: true,
+				Required:  false, Computed: true, Optional: false, ForceNew: false,
 			},
 		},
 		Importer: &schema.ResourceImporter{

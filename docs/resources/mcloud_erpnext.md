@@ -15,12 +15,12 @@ ERPNext Instance.
 
 The following arguments are supported:
 
-- `name` - (Required) [string] 
-- `fqdn` - (Required) [string] 
-- `sku` - (Required) [string] 
-- `version` - (Required) [string] 
-- `server_pool_id` - (Required) [string] 
-- `status` - [string] 
+- `name` - (Required) [string]  
+- `fqdn` - (Required) [string]  
+- `sku` - (Required) [string]  
+- `version` - (Required) [string]  
+- `server_pool_id` - (Required) [string]  
+- `status` - [string]   (default: `running`)
 
 ## Attributes Reference
 

@@ -88,9 +88,11 @@ resources:
       access_key_primary:
         type: string
         computed: true
+        sensitive: true
       access_key_secondary:
         type: string
         computed: true
+        sensitive: true
       master_domain:
         type: string
         computed: true
@@ -128,6 +130,34 @@ resources:
       admin_password:
         type: string
         computed: true
+
+
+  mcloud_harbor:
+    primary_key: name
+    description: Harbor Instance.
+    url:
+      template: /api/v1/harbor/%s
+      args: [ "fields.name" ]
+    fields:
+      name:
+        type: string
+      fqdn:
+        type: string
+      sku:
+        type: string
+      version:
+        type: string
+      server_pool_id:
+        type: string
+        force_new: True
+      status:
+        type: string
+        default: running
+        required: false
+      admin_password:
+        type: string
+        computed: true
+        sensitive: true
 
   mcloud_mattermost:
     primary_key: name
@@ -195,6 +225,7 @@ resources:
       key_priv:
         type: string
         computed: true
+        sensitive: true
 
   mcloud_ssh_key:
     primary_key: name
@@ -211,6 +242,7 @@ resources:
       private_key:
         type: string
         description: "private key in pem format: `-----BEGIN OPENSSH PRIVATE KEY-----\\nb3Bl...cgECAw==\\n-----END OPENSSH PRIVATE KEY-----\\n`"
+        sensitive: true
 
   mcloud_server_pool_dedicated:
     primary_key: name

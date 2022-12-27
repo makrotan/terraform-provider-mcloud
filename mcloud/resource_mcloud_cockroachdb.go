@@ -98,12 +98,14 @@ func resourceMcloudCockroachdb() *schema.Resource {
 				ForceNew: false,
 			},
 			"access_key_primary": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: false, Computed: true, Optional: false, ForceNew: false,
+				Type:      schema.TypeString,
+				Sensitive: true,
+				Required:  false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"access_key_secondary": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: false, Computed: true, Optional: false, ForceNew: false,
+				Type:      schema.TypeString,
+				Sensitive: true,
+				Required:  false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"master_domain": &schema.Schema{
 				Type:     schema.TypeString,

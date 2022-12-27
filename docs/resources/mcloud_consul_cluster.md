@@ -15,12 +15,12 @@ Consul Cluster.
 
 The following arguments are supported:
 
-- `master_server_pool_id` - (Required) [string] 
-- `name` - (Required) [string] 
-- `firewall_whitelist_ipv4` - (Required) [string] 
-- `pki_ca_id` - (Required) [string] 
-- `status` - [string] 
-- `version` - (Required) [string] 
+- `master_server_pool_id` - (Required) [string]  
+- `name` - (Required) [string]  
+- `firewall_whitelist_ipv4` - (Required) [string]  
+- `pki_ca_id` - (Required) [string]  
+- `status` - [string]   (default: `running`)
+- `version` - (Required) [string]  
 
 ## Attributes Reference
 
