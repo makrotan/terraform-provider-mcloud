@@ -23,26 +23,24 @@ resource "mcloud_server_pool_hcloud" "test" {
   instance_count = 1
 }
 
-#resource "mcloud_pki_ca" "test" {
-#  name = "harbor-test"
-#}
-
-resource "mcloud_harbor" "test" {
+resource "mcloud_pki_ca" "test" {
   name = "harbor-test"
-  sku = "dev"
-  version = "2.7.0"
-  fqdn = "harbor-test.makrotan.com"
+}
+
+resource "mcloud_mattermost" "test" {
+  name           = "test"
   server_pool_id = mcloud_server_pool_hcloud.test.id
+  fqdn           = "mattermost-test.makrotan.com"
+  sku            = "dev"
+  version        = "7.1"
 }
 
 output "out" {
   value = <<EOT
 Resources successfully installed:
 
-    Harbor
-        Access: https://${mcloud_harbor.test.fqdn}/
-        Username: admin
-        Password: ${mcloud_harbor.test.admin_password}
+    Mattermost
+        Access: https://${mcloud_mattermost.test.fqdn}
 
 EOT
   sensitive = true
