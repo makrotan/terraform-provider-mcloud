@@ -14,15 +14,15 @@ import (
 )
 
 type McloudSshKey struct {
-	Name       string `json:"name"`
-	PublicKey  string `json:"public_key"`
-	PrivateKey string `json:"private_key"`
+    Name string `json:"name"`
+    PublicKey string `json:"public_key"`
+    PrivateKey string `json:"private_key"`
 }
 
 type McloudSshKeyResponse struct {
-	Name       string `json:"name"`
-	PublicKey  string `json:"public_key"`
-	PrivateKey string `json:"private_key"`
+    Name string `json:"name"`
+    PublicKey string `json:"public_key"`
+    PrivateKey string `json:"private_key"`
 }
 
 func resourceMcloudSshKey() *schema.Resource {
@@ -33,23 +33,23 @@ func resourceMcloudSshKey() *schema.Resource {
 		DeleteContext: resourceMcloudSshKeyDelete,
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true, Computed: false, Optional: false, ForceNew: true,
+                Type:     schema.TypeString,
+                Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
 			"public_key": &schema.Schema{
-				Type:     schema.TypeString,
+                Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
 				Computed: false,
 				ForceNew: false,
 			},
 			"private_key": &schema.Schema{
-				Type:      schema.TypeString,
-				Sensitive: true,
-				Optional:  false,
-				Required:  true,
-				Computed:  false,
-				ForceNew:  false,
+                Type:     schema.TypeString,
+                Sensitive: true,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
 			},
 		},
 		Importer: &schema.ResourceImporter{
@@ -66,9 +66,9 @@ func resourceMcloudSshKeyCreate(ctx context.Context, d *schema.ResourceData, m i
 
 	pk := d.Get("name").(string)
 	instance := McloudSshKey{
-		Name:       d.Get("name").(string),
-		PublicKey:  d.Get("public_key").(string),
-		PrivateKey: d.Get("private_key").(string),
+        Name: d.Get("name").(string),
+        PublicKey: d.Get("public_key").(string),
+        PrivateKey: d.Get("private_key").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -110,9 +110,9 @@ func resourceMcloudSshKeyCreate(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	d.SetId(pk)
-	d.Set("name", mcloudSshKeyResponse.Name)
-	d.Set("public_key", mcloudSshKeyResponse.PublicKey)
-	d.Set("private_key", mcloudSshKeyResponse.PrivateKey)
+    d.Set("name", mcloudSshKeyResponse.Name)
+    d.Set("public_key", mcloudSshKeyResponse.PublicKey)
+    d.Set("private_key", mcloudSshKeyResponse.PrivateKey)
 
 	return diags
 }
@@ -125,7 +125,7 @@ func resourceMcloudSshKeyRead(ctx context.Context, d *schema.ResourceData, m int
 	var diags diag.Diagnostics
 
 	pk := d.Id()
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/ssh-key/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/ssh-key/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -156,9 +156,9 @@ func resourceMcloudSshKeyRead(ctx context.Context, d *schema.ResourceData, m int
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	d.Set("name", mcloudSshKeyResponse.Name)
-	d.Set("public_key", mcloudSshKeyResponse.PublicKey)
-	d.Set("private_key", mcloudSshKeyResponse.PrivateKey)
+    d.Set("name", mcloudSshKeyResponse.Name)
+    d.Set("public_key", mcloudSshKeyResponse.PublicKey)
+    d.Set("private_key", mcloudSshKeyResponse.PrivateKey)
 
 	return diags
 }
@@ -173,7 +173,7 @@ func resourceMcloudSshKeyDelete(ctx context.Context, d *schema.ResourceData, m i
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	// 	pk := d.Id()
+// 	pk := d.Id()
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/ssh-key/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)

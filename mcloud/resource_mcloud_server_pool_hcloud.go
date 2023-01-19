@@ -14,17 +14,19 @@ import (
 )
 
 type McloudServerPoolHcloud struct {
-	Name          string `json:"name"`
-	InstanceType  string `json:"instance_type"`
-	InstanceCount int    `json:"instance_count"`
-	Status        string `json:"status"`
+    Name string `json:"name"`
+    InstanceType string `json:"instance_type"`
+    Location string `json:"location"`
+    InstanceCount int `json:"instance_count"`
+    Status string `json:"status"`
 }
 
 type McloudServerPoolHcloudResponse struct {
-	Name          string `json:"name"`
-	InstanceType  string `json:"instance_type"`
-	InstanceCount int    `json:"instance_count"`
-	Status        string `json:"status"`
+    Name string `json:"name"`
+    InstanceType string `json:"instance_type"`
+    Location string `json:"location"`
+    InstanceCount int `json:"instance_count"`
+    Status string `json:"status"`
 }
 
 func resourceMcloudServerPoolHcloud() *schema.Resource {
@@ -35,26 +37,34 @@ func resourceMcloudServerPoolHcloud() *schema.Resource {
 		DeleteContext: resourceMcloudServerPoolHcloudDelete,
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true, Computed: false, Optional: false, ForceNew: true,
+                Type:     schema.TypeString,
+                Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
 			"instance_type": &schema.Schema{
-				Type:     schema.TypeString,
+                Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
 				Computed: false,
 				ForceNew: false,
 			},
+			"location": &schema.Schema{
+                Type:     schema.TypeString,
+                Default: "spread",
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
 			"instance_count": &schema.Schema{
-				Type:     schema.TypeInt,
+			    Type:     schema.TypeInt,
 				Optional: false,
 				Required: true,
 				Computed: false,
 				ForceNew: false,
 			},
 			"status": &schema.Schema{
-				Type:     schema.TypeString,
-				Default:  "running",
+                Type:     schema.TypeString,
+                Default: "running",
 				Optional: true,
 				Required: false,
 				Computed: false,
@@ -75,10 +85,11 @@ func resourceMcloudServerPoolHcloudCreate(ctx context.Context, d *schema.Resourc
 
 	pk := d.Get("name").(string)
 	instance := McloudServerPoolHcloud{
-		Name:          d.Get("name").(string),
-		InstanceType:  d.Get("instance_type").(string),
-		InstanceCount: d.Get("instance_count").(int),
-		Status:        d.Get("status").(string),
+        Name: d.Get("name").(string),
+        InstanceType: d.Get("instance_type").(string),
+        Location: d.Get("location").(string),
+        InstanceCount: d.Get("instance_count").(int),
+        Status: d.Get("status").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -120,10 +131,11 @@ func resourceMcloudServerPoolHcloudCreate(ctx context.Context, d *schema.Resourc
 	}
 
 	d.SetId(pk)
-	d.Set("name", mcloudServerPoolHcloudResponse.Name)
-	d.Set("instance_type", mcloudServerPoolHcloudResponse.InstanceType)
-	d.Set("instance_count", mcloudServerPoolHcloudResponse.InstanceCount)
-	d.Set("status", mcloudServerPoolHcloudResponse.Status)
+    d.Set("name", mcloudServerPoolHcloudResponse.Name)
+    d.Set("instance_type", mcloudServerPoolHcloudResponse.InstanceType)
+    d.Set("location", mcloudServerPoolHcloudResponse.Location)
+    d.Set("instance_count", mcloudServerPoolHcloudResponse.InstanceCount)
+    d.Set("status", mcloudServerPoolHcloudResponse.Status)
 
 	return diags
 }
@@ -136,7 +148,7 @@ func resourceMcloudServerPoolHcloudRead(ctx context.Context, d *schema.ResourceD
 	var diags diag.Diagnostics
 
 	pk := d.Id()
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/server-pool/hcloud/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/server-pool/hcloud/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -167,10 +179,11 @@ func resourceMcloudServerPoolHcloudRead(ctx context.Context, d *schema.ResourceD
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	d.Set("name", mcloudServerPoolHcloudResponse.Name)
-	d.Set("instance_type", mcloudServerPoolHcloudResponse.InstanceType)
-	d.Set("instance_count", mcloudServerPoolHcloudResponse.InstanceCount)
-	d.Set("status", mcloudServerPoolHcloudResponse.Status)
+    d.Set("name", mcloudServerPoolHcloudResponse.Name)
+    d.Set("instance_type", mcloudServerPoolHcloudResponse.InstanceType)
+    d.Set("location", mcloudServerPoolHcloudResponse.Location)
+    d.Set("instance_count", mcloudServerPoolHcloudResponse.InstanceCount)
+    d.Set("status", mcloudServerPoolHcloudResponse.Status)
 
 	return diags
 }
@@ -185,7 +198,7 @@ func resourceMcloudServerPoolHcloudDelete(ctx context.Context, d *schema.Resourc
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	// 	pk := d.Id()
+// 	pk := d.Id()
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/server-pool/hcloud/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)

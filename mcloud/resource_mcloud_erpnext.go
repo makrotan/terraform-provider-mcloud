@@ -14,23 +14,23 @@ import (
 )
 
 type McloudErpnext struct {
-	Name          string `json:"name"`
-	Fqdn          string `json:"fqdn"`
-	Sku           string `json:"sku"`
-	Version       string `json:"version"`
-	ServerPoolId  string `json:"server_pool_id"`
-	Status        string `json:"status"`
-	AdminPassword string `json:"admin_password,omitempty"`
+    Name string `json:"name"`
+    Fqdn string `json:"fqdn"`
+    Sku string `json:"sku"`
+    Version string `json:"version"`
+    ServerPoolId string `json:"server_pool_id"`
+    Status string `json:"status"`
+    AdminPassword string `json:"admin_password,omitempty"`
 }
 
 type McloudErpnextResponse struct {
-	Name          string `json:"name"`
-	Fqdn          string `json:"fqdn"`
-	Sku           string `json:"sku"`
-	Version       string `json:"version"`
-	ServerPoolId  string `json:"server_pool_id"`
-	Status        string `json:"status"`
-	AdminPassword string `json:"admin_password"`
+    Name string `json:"name"`
+    Fqdn string `json:"fqdn"`
+    Sku string `json:"sku"`
+    Version string `json:"version"`
+    ServerPoolId string `json:"server_pool_id"`
+    Status string `json:"status"`
+    AdminPassword string `json:"admin_password"`
 }
 
 func resourceMcloudErpnext() *schema.Resource {
@@ -41,48 +41,48 @@ func resourceMcloudErpnext() *schema.Resource {
 		DeleteContext: resourceMcloudErpnextDelete,
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true, Computed: false, Optional: false, ForceNew: true,
+                Type:     schema.TypeString,
+                Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
 			"fqdn": &schema.Schema{
-				Type:     schema.TypeString,
+                Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
 				Computed: false,
 				ForceNew: false,
 			},
 			"sku": &schema.Schema{
-				Type:     schema.TypeString,
+                Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
 				Computed: false,
 				ForceNew: false,
 			},
 			"version": &schema.Schema{
-				Type:     schema.TypeString,
+                Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
 				Computed: false,
 				ForceNew: false,
 			},
 			"server_pool_id": &schema.Schema{
-				Type:     schema.TypeString,
+                Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
 				Computed: false,
 				ForceNew: true,
 			},
 			"status": &schema.Schema{
-				Type:     schema.TypeString,
-				Default:  "running",
+                Type:     schema.TypeString,
+                Default: "running",
 				Optional: true,
 				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
 			"admin_password": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: false, Computed: true, Optional: false, ForceNew: false,
+                Type:     schema.TypeString,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 		},
 		Importer: &schema.ResourceImporter{
@@ -99,12 +99,12 @@ func resourceMcloudErpnextCreate(ctx context.Context, d *schema.ResourceData, m 
 
 	pk := d.Get("name").(string)
 	instance := McloudErpnext{
-		Name:         d.Get("name").(string),
-		Fqdn:         d.Get("fqdn").(string),
-		Sku:          d.Get("sku").(string),
-		Version:      d.Get("version").(string),
-		ServerPoolId: d.Get("server_pool_id").(string),
-		Status:       d.Get("status").(string),
+        Name: d.Get("name").(string),
+        Fqdn: d.Get("fqdn").(string),
+        Sku: d.Get("sku").(string),
+        Version: d.Get("version").(string),
+        ServerPoolId: d.Get("server_pool_id").(string),
+        Status: d.Get("status").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -146,13 +146,13 @@ func resourceMcloudErpnextCreate(ctx context.Context, d *schema.ResourceData, m 
 	}
 
 	d.SetId(pk)
-	d.Set("name", mcloudErpnextResponse.Name)
-	d.Set("fqdn", mcloudErpnextResponse.Fqdn)
-	d.Set("sku", mcloudErpnextResponse.Sku)
-	d.Set("version", mcloudErpnextResponse.Version)
-	d.Set("server_pool_id", mcloudErpnextResponse.ServerPoolId)
-	d.Set("status", mcloudErpnextResponse.Status)
-	d.Set("admin_password", mcloudErpnextResponse.AdminPassword)
+    d.Set("name", mcloudErpnextResponse.Name)
+    d.Set("fqdn", mcloudErpnextResponse.Fqdn)
+    d.Set("sku", mcloudErpnextResponse.Sku)
+    d.Set("version", mcloudErpnextResponse.Version)
+    d.Set("server_pool_id", mcloudErpnextResponse.ServerPoolId)
+    d.Set("status", mcloudErpnextResponse.Status)
+    d.Set("admin_password", mcloudErpnextResponse.AdminPassword)
 
 	return diags
 }
@@ -165,7 +165,7 @@ func resourceMcloudErpnextRead(ctx context.Context, d *schema.ResourceData, m in
 	var diags diag.Diagnostics
 
 	pk := d.Id()
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/erpnext/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/erpnext/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -196,13 +196,13 @@ func resourceMcloudErpnextRead(ctx context.Context, d *schema.ResourceData, m in
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	d.Set("name", mcloudErpnextResponse.Name)
-	d.Set("fqdn", mcloudErpnextResponse.Fqdn)
-	d.Set("sku", mcloudErpnextResponse.Sku)
-	d.Set("version", mcloudErpnextResponse.Version)
-	d.Set("server_pool_id", mcloudErpnextResponse.ServerPoolId)
-	d.Set("status", mcloudErpnextResponse.Status)
-	d.Set("admin_password", mcloudErpnextResponse.AdminPassword)
+    d.Set("name", mcloudErpnextResponse.Name)
+    d.Set("fqdn", mcloudErpnextResponse.Fqdn)
+    d.Set("sku", mcloudErpnextResponse.Sku)
+    d.Set("version", mcloudErpnextResponse.Version)
+    d.Set("server_pool_id", mcloudErpnextResponse.ServerPoolId)
+    d.Set("status", mcloudErpnextResponse.Status)
+    d.Set("admin_password", mcloudErpnextResponse.AdminPassword)
 
 	return diags
 }
@@ -217,7 +217,7 @@ func resourceMcloudErpnextDelete(ctx context.Context, d *schema.ResourceData, m 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	// 	pk := d.Id()
+// 	pk := d.Id()
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/erpnext/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)

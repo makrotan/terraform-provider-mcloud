@@ -17,6 +17,7 @@ The following arguments are supported:
 
 - `name` - (Required) [string]  
 - `instance_type` - (Required) [string]  
+- `location` - [string]   (default: `spread`)
 - `instance_count` - (Required) [number]  
 - `status` - [string] `new`, `running`, `failed`, `deleting` or `deleted`  (default: `running`)
 

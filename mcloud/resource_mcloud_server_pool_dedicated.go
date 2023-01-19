@@ -14,13 +14,13 @@ import (
 )
 
 type McloudServerPoolDedicated struct {
-	Name   string `json:"name"`
-	Status string `json:"status"`
+    Name string `json:"name"`
+    Status string `json:"status"`
 }
 
 type McloudServerPoolDedicatedResponse struct {
-	Name   string `json:"name"`
-	Status string `json:"status"`
+    Name string `json:"name"`
+    Status string `json:"status"`
 }
 
 func resourceMcloudServerPoolDedicated() *schema.Resource {
@@ -31,12 +31,12 @@ func resourceMcloudServerPoolDedicated() *schema.Resource {
 		DeleteContext: resourceMcloudServerPoolDedicatedDelete,
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true, Computed: false, Optional: false, ForceNew: true,
+                Type:     schema.TypeString,
+                Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
 			"status": &schema.Schema{
-				Type:     schema.TypeString,
-				Default:  "running",
+                Type:     schema.TypeString,
+                Default: "running",
 				Optional: true,
 				Required: false,
 				Computed: false,
@@ -57,8 +57,8 @@ func resourceMcloudServerPoolDedicatedCreate(ctx context.Context, d *schema.Reso
 
 	pk := d.Get("name").(string)
 	instance := McloudServerPoolDedicated{
-		Name:   d.Get("name").(string),
-		Status: d.Get("status").(string),
+        Name: d.Get("name").(string),
+        Status: d.Get("status").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -100,8 +100,8 @@ func resourceMcloudServerPoolDedicatedCreate(ctx context.Context, d *schema.Reso
 	}
 
 	d.SetId(pk)
-	d.Set("name", mcloudServerPoolDedicatedResponse.Name)
-	d.Set("status", mcloudServerPoolDedicatedResponse.Status)
+    d.Set("name", mcloudServerPoolDedicatedResponse.Name)
+    d.Set("status", mcloudServerPoolDedicatedResponse.Status)
 
 	return diags
 }
@@ -114,7 +114,7 @@ func resourceMcloudServerPoolDedicatedRead(ctx context.Context, d *schema.Resour
 	var diags diag.Diagnostics
 
 	pk := d.Id()
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/server-pool/dedicated/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/server-pool/dedicated/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -145,8 +145,8 @@ func resourceMcloudServerPoolDedicatedRead(ctx context.Context, d *schema.Resour
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	d.Set("name", mcloudServerPoolDedicatedResponse.Name)
-	d.Set("status", mcloudServerPoolDedicatedResponse.Status)
+    d.Set("name", mcloudServerPoolDedicatedResponse.Name)
+    d.Set("status", mcloudServerPoolDedicatedResponse.Status)
 
 	return diags
 }
@@ -161,7 +161,7 @@ func resourceMcloudServerPoolDedicatedDelete(ctx context.Context, d *schema.Reso
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	// 	pk := d.Id()
+// 	pk := d.Id()
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/server-pool/dedicated/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)

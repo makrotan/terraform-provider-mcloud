@@ -13,50 +13,45 @@ import (
 	"strings"
 )
 
-type McloudHarbor struct {
+type McloudK3sCluster struct {
     Name string `json:"name"`
-    Fqdn string `json:"fqdn"`
     Sku string `json:"sku"`
     Version string `json:"version"`
-    ServerPoolId string `json:"server_pool_id"`
+    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
+    MasterServerPoolId string `json:"master_server_pool_id"`
     Status string `json:"status"`
-    AdminPassword string `json:"admin_password,omitempty"`
+    AccessKeyPrimary string `json:"access_key_primary,omitempty"`
+    K3sConfigYaml string `json:"k3s_config_yaml,omitempty"`
 }
 
-type McloudHarborResponse struct {
+type McloudK3sClusterResponse struct {
     Name string `json:"name"`
-    Fqdn string `json:"fqdn"`
     Sku string `json:"sku"`
     Version string `json:"version"`
-    ServerPoolId string `json:"server_pool_id"`
+    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
+    MasterServerPoolId string `json:"master_server_pool_id"`
     Status string `json:"status"`
-    AdminPassword string `json:"admin_password"`
+    AccessKeyPrimary string `json:"access_key_primary"`
+    K3sConfigYaml string `json:"k3s_config_yaml"`
 }
 
-func resourceMcloudHarbor() *schema.Resource {
+func resourceMcloudK3sCluster() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceMcloudHarborCreate,
-		ReadContext:   resourceMcloudHarborRead,
-		UpdateContext: resourceMcloudHarborUpdate,
-		DeleteContext: resourceMcloudHarborDelete,
+		CreateContext: resourceMcloudK3sClusterCreate,
+		ReadContext:   resourceMcloudK3sClusterRead,
+		UpdateContext: resourceMcloudK3sClusterUpdate,
+		DeleteContext: resourceMcloudK3sClusterDelete,
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true, Computed: false, Optional: false, ForceNew: true,
-			},
-			"fqdn": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
 			},
 			"sku": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
 				Computed: false,
-				ForceNew: false,
+				ForceNew: true,
 			},
 			"version": &schema.Schema{
                 Type:     schema.TypeString,
@@ -65,7 +60,14 @@ func resourceMcloudHarbor() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"server_pool_id": &schema.Schema{
+			"firewall_whitelist_ipv4": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
+			"master_server_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
@@ -80,7 +82,12 @@ func resourceMcloudHarbor() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"admin_password": &schema.Schema{
+			"access_key_primary": &schema.Schema{
+                Type:     schema.TypeString,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
+			},
+			"k3s_config_yaml": &schema.Schema{
                 Type:     schema.TypeString,
                 Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
@@ -92,19 +99,19 @@ func resourceMcloudHarbor() *schema.Resource {
 	}
 }
 
-func resourceMcloudHarborCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudK3sClusterCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
 	pk := d.Get("name").(string)
-	instance := McloudHarbor{
+	instance := McloudK3sCluster{
         Name: d.Get("name").(string),
-        Fqdn: d.Get("fqdn").(string),
         Sku: d.Get("sku").(string),
         Version: d.Get("version").(string),
-        ServerPoolId: d.Get("server_pool_id").(string),
+        FirewallWhitelistIpv4: d.Get("firewall_whitelist_ipv4").(string),
+        MasterServerPoolId: d.Get("master_server_pool_id").(string),
         Status: d.Get("status").(string),
 	}
 
@@ -114,7 +121,7 @@ func resourceMcloudHarborCreate(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	// req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/ssh-key/%s", strings.Trim(provider.HostURL, "/"), pk), strings.NewReader(string(rb)))
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/harbor/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), strings.NewReader(string(rb)))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/k3s-cluster/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), strings.NewReader(string(rb)))
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -140,25 +147,26 @@ func resourceMcloudHarborCreate(ctx context.Context, d *schema.ResourceData, m i
 		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
 	}
 
-	var mcloudHarborResponse McloudHarborResponse
-	err = json.Unmarshal(body, &mcloudHarborResponse)
+	var mcloudK3sClusterResponse McloudK3sClusterResponse
+	err = json.Unmarshal(body, &mcloudK3sClusterResponse)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	d.SetId(pk)
-    d.Set("name", mcloudHarborResponse.Name)
-    d.Set("fqdn", mcloudHarborResponse.Fqdn)
-    d.Set("sku", mcloudHarborResponse.Sku)
-    d.Set("version", mcloudHarborResponse.Version)
-    d.Set("server_pool_id", mcloudHarborResponse.ServerPoolId)
-    d.Set("status", mcloudHarborResponse.Status)
-    d.Set("admin_password", mcloudHarborResponse.AdminPassword)
+    d.Set("name", mcloudK3sClusterResponse.Name)
+    d.Set("sku", mcloudK3sClusterResponse.Sku)
+    d.Set("version", mcloudK3sClusterResponse.Version)
+    d.Set("firewall_whitelist_ipv4", mcloudK3sClusterResponse.FirewallWhitelistIpv4)
+    d.Set("master_server_pool_id", mcloudK3sClusterResponse.MasterServerPoolId)
+    d.Set("status", mcloudK3sClusterResponse.Status)
+    d.Set("access_key_primary", mcloudK3sClusterResponse.AccessKeyPrimary)
+    d.Set("k3s_config_yaml", mcloudK3sClusterResponse.K3sConfigYaml)
 
 	return diags
 }
 
-func resourceMcloudHarborRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudK3sClusterRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 	client := provider.HTTPClient
 
@@ -166,7 +174,7 @@ func resourceMcloudHarborRead(ctx context.Context, d *schema.ResourceData, m int
 	var diags diag.Diagnostics
 
 	pk := d.Id()
-	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/harbor/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/k3s-cluster/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -184,34 +192,35 @@ func resourceMcloudHarborRead(ctx context.Context, d *schema.ResourceData, m int
 	}
 
 	if res.StatusCode == 404 {
-		log.Printf("[WARN] mcloud_harbor %s not present", pk)
+		log.Printf("[WARN] mcloud_k3s_cluster %s not present", pk)
 		d.SetId("")
 		return nil
 	} else if res.StatusCode != http.StatusOK {
 		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
 	}
 
-	var mcloudHarborResponse McloudHarborResponse
-	err = json.Unmarshal(body, &mcloudHarborResponse)
-	//err = json.NewDecoder(resp.Body).Decode(McloudHarborResponse)
+	var mcloudK3sClusterResponse McloudK3sClusterResponse
+	err = json.Unmarshal(body, &mcloudK3sClusterResponse)
+	//err = json.NewDecoder(resp.Body).Decode(McloudK3sClusterResponse)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-    d.Set("name", mcloudHarborResponse.Name)
-    d.Set("fqdn", mcloudHarborResponse.Fqdn)
-    d.Set("sku", mcloudHarborResponse.Sku)
-    d.Set("version", mcloudHarborResponse.Version)
-    d.Set("server_pool_id", mcloudHarborResponse.ServerPoolId)
-    d.Set("status", mcloudHarborResponse.Status)
-    d.Set("admin_password", mcloudHarborResponse.AdminPassword)
+    d.Set("name", mcloudK3sClusterResponse.Name)
+    d.Set("sku", mcloudK3sClusterResponse.Sku)
+    d.Set("version", mcloudK3sClusterResponse.Version)
+    d.Set("firewall_whitelist_ipv4", mcloudK3sClusterResponse.FirewallWhitelistIpv4)
+    d.Set("master_server_pool_id", mcloudK3sClusterResponse.MasterServerPoolId)
+    d.Set("status", mcloudK3sClusterResponse.Status)
+    d.Set("access_key_primary", mcloudK3sClusterResponse.AccessKeyPrimary)
+    d.Set("k3s_config_yaml", mcloudK3sClusterResponse.K3sConfigYaml)
 
 	return diags
 }
-func resourceMcloudHarborUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return resourceMcloudHarborCreate(ctx, d, m)
+func resourceMcloudK3sClusterUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	return resourceMcloudK3sClusterCreate(ctx, d, m)
 }
 
-func resourceMcloudHarborDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudK3sClusterDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 	client := provider.HTTPClient
 
@@ -219,7 +228,7 @@ func resourceMcloudHarborDelete(ctx context.Context, d *schema.ResourceData, m i
 	var diags diag.Diagnostics
 
 // 	pk := d.Id()
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/harbor/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/k3s-cluster/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
