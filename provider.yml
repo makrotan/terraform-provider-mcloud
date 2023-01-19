@@ -182,6 +182,40 @@ resources:
         default: running
         required: false
 
+  mcloud_k3s_cluster:
+    primary_key: name
+    description: K3s Kubernetes Cluster.
+    url:
+      template: /api/v1/k3s-cluster/%s
+      args: [ "fields.name" ]
+    fields:
+      name:
+        type: string
+      sku:
+        type: string
+        force_new: True
+      version:
+        type: string
+      firewall_whitelist_ipv4:
+        type: string
+        required: false
+      master_server_pool_id:
+        type: string
+        force_new: True
+      status:
+        type: string
+        default: running
+        required: false
+      access_key_primary:
+        type: string
+        computed: true
+        sensitive: true
+      k3s_config_yaml:
+        type: string
+        computed: true
+        sensitive: true
+
+
   mcloud_pki_ca:
     primary_key: name
     description: PKI Certificate Authority.
@@ -270,6 +304,10 @@ resources:
         type: string
       instance_type:
         type: string
+      location:
+        type: string
+        required: false
+        default: spread
       instance_count:
         type: number
       status:

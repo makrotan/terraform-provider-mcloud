@@ -14,29 +14,29 @@ import (
 )
 
 type McloudPkiCa struct {
-	Name         string `json:"name"`
-	ValidDays    int    `json:"valid_days"`
-	Country      string `json:"country"`
-	State        string `json:"state"`
-	City         string `json:"city"`
-	Organisation string `json:"organisation"`
-	Unit         string `json:"unit"`
-	Email        string `json:"email"`
-	KeyPub       string `json:"key_pub,omitempty"`
-	KeyPriv      string `json:"key_priv,omitempty"`
+    Name string `json:"name"`
+    ValidDays int `json:"valid_days"`
+    Country string `json:"country"`
+    State string `json:"state"`
+    City string `json:"city"`
+    Organisation string `json:"organisation"`
+    Unit string `json:"unit"`
+    Email string `json:"email"`
+    KeyPub string `json:"key_pub,omitempty"`
+    KeyPriv string `json:"key_priv,omitempty"`
 }
 
 type McloudPkiCaResponse struct {
-	Name         string `json:"name"`
-	ValidDays    int    `json:"valid_days"`
-	Country      string `json:"country"`
-	State        string `json:"state"`
-	City         string `json:"city"`
-	Organisation string `json:"organisation"`
-	Unit         string `json:"unit"`
-	Email        string `json:"email"`
-	KeyPub       string `json:"key_pub"`
-	KeyPriv      string `json:"key_priv"`
+    Name string `json:"name"`
+    ValidDays int `json:"valid_days"`
+    Country string `json:"country"`
+    State string `json:"state"`
+    City string `json:"city"`
+    Organisation string `json:"organisation"`
+    Unit string `json:"unit"`
+    Email string `json:"email"`
+    KeyPub string `json:"key_pub"`
+    KeyPriv string `json:"key_priv"`
 }
 
 func resourceMcloudPkiCa() *schema.Resource {
@@ -47,73 +47,73 @@ func resourceMcloudPkiCa() *schema.Resource {
 		DeleteContext: resourceMcloudPkiCaDelete,
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true, Computed: false, Optional: false, ForceNew: true,
+                Type:     schema.TypeString,
+                Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
 			"valid_days": &schema.Schema{
-				Type:     schema.TypeInt,
-				Default:  7300,
+			    Type:     schema.TypeInt,
+                Default: 7300,
 				Optional: true,
 				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
 			"country": &schema.Schema{
-				Type:     schema.TypeString,
-				Default:  "DE",
+                Type:     schema.TypeString,
+                Default: "DE",
 				Optional: true,
 				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
 			"state": &schema.Schema{
-				Type:     schema.TypeString,
-				Default:  "DE",
+                Type:     schema.TypeString,
+                Default: "DE",
 				Optional: true,
 				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
 			"city": &schema.Schema{
-				Type:     schema.TypeString,
-				Default:  "Leipzig",
+                Type:     schema.TypeString,
+                Default: "Leipzig",
 				Optional: true,
 				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
 			"organisation": &schema.Schema{
-				Type:     schema.TypeString,
-				Default:  "Makrotan",
+                Type:     schema.TypeString,
+                Default: "Makrotan",
 				Optional: true,
 				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
 			"unit": &schema.Schema{
-				Type:     schema.TypeString,
-				Default:  "IT",
+                Type:     schema.TypeString,
+                Default: "IT",
 				Optional: true,
 				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
 			"email": &schema.Schema{
-				Type:     schema.TypeString,
-				Default:  "info@makrotan.com",
+                Type:     schema.TypeString,
+                Default: "info@makrotan.com",
 				Optional: true,
 				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
 			"key_pub": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: false, Computed: true, Optional: false, ForceNew: false,
+                Type:     schema.TypeString,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"key_priv": &schema.Schema{
-				Type:      schema.TypeString,
-				Sensitive: true,
-				Required:  false, Computed: true, Optional: false, ForceNew: false,
+                Type:     schema.TypeString,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 		},
 		Importer: &schema.ResourceImporter{
@@ -130,14 +130,14 @@ func resourceMcloudPkiCaCreate(ctx context.Context, d *schema.ResourceData, m in
 
 	pk := d.Get("name").(string)
 	instance := McloudPkiCa{
-		Name:         d.Get("name").(string),
-		ValidDays:    d.Get("valid_days").(int),
-		Country:      d.Get("country").(string),
-		State:        d.Get("state").(string),
-		City:         d.Get("city").(string),
-		Organisation: d.Get("organisation").(string),
-		Unit:         d.Get("unit").(string),
-		Email:        d.Get("email").(string),
+        Name: d.Get("name").(string),
+        ValidDays: d.Get("valid_days").(int),
+        Country: d.Get("country").(string),
+        State: d.Get("state").(string),
+        City: d.Get("city").(string),
+        Organisation: d.Get("organisation").(string),
+        Unit: d.Get("unit").(string),
+        Email: d.Get("email").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -179,16 +179,16 @@ func resourceMcloudPkiCaCreate(ctx context.Context, d *schema.ResourceData, m in
 	}
 
 	d.SetId(pk)
-	d.Set("name", mcloudPkiCaResponse.Name)
-	d.Set("valid_days", mcloudPkiCaResponse.ValidDays)
-	d.Set("country", mcloudPkiCaResponse.Country)
-	d.Set("state", mcloudPkiCaResponse.State)
-	d.Set("city", mcloudPkiCaResponse.City)
-	d.Set("organisation", mcloudPkiCaResponse.Organisation)
-	d.Set("unit", mcloudPkiCaResponse.Unit)
-	d.Set("email", mcloudPkiCaResponse.Email)
-	d.Set("key_pub", mcloudPkiCaResponse.KeyPub)
-	d.Set("key_priv", mcloudPkiCaResponse.KeyPriv)
+    d.Set("name", mcloudPkiCaResponse.Name)
+    d.Set("valid_days", mcloudPkiCaResponse.ValidDays)
+    d.Set("country", mcloudPkiCaResponse.Country)
+    d.Set("state", mcloudPkiCaResponse.State)
+    d.Set("city", mcloudPkiCaResponse.City)
+    d.Set("organisation", mcloudPkiCaResponse.Organisation)
+    d.Set("unit", mcloudPkiCaResponse.Unit)
+    d.Set("email", mcloudPkiCaResponse.Email)
+    d.Set("key_pub", mcloudPkiCaResponse.KeyPub)
+    d.Set("key_priv", mcloudPkiCaResponse.KeyPriv)
 
 	return diags
 }
@@ -201,7 +201,7 @@ func resourceMcloudPkiCaRead(ctx context.Context, d *schema.ResourceData, m inte
 	var diags diag.Diagnostics
 
 	pk := d.Id()
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/pki-ca/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/pki-ca/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -232,16 +232,16 @@ func resourceMcloudPkiCaRead(ctx context.Context, d *schema.ResourceData, m inte
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	d.Set("name", mcloudPkiCaResponse.Name)
-	d.Set("valid_days", mcloudPkiCaResponse.ValidDays)
-	d.Set("country", mcloudPkiCaResponse.Country)
-	d.Set("state", mcloudPkiCaResponse.State)
-	d.Set("city", mcloudPkiCaResponse.City)
-	d.Set("organisation", mcloudPkiCaResponse.Organisation)
-	d.Set("unit", mcloudPkiCaResponse.Unit)
-	d.Set("email", mcloudPkiCaResponse.Email)
-	d.Set("key_pub", mcloudPkiCaResponse.KeyPub)
-	d.Set("key_priv", mcloudPkiCaResponse.KeyPriv)
+    d.Set("name", mcloudPkiCaResponse.Name)
+    d.Set("valid_days", mcloudPkiCaResponse.ValidDays)
+    d.Set("country", mcloudPkiCaResponse.Country)
+    d.Set("state", mcloudPkiCaResponse.State)
+    d.Set("city", mcloudPkiCaResponse.City)
+    d.Set("organisation", mcloudPkiCaResponse.Organisation)
+    d.Set("unit", mcloudPkiCaResponse.Unit)
+    d.Set("email", mcloudPkiCaResponse.Email)
+    d.Set("key_pub", mcloudPkiCaResponse.KeyPub)
+    d.Set("key_priv", mcloudPkiCaResponse.KeyPriv)
 
 	return diags
 }
@@ -256,7 +256,7 @@ func resourceMcloudPkiCaDelete(ctx context.Context, d *schema.ResourceData, m in
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	// 	pk := d.Id()
+// 	pk := d.Id()
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/pki-ca/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)

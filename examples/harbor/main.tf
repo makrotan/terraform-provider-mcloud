@@ -23,10 +23,6 @@ resource "mcloud_server_pool_hcloud" "test" {
   instance_count = 1
 }
 
-#resource "mcloud_pki_ca" "test" {
-#  name = "harbor-test"
-#}
-
 resource "mcloud_harbor" "test" {
   name = "harbor-test"
   sku = "dev"
@@ -43,6 +39,8 @@ Resources successfully installed:
         Access: https://${mcloud_harbor.test.fqdn}/
         Username: admin
         Password: ${mcloud_harbor.test.admin_password}
+        Docker Login CMD: docker login -u admin -p ${mcloud_harbor.test.admin_password} ${mcloud_harbor.test.fqdn}
+        API Usage: curl -u "admin:${mcloud_harbor.test.admin_password}" https://${mcloud_harbor.test.fqdn}/api/v2.0/statistics
 
 EOT
   sensitive = true
