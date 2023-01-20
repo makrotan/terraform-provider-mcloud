@@ -32,7 +32,7 @@ resource "mcloud_mattermost" "test" {
   server_pool_id = mcloud_server_pool_hcloud.test.id
   fqdn           = "mattermost-test.makrotan.com"
   sku            = "dev"
-  version        = "7.1"
+  version        = "7.7"
 }
 
 output "out" {
