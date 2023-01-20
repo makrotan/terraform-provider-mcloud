@@ -29,7 +29,7 @@ resource "mcloud_k3s_cluster" "test" {
   sku = "dev"
   master_server_pool_id = mcloud_server_pool_hcloud.test.id
   version = "v1.23.1+k3s2"
-  firewall_whitelist_ipv4 = "109.109.6.152,92.79.101.164"
+  firewall_whitelist_ipv4 = var.firewall_whitelist_ipv4
 }
 
 resource "local_file" "test" {
