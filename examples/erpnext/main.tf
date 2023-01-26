@@ -18,29 +18,33 @@ provider "mcloud" {
 }
 
 resource "mcloud_server_pool_hcloud" "test" {
-  name = "mattermost-test"
+  name = "erpnext-test"
   instance_type = "cpx11"
   instance_count = 1
 }
 
 resource "mcloud_pki_ca" "test" {
-  name = "mattermost-test"
+  name = "erpnext-test"
 }
 
-resource "mcloud_mattermost" "test" {
+resource "mcloud_erpnext" "test" {
   name           = "test"
   server_pool_id = mcloud_server_pool_hcloud.test.id
-  fqdn           = "mattermost-test.makrotan.com"
+  fqdn           = "erpnext-test.makrotan.com"
   sku            = "dev"
-  version        = "7.7"
+  version = "14.13.0"
+#  version        = "14.12.1"
 }
+
 
 output "out" {
   value = <<EOT
 Resources successfully installed:
 
-    Mattermost
-        Access: https://${mcloud_mattermost.test.fqdn}
+    ErpNext
+        Access: https://${mcloud_erpnext.test.fqdn}
+        Username: administrator
+        Password: ${mcloud_erpnext.test.admin_password}
 
 EOT
   sensitive = true

@@ -216,6 +216,78 @@ resources:
         sensitive: true
 
 
+  mcloud_nomad_cluster:
+    primary_key: name
+    description: Nomad Cluster.
+    url:
+      template: /api/v1/nomad-cluster/%s
+      args: ["fields.name"]
+    fields:
+      name:
+        type: string
+      master_server_pool_id:
+        type: string
+        force_new: true
+      encryption_key:
+        type: string
+        computed: true
+        sensitive: true
+      status:
+        type: string
+        default: running
+        required: false
+      version:
+        type: string
+      access_key_primary:
+        type: string
+        computed: true
+        sensitive: true
+      access_key_secondary:
+        type: string
+        computed: true
+        sensitive: true
+      firewall_whitelist_ipv4:
+        type: string
+        default: ""
+      pki_ca_id:
+        type: string
+        force_new: True
+      consul_cluster_id:
+        type: string
+        force_new: true
+      # ro
+      master_domain:
+        type: string
+        computed: true
+      ui_basic_auth_user:
+        type: string
+        computed: true
+        sensitive: true
+      ui_basic_auth_password:
+        type: string
+        computed: true
+        sensitive: true
+
+  mcloud_nomad_server_pool:
+    primary_key: name
+    description: Nomad Server Pool.
+    url:
+      template: /api/v1/nomad-server-pool/%s
+      args: ["fields.name"]
+    fields:
+      name:
+        type: string
+      nomad_cluster_id:
+        type: string
+        force_new: true
+      server_pool_id:
+        type: string
+        force_new: true
+      status:
+        type: string
+        default: running
+        required: false
+
   mcloud_pki_ca:
     primary_key: name
     description: PKI Certificate Authority.

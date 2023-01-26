@@ -4,5 +4,7 @@
 terraform.tfstate
 terraform.tfstate.backup
 
+*.bak
+
 /go.sum
 /terraform-provider-mcloud

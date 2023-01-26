@@ -33,6 +33,8 @@ func Provider() *schema.Provider {
 			"mcloud_harbor":        resourceMcloudHarbor(),
 			"mcloud_mattermost":        resourceMcloudMattermost(),
 			"mcloud_k3s_cluster":        resourceMcloudK3sCluster(),
+			"mcloud_nomad_cluster":        resourceMcloudNomadCluster(),
+			"mcloud_nomad_server_pool":        resourceMcloudNomadServerPool(),
 			"mcloud_pki_ca":        resourceMcloudPkiCa(),
 			"mcloud_ssh_key":        resourceMcloudSshKey(),
 			"mcloud_server_pool_dedicated":        resourceMcloudServerPoolDedicated(),
