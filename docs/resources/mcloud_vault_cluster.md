@@ -1,13 +1,13 @@
 ---
-page_title: "mcloud_nomad_cluster Resource - terraform-provider-mcloud"
+page_title: "mcloud_vault_cluster Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  Nomad Cluster.
+  Vault Cluster.
 ---
 
-# Resource `mcloud_nomad_cluster`
+# Resource `mcloud_vault_cluster`
 
-Nomad Cluster.
+Vault Cluster.
 
 
 
@@ -21,18 +21,13 @@ The following arguments are supported:
 - `version` - (Required) [string]  
 - `firewall_whitelist_ipv4` - (Required) [string]  
 - `pki_ca_id` - (Required) [string]  
-- `consul_cluster_id` - (Required) [string]  
 
 ## Attributes Reference
 
 In addition to all the arguments above, the following attributes are exported:
 
-- `encryption_key` - [string] 
 - `access_key_primary` - [string] 
 - `access_key_secondary` - [string] 
 - `master_domain` - [string] 
 - `ui_basic_auth_user` - [string] 
 - `ui_basic_auth_password` - [string] 
-- `admin_ca` - [string] 
-- `admin_cert` - [string] 
-- `admin_key` - [string] 

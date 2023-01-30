@@ -40,6 +40,7 @@ func Provider() *schema.Provider {
 			"mcloud_server_pool_dedicated":        resourceMcloudServerPoolDedicated(),
 			"mcloud_server_pool_hcloud":        resourceMcloudServerPoolHcloud(),
 			"mcloud_server_dedicated":        resourceMcloudServerDedicated(),
+			"mcloud_vault_cluster":        resourceMcloudVaultCluster(),
 		},
 		DataSourcesMap:       map[string]*schema.Resource{},
 		ConfigureContextFunc: providerConfigure,
