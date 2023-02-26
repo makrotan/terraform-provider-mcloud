@@ -31,3 +31,4 @@ In addition to all the arguments above, the following attributes are exported:
 - `master_domain` - [string] 
 - `ui_basic_auth_user` - [string] 
 - `ui_basic_auth_password` - [string] 
+- `root_token` - [string] 

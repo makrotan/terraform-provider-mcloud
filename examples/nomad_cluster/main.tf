@@ -20,7 +20,7 @@ provider "mcloud" {
 resource "mcloud_server_pool_hcloud" "test" {
   name = "nomad-test"
   instance_type = "cpx11"
-  instance_count = 1
+  instance_count = 2
 }
 
 resource "mcloud_server_pool_hcloud" "client_a" {
@@ -56,6 +56,7 @@ resource "mcloud_nomad_cluster" "test" {
   master_server_pool_id = mcloud_server_pool_hcloud.test.id
   pki_ca_id = mcloud_pki_ca.test.id
   firewall_whitelist_ipv4 = var.firewall_whitelist_ipv4
+  vault_cluster_id = mcloud_vault_cluster.test.id
 }
 
 resource "mcloud_nomad_server_pool" "client_a" {
@@ -71,39 +72,53 @@ provider "nomad" {
   ca_pem = "${mcloud_nomad_cluster.test.admin_ca}"
   cert_pem = "${mcloud_nomad_cluster.test.admin_cert}"
   key_pem = "${mcloud_nomad_cluster.test.admin_key}"
-
 }
 
-resource "nomad_job" "app" {
-  jobspec = <<EOT
-job "docs" {
-  datacenters = ["dc1"]
-
-  group "example" {
-    network {
-      port "http" {
-        static = "5678"
-      }
-    }
-    task "server" {
-      driver = "docker"
-
-      config {
-        image = "hashicorp/http-echo"
-        ports = ["http"]
-        args = [
-          "-listen",
-          ":5678",
-          "-text",
-          "hello world",
-        ]
-      }
-    }
-  }
-}
-
-EOT
-}
+#resource "nomad_job" "app" {
+#  jobspec = <<EOT
+#job "docs" {
+#  datacenters = ["dc1"]
+#
+#  group "example" {
+#    vault {
+#      policies  = ["fooo"]
+#    }
+#
+#    network {
+#      port "http" {
+#        to = "80"
+##        static = "8080"
+#      }
+#    }
+#    task "server" {
+#      driver = "docker"
+#
+#      config {
+#        image = "nginx"
+#        ports = ["http"]
+#        volumes = ["html:/usr/share/nginx/html"]
+##        args = [
+##          "-listen",
+##          ":5678",
+##          "-text",
+##          "hello world",
+##        ]
+#      }
+#
+#      template {
+#        data   = <<EOF
+#my secret: "{{ with secret "kv/foo" }}{{ .Data.data.bar }}{{ end }}"
+#EOF
+##        destination = "$${NOMAD_TASK_DIR}/usr/share/nginx/html/index.html"
+#        destination = "html/index.html"
+#
+#      }
+#    }
+#  }
+#}
+#
+#EOT
+#}
 
 output "out" {
   value = <<EOT
@@ -118,6 +133,7 @@ Resources successfully installed:
         Access: https://${mcloud_vault_cluster.test.ui_basic_auth_user}:${mcloud_vault_cluster.test.ui_basic_auth_password}@${mcloud_vault_cluster.test.master_domain}/ui/
         User: ${mcloud_vault_cluster.test.ui_basic_auth_user}
         Password: ${mcloud_vault_cluster.test.ui_basic_auth_password}
+        Root-Token: ${mcloud_vault_cluster.test.root_token}
 
     Nomad
         Access: https://${mcloud_nomad_cluster.test.ui_basic_auth_user}:${mcloud_nomad_cluster.test.ui_basic_auth_password}@${mcloud_nomad_cluster.test.master_domain}/ui/

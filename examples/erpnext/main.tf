@@ -49,3 +49,4 @@ Resources successfully installed:
 EOT
   sensitive = true
 }
+

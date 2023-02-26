@@ -41,6 +41,7 @@ func Provider() *schema.Provider {
 			"mcloud_server_pool_hcloud":        resourceMcloudServerPoolHcloud(),
 			"mcloud_server_dedicated":        resourceMcloudServerDedicated(),
 			"mcloud_vault_cluster":        resourceMcloudVaultCluster(),
+			"mcloud_yugabytedb":        resourceMcloudYugabytedb(),
 		},
 		DataSourcesMap:       map[string]*schema.Resource{},
 		ConfigureContextFunc: providerConfigure,

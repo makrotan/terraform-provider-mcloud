@@ -25,6 +25,7 @@ type McloudVaultCluster struct {
     MasterDomain string `json:"master_domain,omitempty"`
     UiBasicAuthUser string `json:"ui_basic_auth_user,omitempty"`
     UiBasicAuthPassword string `json:"ui_basic_auth_password,omitempty"`
+    RootToken string `json:"root_token,omitempty"`
 }
 
 type McloudVaultClusterResponse struct {
@@ -39,6 +40,7 @@ type McloudVaultClusterResponse struct {
     MasterDomain string `json:"master_domain"`
     UiBasicAuthUser string `json:"ui_basic_auth_user"`
     UiBasicAuthPassword string `json:"ui_basic_auth_password"`
+    RootToken string `json:"root_token"`
 }
 
 func resourceMcloudVaultCluster() *schema.Resource {
@@ -108,6 +110,11 @@ func resourceMcloudVaultCluster() *schema.Resource {
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"ui_basic_auth_password": &schema.Schema{
+                Type:     schema.TypeString,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
+			},
+			"root_token": &schema.Schema{
                 Type:     schema.TypeString,
                 Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
@@ -185,6 +192,7 @@ func resourceMcloudVaultClusterCreate(ctx context.Context, d *schema.ResourceDat
     d.Set("master_domain", mcloudVaultClusterResponse.MasterDomain)
     d.Set("ui_basic_auth_user", mcloudVaultClusterResponse.UiBasicAuthUser)
     d.Set("ui_basic_auth_password", mcloudVaultClusterResponse.UiBasicAuthPassword)
+    d.Set("root_token", mcloudVaultClusterResponse.RootToken)
 
 	return diags
 }
@@ -239,6 +247,7 @@ func resourceMcloudVaultClusterRead(ctx context.Context, d *schema.ResourceData,
     d.Set("master_domain", mcloudVaultClusterResponse.MasterDomain)
     d.Set("ui_basic_auth_user", mcloudVaultClusterResponse.UiBasicAuthUser)
     d.Set("ui_basic_auth_password", mcloudVaultClusterResponse.UiBasicAuthPassword)
+    d.Set("root_token", mcloudVaultClusterResponse.RootToken)
 
 	return diags
 }

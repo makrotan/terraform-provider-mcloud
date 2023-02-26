@@ -255,6 +255,8 @@ resources:
       consul_cluster_id:
         type: string
         force_new: true
+      vault_cluster_id:
+        type: string
       # ro
       master_domain:
         type: string
@@ -470,6 +472,10 @@ resources:
         type: string
         computed: true
         sensitive: true
+      root_token:
+        type: string
+        computed: true
+        sensitive: true
 #      admin_ca:
 #        type: string
 #        computed: true
@@ -479,6 +485,43 @@ resources:
 #        computed: true
 #        sensitive: true
 #      admin_key:
+#        type: string
+#        computed: true
+#        sensitive: true
+
+
+  mcloud_yugabytedb:
+    primary_key: name
+    description: YugabyteDB Instance.
+    url:
+      template: /api/v1/yugabytedb/%s
+      args: ["fields.name"]
+    fields:
+      name:
+        type: string
+      version:
+        type: string
+      pki_ca_id:
+        type: string
+        force_new: True
+      server_pool_id:
+        type: string
+        force_new: True
+      status:
+        type: string
+        default: running
+        required: false
+      firewall_whitelist_ipv4:
+        type: string
+        required: false
+      master_domain:
+        type: string
+        computed: true
+#      ui_basic_auth_user:
+#        type: string
+#        computed: true
+#        sensitive: true
+#      ui_basic_auth_password:
 #        type: string
 #        computed: true
 #        sensitive: true

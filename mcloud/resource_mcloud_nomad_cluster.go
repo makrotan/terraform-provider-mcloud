@@ -24,6 +24,7 @@ type McloudNomadCluster struct {
     FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
     PkiCaId string `json:"pki_ca_id"`
     ConsulClusterId string `json:"consul_cluster_id"`
+    VaultClusterId string `json:"vault_cluster_id"`
     MasterDomain string `json:"master_domain,omitempty"`
     UiBasicAuthUser string `json:"ui_basic_auth_user,omitempty"`
     UiBasicAuthPassword string `json:"ui_basic_auth_password,omitempty"`
@@ -43,6 +44,7 @@ type McloudNomadClusterResponse struct {
     FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
     PkiCaId string `json:"pki_ca_id"`
     ConsulClusterId string `json:"consul_cluster_id"`
+    VaultClusterId string `json:"vault_cluster_id"`
     MasterDomain string `json:"master_domain"`
     UiBasicAuthUser string `json:"ui_basic_auth_user"`
     UiBasicAuthPassword string `json:"ui_basic_auth_password"`
@@ -120,6 +122,13 @@ func resourceMcloudNomadCluster() *schema.Resource {
 				Computed: false,
 				ForceNew: true,
 			},
+			"vault_cluster_id": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
+			},
 			"master_domain": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
@@ -171,6 +180,7 @@ func resourceMcloudNomadClusterCreate(ctx context.Context, d *schema.ResourceDat
         FirewallWhitelistIpv4: d.Get("firewall_whitelist_ipv4").(string),
         PkiCaId: d.Get("pki_ca_id").(string),
         ConsulClusterId: d.Get("consul_cluster_id").(string),
+        VaultClusterId: d.Get("vault_cluster_id").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -222,6 +232,7 @@ func resourceMcloudNomadClusterCreate(ctx context.Context, d *schema.ResourceDat
     d.Set("firewall_whitelist_ipv4", mcloudNomadClusterResponse.FirewallWhitelistIpv4)
     d.Set("pki_ca_id", mcloudNomadClusterResponse.PkiCaId)
     d.Set("consul_cluster_id", mcloudNomadClusterResponse.ConsulClusterId)
+    d.Set("vault_cluster_id", mcloudNomadClusterResponse.VaultClusterId)
     d.Set("master_domain", mcloudNomadClusterResponse.MasterDomain)
     d.Set("ui_basic_auth_user", mcloudNomadClusterResponse.UiBasicAuthUser)
     d.Set("ui_basic_auth_password", mcloudNomadClusterResponse.UiBasicAuthPassword)
@@ -281,6 +292,7 @@ func resourceMcloudNomadClusterRead(ctx context.Context, d *schema.ResourceData,
     d.Set("firewall_whitelist_ipv4", mcloudNomadClusterResponse.FirewallWhitelistIpv4)
     d.Set("pki_ca_id", mcloudNomadClusterResponse.PkiCaId)
     d.Set("consul_cluster_id", mcloudNomadClusterResponse.ConsulClusterId)
+    d.Set("vault_cluster_id", mcloudNomadClusterResponse.VaultClusterId)
     d.Set("master_domain", mcloudNomadClusterResponse.MasterDomain)
     d.Set("ui_basic_auth_user", mcloudNomadClusterResponse.UiBasicAuthUser)
     d.Set("ui_basic_auth_password", mcloudNomadClusterResponse.UiBasicAuthPassword)

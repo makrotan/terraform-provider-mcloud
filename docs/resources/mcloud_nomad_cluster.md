@@ -22,6 +22,7 @@ The following arguments are supported:
 - `firewall_whitelist_ipv4` - (Required) [string]  
 - `pki_ca_id` - (Required) [string]  
 - `consul_cluster_id` - (Required) [string]  
+- `vault_cluster_id` - (Required) [string]  
 
 ## Attributes Reference
 
