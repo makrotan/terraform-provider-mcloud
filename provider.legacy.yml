@@ -132,6 +132,32 @@ resources:
         computed: true
 
 
+  mcloud_grafana:
+    primary_key: name
+    description: ERPNext Instance.
+    url:
+      template: /api/v1/grafana/%s
+      args: [ "fields.name" ]
+    fields:
+      name:
+        type: string
+      fqdn:
+        type: string
+      version:
+        type: string
+      server_pool_id:
+        type: string
+        force_new: True
+      admin_password:
+        type: string
+        computed: true
+        sensitive: true
+      status:
+        type: string
+        default: running
+        required: false
+
+
   mcloud_harbor:
     primary_key: name
     description: Harbor Instance.
