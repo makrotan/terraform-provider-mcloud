@@ -16,8 +16,8 @@ SSH Key.
 The following arguments are supported:
 
 - `name` - (Required) [string]  
-- `public_key` - (Required) [string] public key as givin in an authorized_hosts file, `ssh-rsa AAAAB3Nz...PCmXzzFLKoC0Agvc= hostname` 
 - `private_key` - (Required) [string] private key in pem format: `-----BEGIN OPENSSH PRIVATE KEY-----\nb3Bl...cgECAw==\n-----END OPENSSH PRIVATE KEY-----\n` 
+- `public_key` - (Required) [string] public key as givin in an authorized_hosts file, `ssh-rsa AAAAB3Nz...PCmXzzFLKoC0Agvc= hostname` 
 
 ## Attributes Reference
 

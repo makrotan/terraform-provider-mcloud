@@ -14,21 +14,21 @@ import (
 )
 
 type McloudGrafana struct {
-    Name string `json:"name"`
-    Fqdn string `json:"fqdn"`
-    Version string `json:"version"`
-    ServerPoolId string `json:"server_pool_id"`
     AdminPassword string `json:"admin_password,omitempty"`
+    Fqdn string `json:"fqdn"`
+    Name string `json:"name"`
+    ServerPoolId string `json:"server_pool_id"`
     Status string `json:"status"`
+    Version string `json:"version"`
 }
 
 type McloudGrafanaResponse struct {
-    Name string `json:"name"`
-    Fqdn string `json:"fqdn"`
-    Version string `json:"version"`
-    ServerPoolId string `json:"server_pool_id"`
     AdminPassword string `json:"admin_password"`
+    Fqdn string `json:"fqdn"`
+    Name string `json:"name"`
+    ServerPoolId string `json:"server_pool_id"`
     Status string `json:"status"`
+    Version string `json:"version"`
 }
 
 func resourceMcloudGrafana() *schema.Resource {
@@ -38,9 +38,10 @@ func resourceMcloudGrafana() *schema.Resource {
 		UpdateContext: resourceMcloudGrafanaUpdate,
 		DeleteContext: resourceMcloudGrafanaDelete,
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"admin_password": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true, Computed: false, Optional: false, ForceNew: true,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"fqdn": &schema.Schema{
                 Type:     schema.TypeString,
@@ -49,30 +50,29 @@ func resourceMcloudGrafana() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"version": &schema.Schema{
+			"name": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
+                Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
 			"server_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
+				Optional: true,
+				Required: false,
 				Computed: false,
 				ForceNew: true,
-			},
-			"admin_password": &schema.Schema{
-                Type:     schema.TypeString,
-                Sensitive: true,
-                Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"status": &schema.Schema{
                 Type:     schema.TypeString,
                 Default: "running",
 				Optional: true,
 				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
+			"version": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: false,
+				Required: true,
 				Computed: false,
 				ForceNew: false,
 			},
@@ -91,11 +91,11 @@ func resourceMcloudGrafanaCreate(ctx context.Context, d *schema.ResourceData, m 
 
 	pk := d.Get("name").(string)
 	instance := McloudGrafana{
-        Name: d.Get("name").(string),
         Fqdn: d.Get("fqdn").(string),
-        Version: d.Get("version").(string),
+        Name: d.Get("name").(string),
         ServerPoolId: d.Get("server_pool_id").(string),
         Status: d.Get("status").(string),
+        Version: d.Get("version").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -137,12 +137,12 @@ func resourceMcloudGrafanaCreate(ctx context.Context, d *schema.ResourceData, m 
 	}
 
 	d.SetId(pk)
-    d.Set("name", mcloudGrafanaResponse.Name)
-    d.Set("fqdn", mcloudGrafanaResponse.Fqdn)
-    d.Set("version", mcloudGrafanaResponse.Version)
-    d.Set("server_pool_id", mcloudGrafanaResponse.ServerPoolId)
     d.Set("admin_password", mcloudGrafanaResponse.AdminPassword)
+    d.Set("fqdn", mcloudGrafanaResponse.Fqdn)
+    d.Set("name", mcloudGrafanaResponse.Name)
+    d.Set("server_pool_id", mcloudGrafanaResponse.ServerPoolId)
     d.Set("status", mcloudGrafanaResponse.Status)
+    d.Set("version", mcloudGrafanaResponse.Version)
 
 	return diags
 }
@@ -186,12 +186,12 @@ func resourceMcloudGrafanaRead(ctx context.Context, d *schema.ResourceData, m in
 	if err != nil {
 		return diag.FromErr(err)
 	}
-    d.Set("name", mcloudGrafanaResponse.Name)
-    d.Set("fqdn", mcloudGrafanaResponse.Fqdn)
-    d.Set("version", mcloudGrafanaResponse.Version)
-    d.Set("server_pool_id", mcloudGrafanaResponse.ServerPoolId)
     d.Set("admin_password", mcloudGrafanaResponse.AdminPassword)
+    d.Set("fqdn", mcloudGrafanaResponse.Fqdn)
+    d.Set("name", mcloudGrafanaResponse.Name)
+    d.Set("server_pool_id", mcloudGrafanaResponse.ServerPoolId)
     d.Set("status", mcloudGrafanaResponse.Status)
+    d.Set("version", mcloudGrafanaResponse.Version)
 
 	return diags
 }

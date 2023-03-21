@@ -31,6 +31,26 @@ resource "mcloud_grafana" "test" {
   version = "9.3.6"
 }
 
+resource "mcloud_pki_ca" "test" {
+  name = "mimir-test"
+}
+
+resource "mcloud_grafana_mimir" "test" {
+  name = "mimir-test"
+  fqdn = "mimir-test.makrotan.com"
+  server_pool_id = mcloud_server_pool_hcloud.test.id
+  pki_ca_id = mcloud_pki_ca.test.id
+  version = "2.6.0"
+}
+
+resource "mcloud_grafana_loki" "test" {
+  name = "loki-test"
+  fqdn = "loki-test.makrotan.com"
+  server_pool_id = mcloud_server_pool_hcloud.test.id
+  pki_ca_id = mcloud_pki_ca.test.id
+  version = "2.7.4"
+}
+
 output "out" {
   value = <<EOT
 Resources successfully installed:
@@ -39,6 +59,17 @@ Resources successfully installed:
         Access: https://${mcloud_grafana.test.fqdn}/
         User: admin
         Password: ${mcloud_grafana.test.admin_password}
+
+    Mimir:
+        Access: https://${mcloud_grafana_mimir.test.fqdn}/
+        Prometheus Remote Write URL: https://${mcloud_grafana_mimir.test.fqdn}/api/v1/push
+        User: ${mcloud_grafana_mimir.test.basic_auth_user}
+        Password: ${mcloud_grafana_mimir.test.basic_auth_password}
+
+    Loki:
+        Access: https://${mcloud_grafana_loki.test.fqdn}/
+        User: ${mcloud_grafana_loki.test.basic_auth_user}
+        Password: ${mcloud_grafana_loki.test.basic_auth_password}
 
 EOT
   sensitive = true

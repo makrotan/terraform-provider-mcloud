@@ -14,23 +14,23 @@ import (
 )
 
 type McloudServerDedicated struct {
+    Az string `json:"az"`
+    Ipv4 string `json:"ipv4"`
     Name string `json:"name"`
     PoolName string `json:"pool_name"`
-    Ipv4 string `json:"ipv4"`
+    Region string `json:"region"`
     Provider string `json:"provider"`
     ProviderRef string `json:"provider_ref"`
-    Region string `json:"region"`
-    Az string `json:"az"`
 }
 
 type McloudServerDedicatedResponse struct {
+    Az string `json:"az"`
+    Ipv4 string `json:"ipv4"`
     Name string `json:"name"`
     PoolName string `json:"pool_name"`
-    Ipv4 string `json:"ipv4"`
+    Region string `json:"region"`
     Provider string `json:"provider"`
     ProviderRef string `json:"provider_ref"`
-    Region string `json:"region"`
-    Az string `json:"az"`
 }
 
 func resourceMcloudServerDedicated() *schema.Resource {
@@ -40,6 +40,20 @@ func resourceMcloudServerDedicated() *schema.Resource {
 		UpdateContext: resourceMcloudServerDedicatedUpdate,
 		DeleteContext: resourceMcloudServerDedicatedDelete,
 		Schema: map[string]*schema.Schema{
+			"az": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
+			},
+			"ipv4": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
+			},
 			"name": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true, Computed: false, Optional: false, ForceNew: true,
@@ -51,7 +65,7 @@ func resourceMcloudServerDedicated() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"ipv4": &schema.Schema{
+			"region": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
@@ -72,20 +86,6 @@ func resourceMcloudServerDedicated() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"region": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
-			},
-			"az": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
-			},
 		},
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -101,13 +101,13 @@ func resourceMcloudServerDedicatedCreate(ctx context.Context, d *schema.Resource
 
 	pk := d.Get("name").(string)
 	instance := McloudServerDedicated{
+        Az: d.Get("az").(string),
+        Ipv4: d.Get("ipv4").(string),
         Name: d.Get("name").(string),
         PoolName: d.Get("pool_name").(string),
-        Ipv4: d.Get("ipv4").(string),
+        Region: d.Get("region").(string),
         Provider: d.Get("server_provider").(string),
         ProviderRef: d.Get("server_provider_ref").(string),
-        Region: d.Get("region").(string),
-        Az: d.Get("az").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -149,13 +149,13 @@ func resourceMcloudServerDedicatedCreate(ctx context.Context, d *schema.Resource
 	}
 
 	d.SetId(pk)
+    d.Set("az", mcloudServerDedicatedResponse.Az)
+    d.Set("ipv4", mcloudServerDedicatedResponse.Ipv4)
     d.Set("name", mcloudServerDedicatedResponse.Name)
     d.Set("pool_name", mcloudServerDedicatedResponse.PoolName)
-    d.Set("ipv4", mcloudServerDedicatedResponse.Ipv4)
+    d.Set("region", mcloudServerDedicatedResponse.Region)
     d.Set("server_provider", mcloudServerDedicatedResponse.Provider)
     d.Set("server_provider_ref", mcloudServerDedicatedResponse.ProviderRef)
-    d.Set("region", mcloudServerDedicatedResponse.Region)
-    d.Set("az", mcloudServerDedicatedResponse.Az)
 
 	return diags
 }
@@ -199,13 +199,13 @@ func resourceMcloudServerDedicatedRead(ctx context.Context, d *schema.ResourceDa
 	if err != nil {
 		return diag.FromErr(err)
 	}
+    d.Set("az", mcloudServerDedicatedResponse.Az)
+    d.Set("ipv4", mcloudServerDedicatedResponse.Ipv4)
     d.Set("name", mcloudServerDedicatedResponse.Name)
     d.Set("pool_name", mcloudServerDedicatedResponse.PoolName)
-    d.Set("ipv4", mcloudServerDedicatedResponse.Ipv4)
+    d.Set("region", mcloudServerDedicatedResponse.Region)
     d.Set("server_provider", mcloudServerDedicatedResponse.Provider)
     d.Set("server_provider_ref", mcloudServerDedicatedResponse.ProviderRef)
-    d.Set("region", mcloudServerDedicatedResponse.Region)
-    d.Set("az", mcloudServerDedicatedResponse.Az)
 
 	return diags
 }

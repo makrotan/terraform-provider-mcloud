@@ -2,12 +2,12 @@
 page_title: "mcloud_grafana Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  ERPNext Instance.
+  Grafana(backup_ref, name, created, server_pool, admin_password, fqdn, app_port, status, version)
 ---
 
 # Resource `mcloud_grafana`
 
-ERPNext Instance.
+Grafana(backup_ref, name, created, server_pool, admin_password, fqdn, app_port, status, version)
 
 
 
@@ -15,11 +15,11 @@ ERPNext Instance.
 
 The following arguments are supported:
 
-- `name` - (Required) [string]  
 - `fqdn` - (Required) [string]  
-- `version` - (Required) [string]  
-- `server_pool_id` - (Required) [string]  
+- `name` - (Required) [string]  
+- `server_pool_id` - [string]  
 - `status` - [string]   (default: `running`)
+- `version` - (Required) [string] Possible values: `9.3.6` 
 
 ## Attributes Reference
 

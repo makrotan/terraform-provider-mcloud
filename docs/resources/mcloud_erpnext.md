@@ -2,12 +2,12 @@
 page_title: "mcloud_erpnext Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  ERPNext Instance.
+  Erpnext(name, status, backup_ref, sku, fqdn, admin_password, created, version, app_port, server_pool)
 ---
 
 # Resource `mcloud_erpnext`
 
-ERPNext Instance.
+Erpnext(name, status, backup_ref, sku, fqdn, admin_password, created, version, app_port, server_pool)
 
 
 
@@ -15,12 +15,12 @@ ERPNext Instance.
 
 The following arguments are supported:
 
-- `name` - (Required) [string]  
 - `fqdn` - (Required) [string]  
-- `sku` - (Required) [string]  
-- `version` - (Required) [string]  
-- `server_pool_id` - (Required) [string]  
+- `name` - (Required) [string]  
+- `server_pool_id` - [string]  
+- `sku` - (Required) [string] Possible values: `dev` 
 - `status` - [string]   (default: `running`)
+- `version` - (Required) [string] Possible values: `14.13.0`, `14.18.1` 
 
 ## Attributes Reference
 

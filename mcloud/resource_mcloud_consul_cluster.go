@@ -17,30 +17,30 @@ type McloudConsulCluster struct {
     AccessKeyPrimary string `json:"access_key_primary,omitempty"`
     AccessKeySecondary string `json:"access_key_secondary,omitempty"`
     EncryptionKey string `json:"encryption_key,omitempty"`
+    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
+    MasterDomain string `json:"master_domain,omitempty"`
     MasterServerPoolId string `json:"master_server_pool_id"`
     Name string `json:"name"`
-    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
     PkiCaId string `json:"pki_ca_id"`
     Status string `json:"status"`
-    Version string `json:"version"`
-    MasterDomain string `json:"master_domain,omitempty"`
-    UiBasicAuthUser string `json:"ui_basic_auth_user,omitempty"`
     UiBasicAuthPassword string `json:"ui_basic_auth_password,omitempty"`
+    UiBasicAuthUser string `json:"ui_basic_auth_user,omitempty"`
+    Version string `json:"version"`
 }
 
 type McloudConsulClusterResponse struct {
     AccessKeyPrimary string `json:"access_key_primary"`
     AccessKeySecondary string `json:"access_key_secondary"`
     EncryptionKey string `json:"encryption_key"`
+    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
+    MasterDomain string `json:"master_domain"`
     MasterServerPoolId string `json:"master_server_pool_id"`
     Name string `json:"name"`
-    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
     PkiCaId string `json:"pki_ca_id"`
     Status string `json:"status"`
-    Version string `json:"version"`
-    MasterDomain string `json:"master_domain"`
-    UiBasicAuthUser string `json:"ui_basic_auth_user"`
     UiBasicAuthPassword string `json:"ui_basic_auth_password"`
+    UiBasicAuthUser string `json:"ui_basic_auth_user"`
+    Version string `json:"version"`
 }
 
 func resourceMcloudConsulCluster() *schema.Resource {
@@ -65,6 +65,17 @@ func resourceMcloudConsulCluster() *schema.Resource {
                 Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
+			"firewall_whitelist_ipv4": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
+			},
+			"master_domain": &schema.Schema{
+                Type:     schema.TypeString,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
+			},
 			"master_server_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: false,
@@ -75,13 +86,6 @@ func resourceMcloudConsulCluster() *schema.Resource {
 			"name": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true, Computed: false, Optional: false, ForceNew: true,
-			},
-			"firewall_whitelist_ipv4": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
 			},
 			"pki_ca_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -98,15 +102,9 @@ func resourceMcloudConsulCluster() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"version": &schema.Schema{
+			"ui_basic_auth_password": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
-			},
-			"master_domain": &schema.Schema{
-                Type:     schema.TypeString,
+                Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"ui_basic_auth_user": &schema.Schema{
@@ -114,10 +112,12 @@ func resourceMcloudConsulCluster() *schema.Resource {
                 Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
-			"ui_basic_auth_password": &schema.Schema{
+			"version": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
-                Required: false, Computed: true, Optional: false, ForceNew: false,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
 			},
 		},
 		Importer: &schema.ResourceImporter{
@@ -134,9 +134,9 @@ func resourceMcloudConsulClusterCreate(ctx context.Context, d *schema.ResourceDa
 
 	pk := d.Get("name").(string)
 	instance := McloudConsulCluster{
+        FirewallWhitelistIpv4: d.Get("firewall_whitelist_ipv4").(string),
         MasterServerPoolId: d.Get("master_server_pool_id").(string),
         Name: d.Get("name").(string),
-        FirewallWhitelistIpv4: d.Get("firewall_whitelist_ipv4").(string),
         PkiCaId: d.Get("pki_ca_id").(string),
         Status: d.Get("status").(string),
         Version: d.Get("version").(string),
@@ -184,15 +184,15 @@ func resourceMcloudConsulClusterCreate(ctx context.Context, d *schema.ResourceDa
     d.Set("access_key_primary", mcloudConsulClusterResponse.AccessKeyPrimary)
     d.Set("access_key_secondary", mcloudConsulClusterResponse.AccessKeySecondary)
     d.Set("encryption_key", mcloudConsulClusterResponse.EncryptionKey)
+    d.Set("firewall_whitelist_ipv4", mcloudConsulClusterResponse.FirewallWhitelistIpv4)
+    d.Set("master_domain", mcloudConsulClusterResponse.MasterDomain)
     d.Set("master_server_pool_id", mcloudConsulClusterResponse.MasterServerPoolId)
     d.Set("name", mcloudConsulClusterResponse.Name)
-    d.Set("firewall_whitelist_ipv4", mcloudConsulClusterResponse.FirewallWhitelistIpv4)
     d.Set("pki_ca_id", mcloudConsulClusterResponse.PkiCaId)
     d.Set("status", mcloudConsulClusterResponse.Status)
-    d.Set("version", mcloudConsulClusterResponse.Version)
-    d.Set("master_domain", mcloudConsulClusterResponse.MasterDomain)
-    d.Set("ui_basic_auth_user", mcloudConsulClusterResponse.UiBasicAuthUser)
     d.Set("ui_basic_auth_password", mcloudConsulClusterResponse.UiBasicAuthPassword)
+    d.Set("ui_basic_auth_user", mcloudConsulClusterResponse.UiBasicAuthUser)
+    d.Set("version", mcloudConsulClusterResponse.Version)
 
 	return diags
 }
@@ -239,15 +239,15 @@ func resourceMcloudConsulClusterRead(ctx context.Context, d *schema.ResourceData
     d.Set("access_key_primary", mcloudConsulClusterResponse.AccessKeyPrimary)
     d.Set("access_key_secondary", mcloudConsulClusterResponse.AccessKeySecondary)
     d.Set("encryption_key", mcloudConsulClusterResponse.EncryptionKey)
+    d.Set("firewall_whitelist_ipv4", mcloudConsulClusterResponse.FirewallWhitelistIpv4)
+    d.Set("master_domain", mcloudConsulClusterResponse.MasterDomain)
     d.Set("master_server_pool_id", mcloudConsulClusterResponse.MasterServerPoolId)
     d.Set("name", mcloudConsulClusterResponse.Name)
-    d.Set("firewall_whitelist_ipv4", mcloudConsulClusterResponse.FirewallWhitelistIpv4)
     d.Set("pki_ca_id", mcloudConsulClusterResponse.PkiCaId)
     d.Set("status", mcloudConsulClusterResponse.Status)
-    d.Set("version", mcloudConsulClusterResponse.Version)
-    d.Set("master_domain", mcloudConsulClusterResponse.MasterDomain)
-    d.Set("ui_basic_auth_user", mcloudConsulClusterResponse.UiBasicAuthUser)
     d.Set("ui_basic_auth_password", mcloudConsulClusterResponse.UiBasicAuthPassword)
+    d.Set("ui_basic_auth_user", mcloudConsulClusterResponse.UiBasicAuthUser)
+    d.Set("version", mcloudConsulClusterResponse.Version)
 
 	return diags
 }

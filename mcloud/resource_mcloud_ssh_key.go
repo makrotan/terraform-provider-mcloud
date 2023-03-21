@@ -15,14 +15,14 @@ import (
 
 type McloudSshKey struct {
     Name string `json:"name"`
-    PublicKey string `json:"public_key"`
     PrivateKey string `json:"private_key"`
+    PublicKey string `json:"public_key"`
 }
 
 type McloudSshKeyResponse struct {
     Name string `json:"name"`
-    PublicKey string `json:"public_key"`
     PrivateKey string `json:"private_key"`
+    PublicKey string `json:"public_key"`
 }
 
 func resourceMcloudSshKey() *schema.Resource {
@@ -36,16 +36,16 @@ func resourceMcloudSshKey() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
-			"public_key": &schema.Schema{
+			"private_key": &schema.Schema{
                 Type:     schema.TypeString,
+                Sensitive: true,
 				Optional: false,
 				Required: true,
 				Computed: false,
 				ForceNew: false,
 			},
-			"private_key": &schema.Schema{
+			"public_key": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
 				Optional: false,
 				Required: true,
 				Computed: false,
@@ -67,8 +67,8 @@ func resourceMcloudSshKeyCreate(ctx context.Context, d *schema.ResourceData, m i
 	pk := d.Get("name").(string)
 	instance := McloudSshKey{
         Name: d.Get("name").(string),
-        PublicKey: d.Get("public_key").(string),
         PrivateKey: d.Get("private_key").(string),
+        PublicKey: d.Get("public_key").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -111,8 +111,8 @@ func resourceMcloudSshKeyCreate(ctx context.Context, d *schema.ResourceData, m i
 
 	d.SetId(pk)
     d.Set("name", mcloudSshKeyResponse.Name)
-    d.Set("public_key", mcloudSshKeyResponse.PublicKey)
     d.Set("private_key", mcloudSshKeyResponse.PrivateKey)
+    d.Set("public_key", mcloudSshKeyResponse.PublicKey)
 
 	return diags
 }
@@ -157,8 +157,8 @@ func resourceMcloudSshKeyRead(ctx context.Context, d *schema.ResourceData, m int
 		return diag.FromErr(err)
 	}
     d.Set("name", mcloudSshKeyResponse.Name)
-    d.Set("public_key", mcloudSshKeyResponse.PublicKey)
     d.Set("private_key", mcloudSshKeyResponse.PrivateKey)
+    d.Set("public_key", mcloudSshKeyResponse.PublicKey)
 
 	return diags
 }

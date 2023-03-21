@@ -14,23 +14,23 @@ import (
 )
 
 type McloudHarbor struct {
-    Name string `json:"name"`
-    Fqdn string `json:"fqdn"`
-    Sku string `json:"sku"`
-    Version string `json:"version"`
-    ServerPoolId string `json:"server_pool_id"`
-    Status string `json:"status"`
     AdminPassword string `json:"admin_password,omitempty"`
+    Fqdn string `json:"fqdn"`
+    Name string `json:"name"`
+    ServerPoolId string `json:"server_pool_id"`
+    Sku string `json:"sku"`
+    Status string `json:"status"`
+    Version string `json:"version"`
 }
 
 type McloudHarborResponse struct {
-    Name string `json:"name"`
-    Fqdn string `json:"fqdn"`
-    Sku string `json:"sku"`
-    Version string `json:"version"`
-    ServerPoolId string `json:"server_pool_id"`
-    Status string `json:"status"`
     AdminPassword string `json:"admin_password"`
+    Fqdn string `json:"fqdn"`
+    Name string `json:"name"`
+    ServerPoolId string `json:"server_pool_id"`
+    Sku string `json:"sku"`
+    Status string `json:"status"`
+    Version string `json:"version"`
 }
 
 func resourceMcloudHarbor() *schema.Resource {
@@ -40,9 +40,10 @@ func resourceMcloudHarbor() *schema.Resource {
 		UpdateContext: resourceMcloudHarborUpdate,
 		DeleteContext: resourceMcloudHarborDelete,
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"admin_password": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true, Computed: false, Optional: false, ForceNew: true,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"fqdn": &schema.Schema{
                 Type:     schema.TypeString,
@@ -51,19 +52,9 @@ func resourceMcloudHarbor() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"sku": &schema.Schema{
+			"name": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
-			},
-			"version": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
+                Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
 			"server_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -71,6 +62,13 @@ func resourceMcloudHarbor() *schema.Resource {
 				Required: true,
 				Computed: false,
 				ForceNew: true,
+			},
+			"sku": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
 			},
 			"status": &schema.Schema{
                 Type:     schema.TypeString,
@@ -80,10 +78,12 @@ func resourceMcloudHarbor() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"admin_password": &schema.Schema{
+			"version": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
-                Required: false, Computed: true, Optional: false, ForceNew: false,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
 			},
 		},
 		Importer: &schema.ResourceImporter{
@@ -100,12 +100,12 @@ func resourceMcloudHarborCreate(ctx context.Context, d *schema.ResourceData, m i
 
 	pk := d.Get("name").(string)
 	instance := McloudHarbor{
-        Name: d.Get("name").(string),
         Fqdn: d.Get("fqdn").(string),
-        Sku: d.Get("sku").(string),
-        Version: d.Get("version").(string),
+        Name: d.Get("name").(string),
         ServerPoolId: d.Get("server_pool_id").(string),
+        Sku: d.Get("sku").(string),
         Status: d.Get("status").(string),
+        Version: d.Get("version").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -147,13 +147,13 @@ func resourceMcloudHarborCreate(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	d.SetId(pk)
-    d.Set("name", mcloudHarborResponse.Name)
-    d.Set("fqdn", mcloudHarborResponse.Fqdn)
-    d.Set("sku", mcloudHarborResponse.Sku)
-    d.Set("version", mcloudHarborResponse.Version)
-    d.Set("server_pool_id", mcloudHarborResponse.ServerPoolId)
-    d.Set("status", mcloudHarborResponse.Status)
     d.Set("admin_password", mcloudHarborResponse.AdminPassword)
+    d.Set("fqdn", mcloudHarborResponse.Fqdn)
+    d.Set("name", mcloudHarborResponse.Name)
+    d.Set("server_pool_id", mcloudHarborResponse.ServerPoolId)
+    d.Set("sku", mcloudHarborResponse.Sku)
+    d.Set("status", mcloudHarborResponse.Status)
+    d.Set("version", mcloudHarborResponse.Version)
 
 	return diags
 }
@@ -197,13 +197,13 @@ func resourceMcloudHarborRead(ctx context.Context, d *schema.ResourceData, m int
 	if err != nil {
 		return diag.FromErr(err)
 	}
-    d.Set("name", mcloudHarborResponse.Name)
-    d.Set("fqdn", mcloudHarborResponse.Fqdn)
-    d.Set("sku", mcloudHarborResponse.Sku)
-    d.Set("version", mcloudHarborResponse.Version)
-    d.Set("server_pool_id", mcloudHarborResponse.ServerPoolId)
-    d.Set("status", mcloudHarborResponse.Status)
     d.Set("admin_password", mcloudHarborResponse.AdminPassword)
+    d.Set("fqdn", mcloudHarborResponse.Fqdn)
+    d.Set("name", mcloudHarborResponse.Name)
+    d.Set("server_pool_id", mcloudHarborResponse.ServerPoolId)
+    d.Set("sku", mcloudHarborResponse.Sku)
+    d.Set("status", mcloudHarborResponse.Status)
+    d.Set("version", mcloudHarborResponse.Version)
 
 	return diags
 }

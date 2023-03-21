@@ -15,12 +15,12 @@ K3s Kubernetes Cluster.
 
 The following arguments are supported:
 
-- `name` - (Required) [string]  
-- `sku` - (Required) [string]  
-- `version` - (Required) [string]  
 - `firewall_whitelist_ipv4` - [string]  
 - `master_server_pool_id` - (Required) [string]  
+- `name` - (Required) [string]  
+- `sku` - (Required) [string]  
 - `status` - [string]   (default: `running`)
+- `version` - (Required) [string]  
 
 ## Attributes Reference
 

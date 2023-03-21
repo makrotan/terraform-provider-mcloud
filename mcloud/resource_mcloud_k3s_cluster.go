@@ -14,25 +14,25 @@ import (
 )
 
 type McloudK3sCluster struct {
+    AccessKeyPrimary string `json:"access_key_primary,omitempty"`
+    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
+    K3sConfigYaml string `json:"k3s_config_yaml,omitempty"`
+    MasterServerPoolId string `json:"master_server_pool_id"`
     Name string `json:"name"`
     Sku string `json:"sku"`
-    Version string `json:"version"`
-    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
-    MasterServerPoolId string `json:"master_server_pool_id"`
     Status string `json:"status"`
-    AccessKeyPrimary string `json:"access_key_primary,omitempty"`
-    K3sConfigYaml string `json:"k3s_config_yaml,omitempty"`
+    Version string `json:"version"`
 }
 
 type McloudK3sClusterResponse struct {
+    AccessKeyPrimary string `json:"access_key_primary"`
+    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
+    K3sConfigYaml string `json:"k3s_config_yaml"`
+    MasterServerPoolId string `json:"master_server_pool_id"`
     Name string `json:"name"`
     Sku string `json:"sku"`
-    Version string `json:"version"`
-    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
-    MasterServerPoolId string `json:"master_server_pool_id"`
     Status string `json:"status"`
-    AccessKeyPrimary string `json:"access_key_primary"`
-    K3sConfigYaml string `json:"k3s_config_yaml"`
+    Version string `json:"version"`
 }
 
 func resourceMcloudK3sCluster() *schema.Resource {
@@ -42,23 +42,10 @@ func resourceMcloudK3sCluster() *schema.Resource {
 		UpdateContext: resourceMcloudK3sClusterUpdate,
 		DeleteContext: resourceMcloudK3sClusterDelete,
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"access_key_primary": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true, Computed: false, Optional: false, ForceNew: true,
-			},
-			"sku": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: true,
-			},
-			"version": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"firewall_whitelist_ipv4": &schema.Schema{
                 Type:     schema.TypeString,
@@ -67,7 +54,23 @@ func resourceMcloudK3sCluster() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
+			"k3s_config_yaml": &schema.Schema{
+                Type:     schema.TypeString,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
+			},
 			"master_server_pool_id": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: true,
+			},
+			"name": &schema.Schema{
+                Type:     schema.TypeString,
+                Required: true, Computed: false, Optional: false, ForceNew: true,
+			},
+			"sku": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
@@ -82,15 +85,12 @@ func resourceMcloudK3sCluster() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"access_key_primary": &schema.Schema{
+			"version": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
-                Required: false, Computed: true, Optional: false, ForceNew: false,
-			},
-			"k3s_config_yaml": &schema.Schema{
-                Type:     schema.TypeString,
-                Sensitive: true,
-                Required: false, Computed: true, Optional: false, ForceNew: false,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
 			},
 		},
 		Importer: &schema.ResourceImporter{
@@ -107,12 +107,12 @@ func resourceMcloudK3sClusterCreate(ctx context.Context, d *schema.ResourceData,
 
 	pk := d.Get("name").(string)
 	instance := McloudK3sCluster{
-        Name: d.Get("name").(string),
-        Sku: d.Get("sku").(string),
-        Version: d.Get("version").(string),
         FirewallWhitelistIpv4: d.Get("firewall_whitelist_ipv4").(string),
         MasterServerPoolId: d.Get("master_server_pool_id").(string),
+        Name: d.Get("name").(string),
+        Sku: d.Get("sku").(string),
         Status: d.Get("status").(string),
+        Version: d.Get("version").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -154,14 +154,14 @@ func resourceMcloudK3sClusterCreate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	d.SetId(pk)
+    d.Set("access_key_primary", mcloudK3sClusterResponse.AccessKeyPrimary)
+    d.Set("firewall_whitelist_ipv4", mcloudK3sClusterResponse.FirewallWhitelistIpv4)
+    d.Set("k3s_config_yaml", mcloudK3sClusterResponse.K3sConfigYaml)
+    d.Set("master_server_pool_id", mcloudK3sClusterResponse.MasterServerPoolId)
     d.Set("name", mcloudK3sClusterResponse.Name)
     d.Set("sku", mcloudK3sClusterResponse.Sku)
-    d.Set("version", mcloudK3sClusterResponse.Version)
-    d.Set("firewall_whitelist_ipv4", mcloudK3sClusterResponse.FirewallWhitelistIpv4)
-    d.Set("master_server_pool_id", mcloudK3sClusterResponse.MasterServerPoolId)
     d.Set("status", mcloudK3sClusterResponse.Status)
-    d.Set("access_key_primary", mcloudK3sClusterResponse.AccessKeyPrimary)
-    d.Set("k3s_config_yaml", mcloudK3sClusterResponse.K3sConfigYaml)
+    d.Set("version", mcloudK3sClusterResponse.Version)
 
 	return diags
 }
@@ -205,14 +205,14 @@ func resourceMcloudK3sClusterRead(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		return diag.FromErr(err)
 	}
+    d.Set("access_key_primary", mcloudK3sClusterResponse.AccessKeyPrimary)
+    d.Set("firewall_whitelist_ipv4", mcloudK3sClusterResponse.FirewallWhitelistIpv4)
+    d.Set("k3s_config_yaml", mcloudK3sClusterResponse.K3sConfigYaml)
+    d.Set("master_server_pool_id", mcloudK3sClusterResponse.MasterServerPoolId)
     d.Set("name", mcloudK3sClusterResponse.Name)
     d.Set("sku", mcloudK3sClusterResponse.Sku)
-    d.Set("version", mcloudK3sClusterResponse.Version)
-    d.Set("firewall_whitelist_ipv4", mcloudK3sClusterResponse.FirewallWhitelistIpv4)
-    d.Set("master_server_pool_id", mcloudK3sClusterResponse.MasterServerPoolId)
     d.Set("status", mcloudK3sClusterResponse.Status)
-    d.Set("access_key_primary", mcloudK3sClusterResponse.AccessKeyPrimary)
-    d.Set("k3s_config_yaml", mcloudK3sClusterResponse.K3sConfigYaml)
+    d.Set("version", mcloudK3sClusterResponse.Version)
 
 	return diags
 }
