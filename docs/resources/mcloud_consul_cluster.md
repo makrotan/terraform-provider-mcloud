@@ -15,9 +15,9 @@ Consul Cluster.
 
 The following arguments are supported:
 
+- `firewall_whitelist_ipv4` - (Required) [string]  
 - `master_server_pool_id` - (Required) [string]  
 - `name` - (Required) [string]  
-- `firewall_whitelist_ipv4` - (Required) [string]  
 - `pki_ca_id` - (Required) [string]  
 - `status` - [string]   (default: `running`)
 - `version` - (Required) [string]  
@@ -30,5 +30,5 @@ In addition to all the arguments above, the following attributes are exported:
 - `access_key_secondary` - [string] 
 - `encryption_key` - [string] 
 - `master_domain` - [string] 
-- `ui_basic_auth_user` - [string] 
 - `ui_basic_auth_password` - [string] 
+- `ui_basic_auth_user` - [string] 

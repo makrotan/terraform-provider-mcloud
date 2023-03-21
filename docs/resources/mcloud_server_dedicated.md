@@ -15,13 +15,13 @@ A dedicated server.
 
 The following arguments are supported:
 
+- `az` - (Required) [string]  
+- `ipv4` - (Required) [string]  
 - `name` - (Required) [string]  
 - `pool_name` - (Required) [string]  
-- `ipv4` - (Required) [string]  
+- `region` - (Required) [string]  
 - `server_provider` - (Required) [string]  
 - `server_provider_ref` - [string]  
-- `region` - (Required) [string]  
-- `az` - (Required) [string]  
 
 ## Attributes Reference
 

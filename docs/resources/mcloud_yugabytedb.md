@@ -15,12 +15,12 @@ YugabyteDB Instance.
 
 The following arguments are supported:
 
+- `firewall_whitelist_ipv4` - [string]  
 - `name` - (Required) [string]  
-- `version` - (Required) [string]  
 - `pki_ca_id` - (Required) [string]  
 - `server_pool_id` - (Required) [string]  
 - `status` - [string]   (default: `running`)
-- `firewall_whitelist_ipv4` - [string]  
+- `version` - (Required) [string]  
 
 ## Attributes Reference
 

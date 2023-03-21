@@ -14,23 +14,23 @@ import (
 )
 
 type McloudErpnext struct {
-    Name string `json:"name"`
-    Fqdn string `json:"fqdn"`
-    Sku string `json:"sku"`
-    Version string `json:"version"`
-    ServerPoolId string `json:"server_pool_id"`
-    Status string `json:"status"`
     AdminPassword string `json:"admin_password,omitempty"`
+    Fqdn string `json:"fqdn"`
+    Name string `json:"name"`
+    ServerPoolId string `json:"server_pool_id"`
+    Sku string `json:"sku"`
+    Status string `json:"status"`
+    Version string `json:"version"`
 }
 
 type McloudErpnextResponse struct {
-    Name string `json:"name"`
-    Fqdn string `json:"fqdn"`
-    Sku string `json:"sku"`
-    Version string `json:"version"`
-    ServerPoolId string `json:"server_pool_id"`
-    Status string `json:"status"`
     AdminPassword string `json:"admin_password"`
+    Fqdn string `json:"fqdn"`
+    Name string `json:"name"`
+    ServerPoolId string `json:"server_pool_id"`
+    Sku string `json:"sku"`
+    Status string `json:"status"`
+    Version string `json:"version"`
 }
 
 func resourceMcloudErpnext() *schema.Resource {
@@ -40,9 +40,10 @@ func resourceMcloudErpnext() *schema.Resource {
 		UpdateContext: resourceMcloudErpnextUpdate,
 		DeleteContext: resourceMcloudErpnextDelete,
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"admin_password": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true, Computed: false, Optional: false, ForceNew: true,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"fqdn": &schema.Schema{
                 Type:     schema.TypeString,
@@ -51,26 +52,23 @@ func resourceMcloudErpnext() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
+			"name": &schema.Schema{
+                Type:     schema.TypeString,
+                Required: true, Computed: false, Optional: false, ForceNew: true,
+			},
+			"server_pool_id": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: true,
+			},
 			"sku": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
 				Computed: false,
 				ForceNew: false,
-			},
-			"version": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
-			},
-			"server_pool_id": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: true,
 			},
 			"status": &schema.Schema{
                 Type:     schema.TypeString,
@@ -80,9 +78,12 @@ func resourceMcloudErpnext() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"admin_password": &schema.Schema{
+			"version": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: false, Computed: true, Optional: false, ForceNew: false,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
 			},
 		},
 		Importer: &schema.ResourceImporter{
@@ -99,12 +100,12 @@ func resourceMcloudErpnextCreate(ctx context.Context, d *schema.ResourceData, m 
 
 	pk := d.Get("name").(string)
 	instance := McloudErpnext{
-        Name: d.Get("name").(string),
         Fqdn: d.Get("fqdn").(string),
-        Sku: d.Get("sku").(string),
-        Version: d.Get("version").(string),
+        Name: d.Get("name").(string),
         ServerPoolId: d.Get("server_pool_id").(string),
+        Sku: d.Get("sku").(string),
         Status: d.Get("status").(string),
+        Version: d.Get("version").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -146,13 +147,13 @@ func resourceMcloudErpnextCreate(ctx context.Context, d *schema.ResourceData, m 
 	}
 
 	d.SetId(pk)
-    d.Set("name", mcloudErpnextResponse.Name)
-    d.Set("fqdn", mcloudErpnextResponse.Fqdn)
-    d.Set("sku", mcloudErpnextResponse.Sku)
-    d.Set("version", mcloudErpnextResponse.Version)
-    d.Set("server_pool_id", mcloudErpnextResponse.ServerPoolId)
-    d.Set("status", mcloudErpnextResponse.Status)
     d.Set("admin_password", mcloudErpnextResponse.AdminPassword)
+    d.Set("fqdn", mcloudErpnextResponse.Fqdn)
+    d.Set("name", mcloudErpnextResponse.Name)
+    d.Set("server_pool_id", mcloudErpnextResponse.ServerPoolId)
+    d.Set("sku", mcloudErpnextResponse.Sku)
+    d.Set("status", mcloudErpnextResponse.Status)
+    d.Set("version", mcloudErpnextResponse.Version)
 
 	return diags
 }
@@ -196,13 +197,13 @@ func resourceMcloudErpnextRead(ctx context.Context, d *schema.ResourceData, m in
 	if err != nil {
 		return diag.FromErr(err)
 	}
-    d.Set("name", mcloudErpnextResponse.Name)
-    d.Set("fqdn", mcloudErpnextResponse.Fqdn)
-    d.Set("sku", mcloudErpnextResponse.Sku)
-    d.Set("version", mcloudErpnextResponse.Version)
-    d.Set("server_pool_id", mcloudErpnextResponse.ServerPoolId)
-    d.Set("status", mcloudErpnextResponse.Status)
     d.Set("admin_password", mcloudErpnextResponse.AdminPassword)
+    d.Set("fqdn", mcloudErpnextResponse.Fqdn)
+    d.Set("name", mcloudErpnextResponse.Name)
+    d.Set("server_pool_id", mcloudErpnextResponse.ServerPoolId)
+    d.Set("sku", mcloudErpnextResponse.Sku)
+    d.Set("status", mcloudErpnextResponse.Status)
+    d.Set("version", mcloudErpnextResponse.Version)
 
 	return diags
 }

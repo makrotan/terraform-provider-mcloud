@@ -15,18 +15,18 @@ PKI Certificate Authority.
 
 The following arguments are supported:
 
-- `name` - (Required) [string]  
-- `valid_days` - [number]   (default: `7300`)
-- `country` - [string]   (default: `DE`)
-- `state` - [string]   (default: `DE`)
 - `city` - [string]   (default: `Leipzig`)
-- `organisation` - [string]   (default: `Makrotan`)
-- `unit` - [string]   (default: `IT`)
+- `country` - [string]   (default: `DE`)
 - `email` - [string]   (default: `info@makrotan.com`)
+- `name` - (Required) [string]  
+- `organisation` - [string]   (default: `Makrotan`)
+- `state` - [string]   (default: `DE`)
+- `unit` - [string]   (default: `IT`)
+- `valid_days` - [number]   (default: `7300`)
 
 ## Attributes Reference
 
 In addition to all the arguments above, the following attributes are exported:
 
-- `key_pub` - [string] 
 - `key_priv` - [string] 
+- `key_pub` - [string] 

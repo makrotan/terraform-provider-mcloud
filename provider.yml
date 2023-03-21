@@ -1,0 +1,673 @@
+company_domain: makrotan.com
+name: mcloud
+namespace: makrotan
+provider_spec:
+  auth_type: bearer_token
+  fields: {}
+resources:
+  mcloud_cockroachdb:
+    description: CockroachDB Instance.
+    fields:
+      access_key_primary:
+        computed: true
+        sensitive: true
+        type: string
+      access_key_secondary:
+        computed: true
+        sensitive: true
+        type: string
+      consul_cluster_id:
+        force_new: true
+        type: string
+      firewall_whitelist_ipv4:
+        type: string
+      master_domain:
+        computed: true
+        type: string
+      name:
+        type: string
+      pki_ca_id:
+        force_new: true
+        type: string
+      server_pool_id:
+        force_new: true
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      ui_basic_auth_password:
+        computed: true
+        sensitive: true
+        type: string
+      ui_basic_auth_user:
+        computed: true
+        sensitive: true
+        type: string
+      version:
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/cockroachdb/%s
+  mcloud_consul_cluster:
+    description: Consul Cluster.
+    fields:
+      access_key_primary:
+        computed: true
+        sensitive: true
+        type: string
+      access_key_secondary:
+        computed: true
+        sensitive: true
+        type: string
+      encryption_key:
+        computed: true
+        sensitive: true
+        type: string
+      firewall_whitelist_ipv4:
+        type: string
+      master_domain:
+        computed: true
+        type: string
+      master_server_pool_id:
+        force_new: true
+        type: string
+      name:
+        type: string
+      pki_ca_id:
+        force_new: true
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      ui_basic_auth_password:
+        computed: true
+        sensitive: true
+        type: string
+      ui_basic_auth_user:
+        computed: true
+        sensitive: true
+        type: string
+      version:
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/consul-cluster/%s
+  mcloud_erpnext:
+    description: Erpnext(name, status, backup_ref, sku, fqdn, admin_password, created,
+      version, app_port, server_pool)
+    fields:
+      admin_password:
+        computed: true
+        description: ''
+        sensitive: true
+        type: string
+      fqdn:
+        description: ''
+        type: string
+      name:
+        force_new: true
+        type: string
+      server_pool_id:
+        description: ''
+        force_new: true
+        required: false
+        type: string
+      sku:
+        description: 'Possible values: `dev`'
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      version:
+        description: 'Possible values: `14.13.0`, `14.18.1`'
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/erpnext/%s
+  mcloud_grafana:
+    description: Grafana(backup_ref, name, created, server_pool, admin_password, fqdn,
+      app_port, status, version)
+    fields:
+      admin_password:
+        computed: true
+        description: ''
+        sensitive: true
+        type: string
+      fqdn:
+        description: ''
+        type: string
+      name:
+        force_new: true
+        type: string
+      server_pool_id:
+        description: ''
+        force_new: true
+        required: false
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      version:
+        description: 'Possible values: `9.3.6`'
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/grafana/%s
+  mcloud_grafana_loki:
+    description: GrafanaLoki(backup_ref, name, created, server_pool, access_key, fqdn,
+      app_port, pki_ca, status, version)
+    fields:
+      access_key:
+        computed: true
+        description: ''
+        type: string
+      basic_auth_password:
+        computed: true
+        sensitive: true
+        type: string
+      basic_auth_user:
+        computed: true
+        sensitive: true
+        type: string
+      fqdn:
+        description: ''
+        type: string
+      name:
+        force_new: true
+        type: string
+      pki_ca_id:
+        description: ''
+        force_new: true
+        required: false
+        type: string
+      server_pool_id:
+        description: ''
+        force_new: true
+        required: false
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      version:
+        description: 'Possible values: `2.7.4`'
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/grafana-loki/%s
+  mcloud_grafana_mimir:
+    description: GrafanaMimir(backup_ref, name, created, server_pool, access_key,
+      fqdn, app_port, pki_ca, status, version)
+    fields:
+      access_key:
+        computed: true
+        description: ''
+        type: string
+      basic_auth_password:
+        computed: true
+        sensitive: true
+        type: string
+      basic_auth_user:
+        computed: true
+        sensitive: true
+        type: string
+      fqdn:
+        description: ''
+        type: string
+      name:
+        force_new: true
+        type: string
+      pki_ca_id:
+        description: ''
+        force_new: true
+        required: false
+        type: string
+      server_pool_id:
+        description: ''
+        force_new: true
+        required: false
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      version:
+        description: 'Possible values: `2.6.0`'
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/grafana-mimir/%s
+  mcloud_harbor:
+    description: Harbor Instance.
+    fields:
+      admin_password:
+        computed: true
+        sensitive: true
+        type: string
+      fqdn:
+        type: string
+      name:
+        type: string
+      server_pool_id:
+        force_new: true
+        type: string
+      sku:
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      version:
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/harbor/%s
+  mcloud_k3s_cluster:
+    description: K3s Kubernetes Cluster.
+    fields:
+      access_key_primary:
+        computed: true
+        sensitive: true
+        type: string
+      firewall_whitelist_ipv4:
+        required: false
+        type: string
+      k3s_config_yaml:
+        computed: true
+        sensitive: true
+        type: string
+      master_server_pool_id:
+        force_new: true
+        type: string
+      name:
+        type: string
+      sku:
+        force_new: true
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      version:
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/k3s-cluster/%s
+  mcloud_keycloak:
+    description: Keycloak(backup_ref, name, created, server_pool, admin_password,
+      fqdn, pki_ca, app_port, secret_key, sku, status, version, themes)
+    fields:
+      admin_password:
+        computed: true
+        description: ''
+        sensitive: true
+        type: string
+      fqdn:
+        description: ''
+        type: string
+      name:
+        force_new: true
+        type: string
+      pki_ca_id:
+        description: ''
+        force_new: true
+        required: false
+        type: string
+      secret_key:
+        computed: true
+        description: ''
+        type: string
+      server_pool_id:
+        description: ''
+        force_new: true
+        required: false
+        type: string
+      sku:
+        description: 'Possible values: `dev`'
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      themes:
+        required: false
+        sensitive: true
+      version:
+        description: 'Possible values: `21.0.1`'
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/keycloak/%s
+  mcloud_mattermost:
+    description: Mattermost Instance.
+    fields:
+      fqdn:
+        type: string
+      name:
+        type: string
+      server_pool_id:
+        force_new: true
+        type: string
+      sku:
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      version:
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/mattermost/%s
+  mcloud_nomad_cluster:
+    description: Nomad Cluster.
+    fields:
+      access_key_primary:
+        computed: true
+        sensitive: true
+        type: string
+      access_key_secondary:
+        computed: true
+        sensitive: true
+        type: string
+      admin_ca:
+        computed: true
+        sensitive: true
+        type: string
+      admin_cert:
+        computed: true
+        sensitive: true
+        type: string
+      admin_key:
+        computed: true
+        sensitive: true
+        type: string
+      consul_cluster_id:
+        force_new: true
+        type: string
+      encryption_key:
+        computed: true
+        sensitive: true
+        type: string
+      firewall_whitelist_ipv4:
+        default: ''
+        type: string
+      master_domain:
+        computed: true
+        type: string
+      master_server_pool_id:
+        force_new: true
+        type: string
+      name:
+        type: string
+      pki_ca_id:
+        force_new: true
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      ui_basic_auth_password:
+        computed: true
+        sensitive: true
+        type: string
+      ui_basic_auth_user:
+        computed: true
+        sensitive: true
+        type: string
+      vault_cluster_id:
+        type: string
+      version:
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/nomad-cluster/%s
+  mcloud_nomad_server_pool:
+    description: Nomad Server Pool.
+    fields:
+      name:
+        type: string
+      nomad_cluster_id:
+        force_new: true
+        type: string
+      server_pool_id:
+        force_new: true
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/nomad-server-pool/%s
+  mcloud_pki_ca:
+    description: PKI Certificate Authority.
+    fields:
+      city:
+        default: Leipzig
+        required: false
+        type: string
+      country:
+        default: DE
+        required: false
+        type: string
+      email:
+        default: info@makrotan.com
+        required: false
+        type: string
+      key_priv:
+        computed: true
+        sensitive: true
+        type: string
+      key_pub:
+        computed: true
+        type: string
+      name:
+        type: string
+      organisation:
+        default: Makrotan
+        required: false
+        type: string
+      state:
+        default: DE
+        required: false
+        type: string
+      unit:
+        default: IT
+        required: false
+        type: string
+      valid_days:
+        default: 7300
+        required: false
+        type: number
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/pki-ca/%s
+  mcloud_server_dedicated:
+    description: A dedicated server.
+    fields:
+      az:
+        type: string
+      ipv4:
+        type: string
+      name:
+        type: string
+      pool_name:
+        type: string
+      region:
+        type: string
+      server_provider:
+        map_to: provider
+        type: string
+      server_provider_ref:
+        map_to: provider_ref
+        required: false
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/server-dedicated/%s
+  mcloud_server_pool_dedicated:
+    description: A collection of dedicated servers.
+    fields:
+      name:
+        type: string
+      status:
+        default: running
+        description: '`new`, `running`, `failed`, `deleting` or `deleted`'
+        required: false
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/server-pool/dedicated/%s
+  mcloud_server_pool_hcloud:
+    description: A collection of dedicated servers.
+    fields:
+      instance_count:
+        type: number
+      instance_type:
+        type: string
+      location:
+        default: spread
+        required: false
+        type: string
+      name:
+        type: string
+      status:
+        default: running
+        description: '`new`, `running`, `failed`, `deleting` or `deleted`'
+        required: false
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/server-pool/hcloud/%s
+  mcloud_ssh_key:
+    description: SSH Key.
+    fields:
+      name:
+        type: string
+      private_key:
+        description: 'private key in pem format: `-----BEGIN OPENSSH PRIVATE KEY-----\nb3Bl...cgECAw==\n-----END
+          OPENSSH PRIVATE KEY-----\n`'
+        sensitive: true
+        type: string
+      public_key:
+        description: public key as givin in an authorized_hosts file, `ssh-rsa AAAAB3Nz...PCmXzzFLKoC0Agvc=
+          hostname`
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/ssh-key/%s
+  mcloud_vault_cluster:
+    description: Vault Cluster.
+    fields:
+      access_key_primary:
+        computed: true
+        sensitive: true
+        type: string
+      access_key_secondary:
+        computed: true
+        sensitive: true
+        type: string
+      firewall_whitelist_ipv4:
+        default: ''
+        type: string
+      master_domain:
+        computed: true
+        type: string
+      master_server_pool_id:
+        force_new: true
+        type: string
+      name:
+        type: string
+      pki_ca_id:
+        force_new: true
+        type: string
+      root_token:
+        computed: true
+        sensitive: true
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      ui_basic_auth_password:
+        computed: true
+        sensitive: true
+        type: string
+      ui_basic_auth_user:
+        computed: true
+        sensitive: true
+        type: string
+      version:
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/vault-cluster/%s
+  mcloud_yugabytedb:
+    description: YugabyteDB Instance.
+    fields:
+      firewall_whitelist_ipv4:
+        required: false
+        type: string
+      master_domain:
+        computed: true
+        type: string
+      name:
+        type: string
+      pki_ca_id:
+        force_new: true
+        type: string
+      server_pool_id:
+        force_new: true
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      version:
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/yugabytedb/%s

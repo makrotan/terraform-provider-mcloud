@@ -14,21 +14,21 @@ import (
 )
 
 type McloudMattermost struct {
-    Name string `json:"name"`
     Fqdn string `json:"fqdn"`
-    Sku string `json:"sku"`
-    Version string `json:"version"`
+    Name string `json:"name"`
     ServerPoolId string `json:"server_pool_id"`
+    Sku string `json:"sku"`
     Status string `json:"status"`
+    Version string `json:"version"`
 }
 
 type McloudMattermostResponse struct {
-    Name string `json:"name"`
     Fqdn string `json:"fqdn"`
-    Sku string `json:"sku"`
-    Version string `json:"version"`
+    Name string `json:"name"`
     ServerPoolId string `json:"server_pool_id"`
+    Sku string `json:"sku"`
     Status string `json:"status"`
+    Version string `json:"version"`
 }
 
 func resourceMcloudMattermost() *schema.Resource {
@@ -38,10 +38,6 @@ func resourceMcloudMattermost() *schema.Resource {
 		UpdateContext: resourceMcloudMattermostUpdate,
 		DeleteContext: resourceMcloudMattermostDelete,
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
-                Type:     schema.TypeString,
-                Required: true, Computed: false, Optional: false, ForceNew: true,
-			},
 			"fqdn": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: false,
@@ -49,19 +45,9 @@ func resourceMcloudMattermost() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"sku": &schema.Schema{
+			"name": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
-			},
-			"version": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
+                Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
 			"server_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -70,11 +56,25 @@ func resourceMcloudMattermost() *schema.Resource {
 				Computed: false,
 				ForceNew: true,
 			},
+			"sku": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
+			},
 			"status": &schema.Schema{
                 Type:     schema.TypeString,
                 Default: "running",
 				Optional: true,
 				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
+			"version": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: false,
+				Required: true,
 				Computed: false,
 				ForceNew: false,
 			},
@@ -93,12 +93,12 @@ func resourceMcloudMattermostCreate(ctx context.Context, d *schema.ResourceData,
 
 	pk := d.Get("name").(string)
 	instance := McloudMattermost{
-        Name: d.Get("name").(string),
         Fqdn: d.Get("fqdn").(string),
-        Sku: d.Get("sku").(string),
-        Version: d.Get("version").(string),
+        Name: d.Get("name").(string),
         ServerPoolId: d.Get("server_pool_id").(string),
+        Sku: d.Get("sku").(string),
         Status: d.Get("status").(string),
+        Version: d.Get("version").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -140,12 +140,12 @@ func resourceMcloudMattermostCreate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	d.SetId(pk)
-    d.Set("name", mcloudMattermostResponse.Name)
     d.Set("fqdn", mcloudMattermostResponse.Fqdn)
-    d.Set("sku", mcloudMattermostResponse.Sku)
-    d.Set("version", mcloudMattermostResponse.Version)
+    d.Set("name", mcloudMattermostResponse.Name)
     d.Set("server_pool_id", mcloudMattermostResponse.ServerPoolId)
+    d.Set("sku", mcloudMattermostResponse.Sku)
     d.Set("status", mcloudMattermostResponse.Status)
+    d.Set("version", mcloudMattermostResponse.Version)
 
 	return diags
 }
@@ -189,12 +189,12 @@ func resourceMcloudMattermostRead(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		return diag.FromErr(err)
 	}
-    d.Set("name", mcloudMattermostResponse.Name)
     d.Set("fqdn", mcloudMattermostResponse.Fqdn)
-    d.Set("sku", mcloudMattermostResponse.Sku)
-    d.Set("version", mcloudMattermostResponse.Version)
+    d.Set("name", mcloudMattermostResponse.Name)
     d.Set("server_pool_id", mcloudMattermostResponse.ServerPoolId)
+    d.Set("sku", mcloudMattermostResponse.Sku)
     d.Set("status", mcloudMattermostResponse.Status)
+    d.Set("version", mcloudMattermostResponse.Version)
 
 	return diags
 }

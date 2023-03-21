@@ -16,12 +16,12 @@ CockroachDB Instance.
 The following arguments are supported:
 
 - `consul_cluster_id` - (Required) [string]  
+- `firewall_whitelist_ipv4` - (Required) [string]  
 - `name` - (Required) [string]  
-- `version` - (Required) [string]  
 - `pki_ca_id` - (Required) [string]  
 - `server_pool_id` - (Required) [string]  
 - `status` - [string]   (default: `running`)
-- `firewall_whitelist_ipv4` - (Required) [string]  
+- `version` - (Required) [string]  
 
 ## Attributes Reference
 
@@ -30,5 +30,5 @@ In addition to all the arguments above, the following attributes are exported:
 - `access_key_primary` - [string] 
 - `access_key_secondary` - [string] 
 - `master_domain` - [string] 
-- `ui_basic_auth_user` - [string] 
 - `ui_basic_auth_password` - [string] 
+- `ui_basic_auth_user` - [string] 

@@ -14,33 +14,33 @@ import (
 )
 
 type McloudCockroachdb struct {
+    AccessKeyPrimary string `json:"access_key_primary,omitempty"`
+    AccessKeySecondary string `json:"access_key_secondary,omitempty"`
     ConsulClusterId string `json:"consul_cluster_id"`
+    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
+    MasterDomain string `json:"master_domain,omitempty"`
     Name string `json:"name"`
-    Version string `json:"version"`
     PkiCaId string `json:"pki_ca_id"`
     ServerPoolId string `json:"server_pool_id"`
     Status string `json:"status"`
-    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
-    AccessKeyPrimary string `json:"access_key_primary,omitempty"`
-    AccessKeySecondary string `json:"access_key_secondary,omitempty"`
-    MasterDomain string `json:"master_domain,omitempty"`
-    UiBasicAuthUser string `json:"ui_basic_auth_user,omitempty"`
     UiBasicAuthPassword string `json:"ui_basic_auth_password,omitempty"`
+    UiBasicAuthUser string `json:"ui_basic_auth_user,omitempty"`
+    Version string `json:"version"`
 }
 
 type McloudCockroachdbResponse struct {
+    AccessKeyPrimary string `json:"access_key_primary"`
+    AccessKeySecondary string `json:"access_key_secondary"`
     ConsulClusterId string `json:"consul_cluster_id"`
+    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
+    MasterDomain string `json:"master_domain"`
     Name string `json:"name"`
-    Version string `json:"version"`
     PkiCaId string `json:"pki_ca_id"`
     ServerPoolId string `json:"server_pool_id"`
     Status string `json:"status"`
-    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
-    AccessKeyPrimary string `json:"access_key_primary"`
-    AccessKeySecondary string `json:"access_key_secondary"`
-    MasterDomain string `json:"master_domain"`
-    UiBasicAuthUser string `json:"ui_basic_auth_user"`
     UiBasicAuthPassword string `json:"ui_basic_auth_password"`
+    UiBasicAuthUser string `json:"ui_basic_auth_user"`
+    Version string `json:"version"`
 }
 
 func resourceMcloudCockroachdb() *schema.Resource {
@@ -50,6 +50,16 @@ func resourceMcloudCockroachdb() *schema.Resource {
 		UpdateContext: resourceMcloudCockroachdbUpdate,
 		DeleteContext: resourceMcloudCockroachdbDelete,
 		Schema: map[string]*schema.Schema{
+			"access_key_primary": &schema.Schema{
+                Type:     schema.TypeString,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
+			},
+			"access_key_secondary": &schema.Schema{
+                Type:     schema.TypeString,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
+			},
 			"consul_cluster_id": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: false,
@@ -57,16 +67,20 @@ func resourceMcloudCockroachdb() *schema.Resource {
 				Computed: false,
 				ForceNew: true,
 			},
-			"name": &schema.Schema{
-                Type:     schema.TypeString,
-                Required: true, Computed: false, Optional: false, ForceNew: true,
-			},
-			"version": &schema.Schema{
+			"firewall_whitelist_ipv4": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
 				Computed: false,
 				ForceNew: false,
+			},
+			"master_domain": &schema.Schema{
+                Type:     schema.TypeString,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
+			},
+			"name": &schema.Schema{
+                Type:     schema.TypeString,
+                Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
 			"pki_ca_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -90,25 +104,9 @@ func resourceMcloudCockroachdb() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"firewall_whitelist_ipv4": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
-			},
-			"access_key_primary": &schema.Schema{
+			"ui_basic_auth_password": &schema.Schema{
                 Type:     schema.TypeString,
                 Sensitive: true,
-                Required: false, Computed: true, Optional: false, ForceNew: false,
-			},
-			"access_key_secondary": &schema.Schema{
-                Type:     schema.TypeString,
-                Sensitive: true,
-                Required: false, Computed: true, Optional: false, ForceNew: false,
-			},
-			"master_domain": &schema.Schema{
-                Type:     schema.TypeString,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"ui_basic_auth_user": &schema.Schema{
@@ -116,10 +114,12 @@ func resourceMcloudCockroachdb() *schema.Resource {
                 Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
-			"ui_basic_auth_password": &schema.Schema{
+			"version": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
-                Required: false, Computed: true, Optional: false, ForceNew: false,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
 			},
 		},
 		Importer: &schema.ResourceImporter{
@@ -137,12 +137,12 @@ func resourceMcloudCockroachdbCreate(ctx context.Context, d *schema.ResourceData
 	pk := d.Get("name").(string)
 	instance := McloudCockroachdb{
         ConsulClusterId: d.Get("consul_cluster_id").(string),
+        FirewallWhitelistIpv4: d.Get("firewall_whitelist_ipv4").(string),
         Name: d.Get("name").(string),
-        Version: d.Get("version").(string),
         PkiCaId: d.Get("pki_ca_id").(string),
         ServerPoolId: d.Get("server_pool_id").(string),
         Status: d.Get("status").(string),
-        FirewallWhitelistIpv4: d.Get("firewall_whitelist_ipv4").(string),
+        Version: d.Get("version").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -184,18 +184,18 @@ func resourceMcloudCockroachdbCreate(ctx context.Context, d *schema.ResourceData
 	}
 
 	d.SetId(pk)
+    d.Set("access_key_primary", mcloudCockroachdbResponse.AccessKeyPrimary)
+    d.Set("access_key_secondary", mcloudCockroachdbResponse.AccessKeySecondary)
     d.Set("consul_cluster_id", mcloudCockroachdbResponse.ConsulClusterId)
+    d.Set("firewall_whitelist_ipv4", mcloudCockroachdbResponse.FirewallWhitelistIpv4)
+    d.Set("master_domain", mcloudCockroachdbResponse.MasterDomain)
     d.Set("name", mcloudCockroachdbResponse.Name)
-    d.Set("version", mcloudCockroachdbResponse.Version)
     d.Set("pki_ca_id", mcloudCockroachdbResponse.PkiCaId)
     d.Set("server_pool_id", mcloudCockroachdbResponse.ServerPoolId)
     d.Set("status", mcloudCockroachdbResponse.Status)
-    d.Set("firewall_whitelist_ipv4", mcloudCockroachdbResponse.FirewallWhitelistIpv4)
-    d.Set("access_key_primary", mcloudCockroachdbResponse.AccessKeyPrimary)
-    d.Set("access_key_secondary", mcloudCockroachdbResponse.AccessKeySecondary)
-    d.Set("master_domain", mcloudCockroachdbResponse.MasterDomain)
-    d.Set("ui_basic_auth_user", mcloudCockroachdbResponse.UiBasicAuthUser)
     d.Set("ui_basic_auth_password", mcloudCockroachdbResponse.UiBasicAuthPassword)
+    d.Set("ui_basic_auth_user", mcloudCockroachdbResponse.UiBasicAuthUser)
+    d.Set("version", mcloudCockroachdbResponse.Version)
 
 	return diags
 }
@@ -239,18 +239,18 @@ func resourceMcloudCockroachdbRead(ctx context.Context, d *schema.ResourceData, 
 	if err != nil {
 		return diag.FromErr(err)
 	}
+    d.Set("access_key_primary", mcloudCockroachdbResponse.AccessKeyPrimary)
+    d.Set("access_key_secondary", mcloudCockroachdbResponse.AccessKeySecondary)
     d.Set("consul_cluster_id", mcloudCockroachdbResponse.ConsulClusterId)
+    d.Set("firewall_whitelist_ipv4", mcloudCockroachdbResponse.FirewallWhitelistIpv4)
+    d.Set("master_domain", mcloudCockroachdbResponse.MasterDomain)
     d.Set("name", mcloudCockroachdbResponse.Name)
-    d.Set("version", mcloudCockroachdbResponse.Version)
     d.Set("pki_ca_id", mcloudCockroachdbResponse.PkiCaId)
     d.Set("server_pool_id", mcloudCockroachdbResponse.ServerPoolId)
     d.Set("status", mcloudCockroachdbResponse.Status)
-    d.Set("firewall_whitelist_ipv4", mcloudCockroachdbResponse.FirewallWhitelistIpv4)
-    d.Set("access_key_primary", mcloudCockroachdbResponse.AccessKeyPrimary)
-    d.Set("access_key_secondary", mcloudCockroachdbResponse.AccessKeySecondary)
-    d.Set("master_domain", mcloudCockroachdbResponse.MasterDomain)
-    d.Set("ui_basic_auth_user", mcloudCockroachdbResponse.UiBasicAuthUser)
     d.Set("ui_basic_auth_password", mcloudCockroachdbResponse.UiBasicAuthPassword)
+    d.Set("ui_basic_auth_user", mcloudCockroachdbResponse.UiBasicAuthUser)
+    d.Set("version", mcloudCockroachdbResponse.Version)
 
 	return diags
 }

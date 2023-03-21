@@ -15,10 +15,10 @@ A collection of dedicated servers.
 
 The following arguments are supported:
 
-- `name` - (Required) [string]  
+- `instance_count` - (Required) [number]  
 - `instance_type` - (Required) [string]  
 - `location` - [string]   (default: `spread`)
-- `instance_count` - (Required) [number]  
+- `name` - (Required) [string]  
 - `status` - [string] `new`, `running`, `failed`, `deleting` or `deleted`  (default: `running`)
 
 ## Attributes Reference
