@@ -2,12 +2,12 @@
 page_title: "mcloud_vault_cluster Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  Vault Cluster.
+  VaultCluster(status, backup_ref, name, created, master_server_pool, version, access_key_primary, access_key_secondary, pki_ca, seal_keys, root_token, ip_scope)
 ---
 
 # Resource `mcloud_vault_cluster`
 
-Vault Cluster.
+VaultCluster(status, backup_ref, name, created, master_server_pool, version, access_key_primary, access_key_secondary, pki_ca, seal_keys, root_token, ip_scope)
 
 
 
@@ -15,12 +15,14 @@ Vault Cluster.
 
 The following arguments are supported:
 
-- `firewall_whitelist_ipv4` - (Required) [string]  
-- `master_server_pool_id` - (Required) [string]  
+- `ip_scope_id` - [string]  
+- `master_server_pool_id` - [string]  
 - `name` - (Required) [string]  
-- `pki_ca_id` - (Required) [string]  
+- `pki_ca_id` - [string]  
+- `root_token` - [string]  
+- `seal_keys` - [string]  
 - `status` - [string]   (default: `running`)
-- `version` - (Required) [string]  
+- `version` - (Required) [string] Possible values: `1.12.2-1` 
 
 ## Attributes Reference
 
@@ -28,7 +30,3 @@ In addition to all the arguments above, the following attributes are exported:
 
 - `access_key_primary` - [string] 
 - `access_key_secondary` - [string] 
-- `master_domain` - [string] 
-- `root_token` - [string] 
-- `ui_basic_auth_password` - [string] 
-- `ui_basic_auth_user` - [string] 

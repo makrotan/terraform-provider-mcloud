@@ -2,12 +2,12 @@
 page_title: "mcloud_server_pool_dedicated Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  A collection of dedicated servers.
+  ServerPoolDedicated(polymorphic_ctype, name, created, status, ip_block, serverpool_ptr)
 ---
 
 # Resource `mcloud_server_pool_dedicated`
 
-A collection of dedicated servers.
+ServerPoolDedicated(polymorphic_ctype, name, created, status, ip_block, serverpool_ptr)
 
 
 
@@ -16,8 +16,10 @@ A collection of dedicated servers.
 The following arguments are supported:
 
 - `name` - (Required) [string]  
-- `status` - [string] `new`, `running`, `failed`, `deleting` or `deleted`  (default: `running`)
+- `status` - [string]   (default: `running`)
 
 ## Attributes Reference
 
 In addition to all the arguments above, the following attributes are exported:
+
+- `ip_block_id` - [string] 

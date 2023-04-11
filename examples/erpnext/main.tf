@@ -21,6 +21,7 @@ resource "mcloud_server_pool_hcloud" "test" {
   name = "erpnext-test"
   instance_type = "cpx11"
   instance_count = 1
+  location = "nbg1"
 }
 
 resource "mcloud_pki_ca" "test" {

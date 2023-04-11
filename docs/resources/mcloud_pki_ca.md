@@ -15,6 +15,7 @@ PKI Certificate Authority.
 
 The following arguments are supported:
 
+- `algorithm` - [string]   (default: `ecdsa-256`)
 - `city` - [string]   (default: `Leipzig`)
 - `country` - [string]   (default: `DE`)
 - `email` - [string]   (default: `info@makrotan.com`)

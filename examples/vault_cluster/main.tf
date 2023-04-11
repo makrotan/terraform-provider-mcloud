@@ -21,6 +21,7 @@ resource "mcloud_server_pool_hcloud" "test" {
   name = "vault-test"
   instance_type = "cpx11"
   instance_count = 1
+  location = "spread"
 }
 
 
@@ -33,7 +34,7 @@ resource "mcloud_vault_cluster" "test" {
   version = "1.12.2-1"
   master_server_pool_id = mcloud_server_pool_hcloud.test.id
   pki_ca_id = mcloud_pki_ca.test.id
-  firewall_whitelist_ipv4 = var.firewall_whitelist_ipv4
+  ip_scope = mcloud_ip_scope.vault.id
 }
 
 output "out" {

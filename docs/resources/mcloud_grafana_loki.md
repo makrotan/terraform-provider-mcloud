@@ -2,12 +2,12 @@
 page_title: "mcloud_grafana_loki Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  GrafanaLoki(backup_ref, name, created, server_pool, access_key, fqdn, app_port, pki_ca, status, version)
+  GrafanaLoki(status, backup_ref, name, created, server_pool, access_key, fqdn, app_port, pki_ca, version)
 ---
 
 # Resource `mcloud_grafana_loki`
 
-GrafanaLoki(backup_ref, name, created, server_pool, access_key, fqdn, app_port, pki_ca, status, version)
+GrafanaLoki(status, backup_ref, name, created, server_pool, access_key, fqdn, app_port, pki_ca, version)
 
 
 

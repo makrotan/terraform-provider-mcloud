@@ -353,6 +353,11 @@ resources:
         type: string
         required: false
         default: Leipzig
+      algorithm:
+        type: string
+        required: false
+        default: ecdsa-256
+        force_new: true
       organisation:
         type: string
         required: false
@@ -365,6 +370,28 @@ resources:
         type: string
         required: false
         default: info@makrotan.com
+      key_pub:
+        type: string
+        computed: true
+      key_priv:
+        type: string
+        computed: true
+        sensitive: true
+
+  mcloud_pki_cert:
+    primary_key: name
+    description: PKI Certificate.
+    url:
+      template: /api/v1/pki-cert/%s
+      args: ["fields.name"]
+    fields:
+      name:
+        type: string
+      common_name:
+        type: string
+      ca_id:
+        type: string
+        force_new: true
       key_pub:
         type: string
         computed: true
@@ -390,43 +417,43 @@ resources:
         description: "private key in pem format: `-----BEGIN OPENSSH PRIVATE KEY-----\\nb3Bl...cgECAw==\\n-----END OPENSSH PRIVATE KEY-----\\n`"
         sensitive: true
 
-  mcloud_server_pool_dedicated:
-    primary_key: name
-    description: A collection of dedicated servers.
-    url:
-      template: /api/v1/server-pool/dedicated/%s
-      args: [ "fields.name" ]
-    fields:
-      name:
-        type: string
-      status:
-        type: string
-        default: running
-        required: false
-        description: "`new`, `running`, `failed`, `deleting` or `deleted`"
+#  mcloud_server_pool_dedicated:
+#    primary_key: name
+#    description: A collection of dedicated servers.
+#    url:
+#      template: /api/v1/server-pool/dedicated/%s
+#      args: [ "fields.name" ]
+#    fields:
+#      name:
+#        type: string
+#      status:
+#        type: string
+#        default: running
+#        required: false
+#        description: "`new`, `running`, `failed`, `deleting` or `deleted`"
 
-  mcloud_server_pool_hcloud:
-    primary_key: name
-    description: A collection of dedicated servers.
-    url:
-      template: /api/v1/server-pool/hcloud/%s
-      args: [ "fields.name" ]
-    fields:
-      name:
-        type: string
-      instance_type:
-        type: string
-      location:
-        type: string
-        required: false
-        default: spread
-      instance_count:
-        type: number
-      status:
-        type: string
-        default: running
-        required: false
-        description: "`new`, `running`, `failed`, `deleting` or `deleted`"
+#  mcloud_server_pool_hcloud:
+#    primary_key: name
+#    description: A collection of dedicated servers.
+#    url:
+#      template: /api/v1/server-pool/hcloud/%s
+#      args: [ "fields.name" ]
+#    fields:
+#      name:
+#        type: string
+#      instance_type:
+#        type: string
+#      location:
+#        type: string
+#        required: false
+#        default: spread
+#      instance_count:
+#        type: number
+#      status:
+#        type: string
+#        default: running
+#        required: false
+#        description: "`new`, `running`, `failed`, `deleting` or `deleted`"
 
   mcloud_server_dedicated:
     primary_key: name

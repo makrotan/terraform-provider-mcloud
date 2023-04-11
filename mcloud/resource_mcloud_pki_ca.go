@@ -14,6 +14,7 @@ import (
 )
 
 type McloudPkiCa struct {
+    Algorithm string `json:"algorithm"`
     City string `json:"city"`
     Country string `json:"country"`
     Email string `json:"email"`
@@ -27,6 +28,7 @@ type McloudPkiCa struct {
 }
 
 type McloudPkiCaResponse struct {
+    Algorithm string `json:"algorithm"`
     City string `json:"city"`
     Country string `json:"country"`
     Email string `json:"email"`
@@ -46,6 +48,14 @@ func resourceMcloudPkiCa() *schema.Resource {
 		UpdateContext: resourceMcloudPkiCaUpdate,
 		DeleteContext: resourceMcloudPkiCaDelete,
 		Schema: map[string]*schema.Schema{
+			"algorithm": &schema.Schema{
+                Type:     schema.TypeString,
+                Default: "ecdsa-256",
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: true,
+			},
 			"city": &schema.Schema{
                 Type:     schema.TypeString,
                 Default: "Leipzig",
@@ -130,6 +140,7 @@ func resourceMcloudPkiCaCreate(ctx context.Context, d *schema.ResourceData, m in
 
 	pk := d.Get("name").(string)
 	instance := McloudPkiCa{
+        Algorithm: d.Get("algorithm").(string),
         City: d.Get("city").(string),
         Country: d.Get("country").(string),
         Email: d.Get("email").(string),
@@ -179,6 +190,7 @@ func resourceMcloudPkiCaCreate(ctx context.Context, d *schema.ResourceData, m in
 	}
 
 	d.SetId(pk)
+    d.Set("algorithm", mcloudPkiCaResponse.Algorithm)
     d.Set("city", mcloudPkiCaResponse.City)
     d.Set("country", mcloudPkiCaResponse.Country)
     d.Set("email", mcloudPkiCaResponse.Email)
@@ -232,6 +244,7 @@ func resourceMcloudPkiCaRead(ctx context.Context, d *schema.ResourceData, m inte
 	if err != nil {
 		return diag.FromErr(err)
 	}
+    d.Set("algorithm", mcloudPkiCaResponse.Algorithm)
     d.Set("city", mcloudPkiCaResponse.City)
     d.Set("country", mcloudPkiCaResponse.Country)
     d.Set("email", mcloudPkiCaResponse.Email)

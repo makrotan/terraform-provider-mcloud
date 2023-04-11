@@ -13,40 +13,31 @@ import (
 	"strings"
 )
 
-type McloudGrafana struct {
-    AdminPassword string `json:"admin_password,omitempty"`
-    Fqdn string `json:"fqdn"`
+type McloudIpScopeBlockAssignment struct {
+    BlockId string `json:"block_id"`
     Name string `json:"name"`
-    ServerPoolId string `json:"server_pool_id"`
+    ScopeId string `json:"scope_id"`
     Status string `json:"status"`
-    Version string `json:"version"`
 }
 
-type McloudGrafanaResponse struct {
-    AdminPassword string `json:"admin_password"`
-    Fqdn string `json:"fqdn"`
+type McloudIpScopeBlockAssignmentResponse struct {
+    BlockId string `json:"block_id"`
     Name string `json:"name"`
-    ServerPoolId string `json:"server_pool_id"`
+    ScopeId string `json:"scope_id"`
     Status string `json:"status"`
-    Version string `json:"version"`
 }
 
-func resourceMcloudGrafana() *schema.Resource {
+func resourceMcloudIpScopeBlockAssignment() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceMcloudGrafanaCreate,
-		ReadContext:   resourceMcloudGrafanaRead,
-		UpdateContext: resourceMcloudGrafanaUpdate,
-		DeleteContext: resourceMcloudGrafanaDelete,
+		CreateContext: resourceMcloudIpScopeBlockAssignmentCreate,
+		ReadContext:   resourceMcloudIpScopeBlockAssignmentRead,
+		UpdateContext: resourceMcloudIpScopeBlockAssignmentUpdate,
+		DeleteContext: resourceMcloudIpScopeBlockAssignmentDelete,
 		Schema: map[string]*schema.Schema{
-			"admin_password": &schema.Schema{
+			"block_id": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
-                Required: false, Computed: true, Optional: false, ForceNew: false,
-			},
-			"fqdn": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
+				Optional: true,
+				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
@@ -54,7 +45,7 @@ func resourceMcloudGrafana() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
-			"server_pool_id": &schema.Schema{
+			"scope_id": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: true,
 				Required: false,
@@ -69,13 +60,6 @@ func resourceMcloudGrafana() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"version": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
-			},
 		},
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -83,19 +67,18 @@ func resourceMcloudGrafana() *schema.Resource {
 	}
 }
 
-func resourceMcloudGrafanaCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudIpScopeBlockAssignmentCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
 	pk := d.Get("name").(string)
-	instance := McloudGrafana{
-        Fqdn: d.Get("fqdn").(string),
+	instance := McloudIpScopeBlockAssignment{
+        BlockId: d.Get("block_id").(string),
         Name: d.Get("name").(string),
-        ServerPoolId: d.Get("server_pool_id").(string),
+        ScopeId: d.Get("scope_id").(string),
         Status: d.Get("status").(string),
-        Version: d.Get("version").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -104,7 +87,7 @@ func resourceMcloudGrafanaCreate(ctx context.Context, d *schema.ResourceData, m 
 	}
 
 	// req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/ssh-key/%s", strings.Trim(provider.HostURL, "/"), pk), strings.NewReader(string(rb)))
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/grafana/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), strings.NewReader(string(rb)))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/ip-scope-block-assignment/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), strings.NewReader(string(rb)))
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -130,24 +113,22 @@ func resourceMcloudGrafanaCreate(ctx context.Context, d *schema.ResourceData, m 
 		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
 	}
 
-	var mcloudGrafanaResponse McloudGrafanaResponse
-	err = json.Unmarshal(body, &mcloudGrafanaResponse)
+	var mcloudIpScopeBlockAssignmentResponse McloudIpScopeBlockAssignmentResponse
+	err = json.Unmarshal(body, &mcloudIpScopeBlockAssignmentResponse)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	d.SetId(pk)
-    d.Set("admin_password", mcloudGrafanaResponse.AdminPassword)
-    d.Set("fqdn", mcloudGrafanaResponse.Fqdn)
-    d.Set("name", mcloudGrafanaResponse.Name)
-    d.Set("server_pool_id", mcloudGrafanaResponse.ServerPoolId)
-    d.Set("status", mcloudGrafanaResponse.Status)
-    d.Set("version", mcloudGrafanaResponse.Version)
+    d.Set("block_id", mcloudIpScopeBlockAssignmentResponse.BlockId)
+    d.Set("name", mcloudIpScopeBlockAssignmentResponse.Name)
+    d.Set("scope_id", mcloudIpScopeBlockAssignmentResponse.ScopeId)
+    d.Set("status", mcloudIpScopeBlockAssignmentResponse.Status)
 
 	return diags
 }
 
-func resourceMcloudGrafanaRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudIpScopeBlockAssignmentRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 	client := provider.HTTPClient
 
@@ -155,7 +136,7 @@ func resourceMcloudGrafanaRead(ctx context.Context, d *schema.ResourceData, m in
 	var diags diag.Diagnostics
 
 	pk := d.Id()
-	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/grafana/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/ip-scope-block-assignment/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -173,33 +154,31 @@ func resourceMcloudGrafanaRead(ctx context.Context, d *schema.ResourceData, m in
 	}
 
 	if res.StatusCode == 404 {
-		log.Printf("[WARN] mcloud_grafana %s not present", pk)
+		log.Printf("[WARN] mcloud_ip_scope_block_assignment %s not present", pk)
 		d.SetId("")
 		return nil
 	} else if res.StatusCode != http.StatusOK {
 		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
 	}
 
-	var mcloudGrafanaResponse McloudGrafanaResponse
-	err = json.Unmarshal(body, &mcloudGrafanaResponse)
-	//err = json.NewDecoder(resp.Body).Decode(McloudGrafanaResponse)
+	var mcloudIpScopeBlockAssignmentResponse McloudIpScopeBlockAssignmentResponse
+	err = json.Unmarshal(body, &mcloudIpScopeBlockAssignmentResponse)
+	//err = json.NewDecoder(resp.Body).Decode(McloudIpScopeBlockAssignmentResponse)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-    d.Set("admin_password", mcloudGrafanaResponse.AdminPassword)
-    d.Set("fqdn", mcloudGrafanaResponse.Fqdn)
-    d.Set("name", mcloudGrafanaResponse.Name)
-    d.Set("server_pool_id", mcloudGrafanaResponse.ServerPoolId)
-    d.Set("status", mcloudGrafanaResponse.Status)
-    d.Set("version", mcloudGrafanaResponse.Version)
+    d.Set("block_id", mcloudIpScopeBlockAssignmentResponse.BlockId)
+    d.Set("name", mcloudIpScopeBlockAssignmentResponse.Name)
+    d.Set("scope_id", mcloudIpScopeBlockAssignmentResponse.ScopeId)
+    d.Set("status", mcloudIpScopeBlockAssignmentResponse.Status)
 
 	return diags
 }
-func resourceMcloudGrafanaUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return resourceMcloudGrafanaCreate(ctx, d, m)
+func resourceMcloudIpScopeBlockAssignmentUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	return resourceMcloudIpScopeBlockAssignmentCreate(ctx, d, m)
 }
 
-func resourceMcloudGrafanaDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudIpScopeBlockAssignmentDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 	client := provider.HTTPClient
 
@@ -207,7 +186,7 @@ func resourceMcloudGrafanaDelete(ctx context.Context, d *schema.ResourceData, m 
 	var diags diag.Diagnostics
 
 // 	pk := d.Id()
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/grafana/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/ip-scope-block-assignment/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

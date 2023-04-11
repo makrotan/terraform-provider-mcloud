@@ -50,7 +50,7 @@ func resourceMcloudErpnext() *schema.Resource {
 				Optional: false,
 				Required: true,
 				Computed: false,
-				ForceNew: false,
+				ForceNew: true,
 			},
 			"name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -61,7 +61,7 @@ func resourceMcloudErpnext() *schema.Resource {
 				Optional: true,
 				Required: false,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"sku": &schema.Schema{
                 Type:     schema.TypeString,

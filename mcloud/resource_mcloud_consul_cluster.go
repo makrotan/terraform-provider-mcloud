@@ -52,23 +52,20 @@ func resourceMcloudConsulCluster() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"access_key_primary": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"access_key_secondary": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"encryption_key": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"firewall_whitelist_ipv4": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
+				Optional: true,
+				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
@@ -81,7 +78,7 @@ func resourceMcloudConsulCluster() *schema.Resource {
 				Optional: false,
 				Required: true,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -89,10 +86,10 @@ func resourceMcloudConsulCluster() *schema.Resource {
 			},
 			"pki_ca_id": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
+				Optional: true,
+				Required: false,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"status": &schema.Schema{
                 Type:     schema.TypeString,
@@ -109,7 +106,6 @@ func resourceMcloudConsulCluster() *schema.Resource {
 			},
 			"ui_basic_auth_user": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"version": &schema.Schema{

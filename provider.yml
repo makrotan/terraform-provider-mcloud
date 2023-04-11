@@ -52,32 +52,39 @@ resources:
       - fields.name
       template: /api/v1/cockroachdb/%s
   mcloud_consul_cluster:
-    description: Consul Cluster.
+    description: ConsulCluster(name, status, backup_ref, created, master_server_pool,
+      encryption_key, version, firewall_whitelist_ipv4, access_key_primary, access_key_secondary,
+      pki_ca)
     fields:
       access_key_primary:
         computed: true
-        sensitive: true
+        description: ''
         type: string
       access_key_secondary:
         computed: true
-        sensitive: true
+        description: ''
         type: string
       encryption_key:
         computed: true
-        sensitive: true
+        description: ''
         type: string
       firewall_whitelist_ipv4:
+        description: ''
+        required: false
         type: string
       master_domain:
         computed: true
+        sensitive: false
         type: string
       master_server_pool_id:
-        force_new: true
+        description: ''
         type: string
       name:
+        force_new: true
         type: string
       pki_ca_id:
-        force_new: true
+        description: ''
+        required: false
         type: string
       status:
         default: running
@@ -89,9 +96,10 @@ resources:
         type: string
       ui_basic_auth_user:
         computed: true
-        sensitive: true
+        sensitive: false
         type: string
       version:
+        description: 'Possible values: `1.11.4`, `1.11.5`, `1.12.0`, `1.14.3`'
         type: string
     primary_key: name
     url:
@@ -105,17 +113,18 @@ resources:
       admin_password:
         computed: true
         description: ''
+        force_new: true
         sensitive: true
         type: string
       fqdn:
         description: ''
+        force_new: true
         type: string
       name:
         force_new: true
         type: string
       server_pool_id:
         description: ''
-        force_new: true
         required: false
         type: string
       sku:
@@ -134,8 +143,8 @@ resources:
       - fields.name
       template: /api/v1/erpnext/%s
   mcloud_grafana:
-    description: Grafana(backup_ref, name, created, server_pool, admin_password, fqdn,
-      app_port, status, version)
+    description: Grafana(status, backup_ref, name, created, server_pool, admin_password,
+      fqdn, app_port, version)
     fields:
       admin_password:
         computed: true
@@ -150,7 +159,6 @@ resources:
         type: string
       server_pool_id:
         description: ''
-        force_new: true
         required: false
         type: string
       status:
@@ -166,8 +174,8 @@ resources:
       - fields.name
       template: /api/v1/grafana/%s
   mcloud_grafana_loki:
-    description: GrafanaLoki(backup_ref, name, created, server_pool, access_key, fqdn,
-      app_port, pki_ca, status, version)
+    description: GrafanaLoki(status, backup_ref, name, created, server_pool, access_key,
+      fqdn, app_port, pki_ca, version)
     fields:
       access_key:
         computed: true
@@ -189,12 +197,10 @@ resources:
         type: string
       pki_ca_id:
         description: ''
-        force_new: true
         required: false
         type: string
       server_pool_id:
         description: ''
-        force_new: true
         required: false
         type: string
       status:
@@ -210,8 +216,8 @@ resources:
       - fields.name
       template: /api/v1/grafana-loki/%s
   mcloud_grafana_mimir:
-    description: GrafanaMimir(backup_ref, name, created, server_pool, access_key,
-      fqdn, app_port, pki_ca, status, version)
+    description: GrafanaMimir(status, backup_ref, name, created, server_pool, access_key,
+      fqdn, app_port, pki_ca, version)
     fields:
       access_key:
         computed: true
@@ -233,12 +239,10 @@ resources:
         type: string
       pki_ca_id:
         description: ''
-        force_new: true
         required: false
         type: string
       server_pool_id:
         description: ''
-        force_new: true
         required: false
         type: string
       status:
@@ -280,6 +284,81 @@ resources:
       args:
       - fields.name
       template: /api/v1/harbor/%s
+  mcloud_ip:
+    description: Ip(status, backup_ref, name, ip, block, created)
+    fields:
+      block_id:
+        description: ''
+        required: false
+        type: string
+      ip:
+        description: ''
+        type: string
+      name:
+        force_new: true
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/ip/%s
+  mcloud_ip_block:
+    description: IpBlock(status, backup_ref, name, created)
+    fields:
+      name:
+        force_new: true
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/ip-block/%s
+  mcloud_ip_scope:
+    description: IpScope(status, backup_ref, name, created)
+    fields:
+      name:
+        force_new: true
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/ip-scope/%s
+  mcloud_ip_scope_block_assignment:
+    description: IpScopeBlockAssignment(name, status, backup_ref, block, scope)
+    fields:
+      block_id:
+        description: ''
+        required: false
+        type: string
+      name:
+        force_new: true
+        type: string
+      scope_id:
+        description: ''
+        required: false
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/ip-scope-block-assignment/%s
   mcloud_k3s_cluster:
     description: K3s Kubernetes Cluster.
     fields:
@@ -314,8 +393,8 @@ resources:
       - fields.name
       template: /api/v1/k3s-cluster/%s
   mcloud_keycloak:
-    description: Keycloak(backup_ref, name, created, server_pool, admin_password,
-      fqdn, pki_ca, app_port, secret_key, sku, status, version, themes)
+    description: Keycloak(status, backup_ref, name, created, server_pool, admin_password,
+      fqdn, pki_ca, app_port, secret_key, sku, version, themes)
     fields:
       admin_password:
         computed: true
@@ -330,16 +409,15 @@ resources:
         type: string
       pki_ca_id:
         description: ''
-        force_new: true
         required: false
         type: string
       secret_key:
         computed: true
         description: ''
+        force_new: true
         type: string
       server_pool_id:
         description: ''
-        force_new: true
         required: false
         type: string
       sku:
@@ -471,6 +549,11 @@ resources:
   mcloud_pki_ca:
     description: PKI Certificate Authority.
     fields:
+      algorithm:
+        default: ecdsa-256
+        force_new: true
+        required: false
+        type: string
       city:
         default: Leipzig
         required: false
@@ -513,6 +596,28 @@ resources:
       args:
       - fields.name
       template: /api/v1/pki-ca/%s
+  mcloud_pki_cert:
+    description: PKI Certificate.
+    fields:
+      ca_id:
+        force_new: true
+        type: string
+      common_name:
+        type: string
+      key_priv:
+        computed: true
+        sensitive: true
+        type: string
+      key_pub:
+        computed: true
+        type: string
+      name:
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/pki-cert/%s
   mcloud_server_dedicated:
     description: A dedicated server.
     fields:
@@ -539,43 +644,52 @@ resources:
       - fields.name
       template: /api/v1/server-dedicated/%s
   mcloud_server_pool_dedicated:
-    description: A collection of dedicated servers.
+    description: ServerPoolDedicated(polymorphic_ctype, name, created, status, ip_block,
+      serverpool_ptr)
     fields:
+      ip_block_id: &id001
+        computed: true
+        force_new: false
+        required: false
+        type: string
       name:
+        force_new: true
         type: string
       status:
         default: running
-        description: '`new`, `running`, `failed`, `deleting` or `deleted`'
         required: false
         type: string
     primary_key: name
     url:
       args:
       - fields.name
-      template: /api/v1/server-pool/dedicated/%s
+      template: /api/v1/server-pool-dedicated/%s
   mcloud_server_pool_hcloud:
-    description: A collection of dedicated servers.
+    description: ServerPoolHcloud(polymorphic_ctype, name, created, status, ip_block,
+      serverpool_ptr, instance_type, instance_count, location, terraform_state)
     fields:
       instance_count:
+        description: ''
         type: number
       instance_type:
+        description: 'Possible values: `cx11`, `cpx11`, `cx21`, `cpx21`'
         type: string
+      ip_block_id: *id001
       location:
-        default: spread
-        required: false
+        description: 'Possible values: `fsn1`, `nbg1`, `hel1`, `spread`'
         type: string
       name:
+        force_new: true
         type: string
       status:
         default: running
-        description: '`new`, `running`, `failed`, `deleting` or `deleted`'
         required: false
         type: string
     primary_key: name
     url:
       args:
       - fields.name
-      template: /api/v1/server-pool/hcloud/%s
+      template: /api/v1/server-pool-hcloud/%s
   mcloud_ssh_key:
     description: SSH Key.
     fields:
@@ -596,47 +710,47 @@ resources:
       - fields.name
       template: /api/v1/ssh-key/%s
   mcloud_vault_cluster:
-    description: Vault Cluster.
+    description: VaultCluster(status, backup_ref, name, created, master_server_pool,
+      version, access_key_primary, access_key_secondary, pki_ca, seal_keys, root_token,
+      ip_scope)
     fields:
       access_key_primary:
         computed: true
-        sensitive: true
+        description: ''
         type: string
       access_key_secondary:
         computed: true
-        sensitive: true
+        description: ''
         type: string
-      firewall_whitelist_ipv4:
-        default: ''
-        type: string
-      master_domain:
-        computed: true
+      ip_scope_id:
+        description: ''
+        required: false
         type: string
       master_server_pool_id:
-        force_new: true
+        description: ''
+        required: false
         type: string
       name:
-        type: string
-      pki_ca_id:
         force_new: true
         type: string
+      pki_ca_id:
+        description: ''
+        required: false
+        type: string
       root_token:
-        computed: true
-        sensitive: true
+        description: ''
+        required: false
+        type: string
+      seal_keys:
+        description: ''
+        required: false
         type: string
       status:
         default: running
         required: false
         type: string
-      ui_basic_auth_password:
-        computed: true
-        sensitive: true
-        type: string
-      ui_basic_auth_user:
-        computed: true
-        sensitive: true
-        type: string
       version:
+        description: 'Possible values: `1.12.2-1`'
         type: string
     primary_key: name
     url:
@@ -644,30 +758,86 @@ resources:
       - fields.name
       template: /api/v1/vault-cluster/%s
   mcloud_yugabytedb:
-    description: YugabyteDB Instance.
+    description: Yugabytedb(status, backup_ref, name, created, server_pool, firewall_whitelist_ipv4,
+      meta, encryption_key, version, pki_ca, ip_scope_admin, ip_scope_client, consul_cluster)
     fields:
-      firewall_whitelist_ipv4:
+      consul_cluster_id:
+        description: ''
         required: false
         type: string
-      master_domain:
+      encryption_key:
+        computed: true
+        description: ''
+        type: string
+      firewall_whitelist_ipv4:
+        description: ''
+        required: false
+        type: string
+      fqdn:
         computed: true
         type: string
+      ip_scope_admin_id:
+        default: null
+        force_new: false
+        required: false
+        type: string
+      ip_scope_client_id:
+        force_new: false
+        required: false
+        type: string
+      meta:
+        description: ''
+        required: false
+        type: map
       name:
+        force_new: true
         type: string
       pki_ca_id:
-        force_new: true
+        description: ''
+        required: false
         type: string
       server_pool_id:
-        force_new: true
+        description: ''
+        required: false
         type: string
       status:
         default: running
         required: false
         type: string
       version:
+        description: 'Possible values: `2.17.1.0`'
         type: string
     primary_key: name
     url:
       args:
       - fields.name
       template: /api/v1/yugabytedb/%s
+  mcloud_yugabytedb_database:
+    description: YugabytedbDatabase(status, backup_ref, name, yugabytedb, password,
+      created)
+    fields:
+      name:
+        force_new: true
+        type: string
+      password:
+        computed: true
+        description: ''
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      username:
+        computed: true
+        required: false
+        sensitive: true
+        type: string
+      yugabytedb_id:
+        description: ''
+        required: false
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/yugabytedb-database/%s

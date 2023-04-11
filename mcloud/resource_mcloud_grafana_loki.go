@@ -74,14 +74,14 @@ func resourceMcloudGrafanaLoki() *schema.Resource {
 				Optional: true,
 				Required: false,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"server_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: true,
 				Required: false,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"status": &schema.Schema{
                 Type:     schema.TypeString,

@@ -2,12 +2,12 @@
 page_title: "mcloud_yugabytedb Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  YugabyteDB Instance.
+  Yugabytedb(status, backup_ref, name, created, server_pool, firewall_whitelist_ipv4, meta, encryption_key, version, pki_ca, ip_scope_admin, ip_scope_client, consul_cluster)
 ---
 
 # Resource `mcloud_yugabytedb`
 
-YugabyteDB Instance.
+Yugabytedb(status, backup_ref, name, created, server_pool, firewall_whitelist_ipv4, meta, encryption_key, version, pki_ca, ip_scope_admin, ip_scope_client, consul_cluster)
 
 
 
@@ -15,15 +15,20 @@ YugabyteDB Instance.
 
 The following arguments are supported:
 
+- `consul_cluster_id` - [string]  
 - `firewall_whitelist_ipv4` - [string]  
+- `ip_scope_admin_id` - [string]  
+- `ip_scope_client_id` - [string]  
+- `meta` - [map]  
 - `name` - (Required) [string]  
-- `pki_ca_id` - (Required) [string]  
-- `server_pool_id` - (Required) [string]  
+- `pki_ca_id` - [string]  
+- `server_pool_id` - [string]  
 - `status` - [string]   (default: `running`)
-- `version` - (Required) [string]  
+- `version` - (Required) [string] Possible values: `2.17.1.0` 
 
 ## Attributes Reference
 
 In addition to all the arguments above, the following attributes are exported:
 
-- `master_domain` - [string] 
+- `encryption_key` - [string] 
+- `fqdn` - [string] 

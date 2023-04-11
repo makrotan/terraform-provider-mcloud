@@ -13,29 +13,23 @@ import (
 	"strings"
 )
 
-type McloudServerPoolDedicated struct {
-    IpBlockId string `json:"ip_block_id,omitempty"`
+type McloudIpBlock struct {
     Name string `json:"name"`
     Status string `json:"status"`
 }
 
-type McloudServerPoolDedicatedResponse struct {
-    IpBlockId string `json:"ip_block_id"`
+type McloudIpBlockResponse struct {
     Name string `json:"name"`
     Status string `json:"status"`
 }
 
-func resourceMcloudServerPoolDedicated() *schema.Resource {
+func resourceMcloudIpBlock() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceMcloudServerPoolDedicatedCreate,
-		ReadContext:   resourceMcloudServerPoolDedicatedRead,
-		UpdateContext: resourceMcloudServerPoolDedicatedUpdate,
-		DeleteContext: resourceMcloudServerPoolDedicatedDelete,
+		CreateContext: resourceMcloudIpBlockCreate,
+		ReadContext:   resourceMcloudIpBlockRead,
+		UpdateContext: resourceMcloudIpBlockUpdate,
+		DeleteContext: resourceMcloudIpBlockDelete,
 		Schema: map[string]*schema.Schema{
-			"ip_block_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Required: false, Computed: true, Optional: false, ForceNew: false,
-			},
 			"name": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true, Computed: false, Optional: false, ForceNew: true,
@@ -55,14 +49,14 @@ func resourceMcloudServerPoolDedicated() *schema.Resource {
 	}
 }
 
-func resourceMcloudServerPoolDedicatedCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudIpBlockCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
 	pk := d.Get("name").(string)
-	instance := McloudServerPoolDedicated{
+	instance := McloudIpBlock{
         Name: d.Get("name").(string),
         Status: d.Get("status").(string),
 	}
@@ -73,7 +67,7 @@ func resourceMcloudServerPoolDedicatedCreate(ctx context.Context, d *schema.Reso
 	}
 
 	// req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/ssh-key/%s", strings.Trim(provider.HostURL, "/"), pk), strings.NewReader(string(rb)))
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/server-pool-dedicated/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), strings.NewReader(string(rb)))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/ip-block/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), strings.NewReader(string(rb)))
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -99,21 +93,20 @@ func resourceMcloudServerPoolDedicatedCreate(ctx context.Context, d *schema.Reso
 		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
 	}
 
-	var mcloudServerPoolDedicatedResponse McloudServerPoolDedicatedResponse
-	err = json.Unmarshal(body, &mcloudServerPoolDedicatedResponse)
+	var mcloudIpBlockResponse McloudIpBlockResponse
+	err = json.Unmarshal(body, &mcloudIpBlockResponse)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	d.SetId(pk)
-    d.Set("ip_block_id", mcloudServerPoolDedicatedResponse.IpBlockId)
-    d.Set("name", mcloudServerPoolDedicatedResponse.Name)
-    d.Set("status", mcloudServerPoolDedicatedResponse.Status)
+    d.Set("name", mcloudIpBlockResponse.Name)
+    d.Set("status", mcloudIpBlockResponse.Status)
 
 	return diags
 }
 
-func resourceMcloudServerPoolDedicatedRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudIpBlockRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 	client := provider.HTTPClient
 
@@ -121,7 +114,7 @@ func resourceMcloudServerPoolDedicatedRead(ctx context.Context, d *schema.Resour
 	var diags diag.Diagnostics
 
 	pk := d.Id()
-	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/server-pool-dedicated/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/ip-block/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -139,30 +132,29 @@ func resourceMcloudServerPoolDedicatedRead(ctx context.Context, d *schema.Resour
 	}
 
 	if res.StatusCode == 404 {
-		log.Printf("[WARN] mcloud_server_pool_dedicated %s not present", pk)
+		log.Printf("[WARN] mcloud_ip_block %s not present", pk)
 		d.SetId("")
 		return nil
 	} else if res.StatusCode != http.StatusOK {
 		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
 	}
 
-	var mcloudServerPoolDedicatedResponse McloudServerPoolDedicatedResponse
-	err = json.Unmarshal(body, &mcloudServerPoolDedicatedResponse)
-	//err = json.NewDecoder(resp.Body).Decode(McloudServerPoolDedicatedResponse)
+	var mcloudIpBlockResponse McloudIpBlockResponse
+	err = json.Unmarshal(body, &mcloudIpBlockResponse)
+	//err = json.NewDecoder(resp.Body).Decode(McloudIpBlockResponse)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-    d.Set("ip_block_id", mcloudServerPoolDedicatedResponse.IpBlockId)
-    d.Set("name", mcloudServerPoolDedicatedResponse.Name)
-    d.Set("status", mcloudServerPoolDedicatedResponse.Status)
+    d.Set("name", mcloudIpBlockResponse.Name)
+    d.Set("status", mcloudIpBlockResponse.Status)
 
 	return diags
 }
-func resourceMcloudServerPoolDedicatedUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return resourceMcloudServerPoolDedicatedCreate(ctx, d, m)
+func resourceMcloudIpBlockUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	return resourceMcloudIpBlockCreate(ctx, d, m)
 }
 
-func resourceMcloudServerPoolDedicatedDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudIpBlockDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 	client := provider.HTTPClient
 
@@ -170,7 +162,7 @@ func resourceMcloudServerPoolDedicatedDelete(ctx context.Context, d *schema.Reso
 	var diags diag.Diagnostics
 
 // 	pk := d.Id()
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/server-pool-dedicated/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/ip-block/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

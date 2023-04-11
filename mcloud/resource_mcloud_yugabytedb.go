@@ -14,8 +14,13 @@ import (
 )
 
 type McloudYugabytedb struct {
+    ConsulClusterId string `json:"consul_cluster_id"`
+    EncryptionKey string `json:"encryption_key,omitempty"`
     FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
-    MasterDomain string `json:"master_domain,omitempty"`
+    Fqdn string `json:"fqdn,omitempty"`
+    IpScopeAdminId string `json:"ip_scope_admin_id"`
+    IpScopeClientId string `json:"ip_scope_client_id"`
+    Meta map[string]interface{} `json:"meta"`
     Name string `json:"name"`
     PkiCaId string `json:"pki_ca_id"`
     ServerPoolId string `json:"server_pool_id"`
@@ -24,8 +29,13 @@ type McloudYugabytedb struct {
 }
 
 type McloudYugabytedbResponse struct {
+    ConsulClusterId string `json:"consul_cluster_id"`
+    EncryptionKey string `json:"encryption_key"`
     FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
-    MasterDomain string `json:"master_domain"`
+    Fqdn string `json:"fqdn"`
+    IpScopeAdminId string `json:"ip_scope_admin_id"`
+    IpScopeClientId string `json:"ip_scope_client_id"`
+    Meta map[string]interface{} `json:"meta"`
     Name string `json:"name"`
     PkiCaId string `json:"pki_ca_id"`
     ServerPoolId string `json:"server_pool_id"`
@@ -40,6 +50,17 @@ func resourceMcloudYugabytedb() *schema.Resource {
 		UpdateContext: resourceMcloudYugabytedbUpdate,
 		DeleteContext: resourceMcloudYugabytedbDelete,
 		Schema: map[string]*schema.Schema{
+			"consul_cluster_id": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
+			"encryption_key": &schema.Schema{
+                Type:     schema.TypeString,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
+			},
 			"firewall_whitelist_ipv4": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: true,
@@ -47,9 +68,33 @@ func resourceMcloudYugabytedb() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"master_domain": &schema.Schema{
+			"fqdn": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
+			},
+			"ip_scope_admin_id": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
+			"ip_scope_client_id": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
+			"meta": &schema.Schema{
+                Type:     schema.TypeMap,
+                Elem: &schema.Schema{
+                    Type: schema.TypeString,
+                },
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
 			},
 			"name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -57,17 +102,17 @@ func resourceMcloudYugabytedb() *schema.Resource {
 			},
 			"pki_ca_id": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
+				Optional: true,
+				Required: false,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"server_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
+				Optional: true,
+				Required: false,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"status": &schema.Schema{
                 Type:     schema.TypeString,
@@ -99,7 +144,11 @@ func resourceMcloudYugabytedbCreate(ctx context.Context, d *schema.ResourceData,
 
 	pk := d.Get("name").(string)
 	instance := McloudYugabytedb{
+        ConsulClusterId: d.Get("consul_cluster_id").(string),
         FirewallWhitelistIpv4: d.Get("firewall_whitelist_ipv4").(string),
+        IpScopeAdminId: d.Get("ip_scope_admin_id").(string),
+        IpScopeClientId: d.Get("ip_scope_client_id").(string),
+        Meta: d.Get("meta").(map[string]interface{}),
         Name: d.Get("name").(string),
         PkiCaId: d.Get("pki_ca_id").(string),
         ServerPoolId: d.Get("server_pool_id").(string),
@@ -146,8 +195,13 @@ func resourceMcloudYugabytedbCreate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	d.SetId(pk)
+    d.Set("consul_cluster_id", mcloudYugabytedbResponse.ConsulClusterId)
+    d.Set("encryption_key", mcloudYugabytedbResponse.EncryptionKey)
     d.Set("firewall_whitelist_ipv4", mcloudYugabytedbResponse.FirewallWhitelistIpv4)
-    d.Set("master_domain", mcloudYugabytedbResponse.MasterDomain)
+    d.Set("fqdn", mcloudYugabytedbResponse.Fqdn)
+    d.Set("ip_scope_admin_id", mcloudYugabytedbResponse.IpScopeAdminId)
+    d.Set("ip_scope_client_id", mcloudYugabytedbResponse.IpScopeClientId)
+    d.Set("meta", mcloudYugabytedbResponse.Meta)
     d.Set("name", mcloudYugabytedbResponse.Name)
     d.Set("pki_ca_id", mcloudYugabytedbResponse.PkiCaId)
     d.Set("server_pool_id", mcloudYugabytedbResponse.ServerPoolId)
@@ -196,8 +250,13 @@ func resourceMcloudYugabytedbRead(ctx context.Context, d *schema.ResourceData, m
 	if err != nil {
 		return diag.FromErr(err)
 	}
+    d.Set("consul_cluster_id", mcloudYugabytedbResponse.ConsulClusterId)
+    d.Set("encryption_key", mcloudYugabytedbResponse.EncryptionKey)
     d.Set("firewall_whitelist_ipv4", mcloudYugabytedbResponse.FirewallWhitelistIpv4)
-    d.Set("master_domain", mcloudYugabytedbResponse.MasterDomain)
+    d.Set("fqdn", mcloudYugabytedbResponse.Fqdn)
+    d.Set("ip_scope_admin_id", mcloudYugabytedbResponse.IpScopeAdminId)
+    d.Set("ip_scope_client_id", mcloudYugabytedbResponse.IpScopeClientId)
+    d.Set("meta", mcloudYugabytedbResponse.Meta)
     d.Set("name", mcloudYugabytedbResponse.Name)
     d.Set("pki_ca_id", mcloudYugabytedbResponse.PkiCaId)
     d.Set("server_pool_id", mcloudYugabytedbResponse.ServerPoolId)

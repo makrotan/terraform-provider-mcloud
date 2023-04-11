@@ -67,7 +67,7 @@ func resourceMcloudKeycloak() *schema.Resource {
 				Optional: true,
 				Required: false,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"secret_key": &schema.Schema{
                 Type:     schema.TypeString,
@@ -78,7 +78,7 @@ func resourceMcloudKeycloak() *schema.Resource {
 				Optional: true,
 				Required: false,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"sku": &schema.Schema{
                 Type:     schema.TypeString,

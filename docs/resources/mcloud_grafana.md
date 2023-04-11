@@ -2,12 +2,12 @@
 page_title: "mcloud_grafana Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  Grafana(backup_ref, name, created, server_pool, admin_password, fqdn, app_port, status, version)
+  Grafana(status, backup_ref, name, created, server_pool, admin_password, fqdn, app_port, version)
 ---
 
 # Resource `mcloud_grafana`
 
-Grafana(backup_ref, name, created, server_pool, admin_password, fqdn, app_port, status, version)
+Grafana(status, backup_ref, name, created, server_pool, admin_password, fqdn, app_port, version)
 
 
 
