@@ -2,12 +2,12 @@
 page_title: "mcloud_consul_cluster Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  ConsulCluster(name, status, backup_ref, created, master_server_pool, encryption_key, version, firewall_whitelist_ipv4, access_key_primary, access_key_secondary, pki_ca)
+  ConsulCluster(name, status, backup_ref, created, master_server_pool, encryption_key, version, ip_scope, access_key_primary, access_key_secondary, pki_ca)
 ---
 
 # Resource `mcloud_consul_cluster`
 
-ConsulCluster(name, status, backup_ref, created, master_server_pool, encryption_key, version, firewall_whitelist_ipv4, access_key_primary, access_key_secondary, pki_ca)
+ConsulCluster(name, status, backup_ref, created, master_server_pool, encryption_key, version, ip_scope, access_key_primary, access_key_secondary, pki_ca)
 
 
 
@@ -15,12 +15,12 @@ ConsulCluster(name, status, backup_ref, created, master_server_pool, encryption_
 
 The following arguments are supported:
 
-- `firewall_whitelist_ipv4` - [string]  
+- `ip_scope_id` - [string]  
 - `master_server_pool_id` - (Required) [string]  
 - `name` - (Required) [string]  
 - `pki_ca_id` - [string]  
 - `status` - [string]   (default: `running`)
-- `version` - (Required) [string] Possible values: `1.11.4`, `1.11.5`, `1.12.0`, `1.14.3` 
+- `version` - (Required) [string] Possible values: `1.11.4`, `1.11.5`, `1.12.0`, `1.14.3`, `1.15.2` 
 
 ## Attributes Reference
 

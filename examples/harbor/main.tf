@@ -21,6 +21,7 @@ resource "mcloud_server_pool_hcloud" "test" {
   name = "harbor-test"
   instance_type = "cpx11"
   instance_count = 1
+  location = "spread"
 }
 
 resource "mcloud_harbor" "test" {

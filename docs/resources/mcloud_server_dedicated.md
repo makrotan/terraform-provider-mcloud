@@ -18,7 +18,7 @@ The following arguments are supported:
 - `az` - (Required) [string]  
 - `ipv4` - (Required) [string]  
 - `name` - (Required) [string]  
-- `pool_name` - (Required) [string]  
+- `pool_id` - (Required) [string]  
 - `region` - (Required) [string]  
 - `server_provider` - (Required) [string]  
 - `server_provider_ref` - [string]  

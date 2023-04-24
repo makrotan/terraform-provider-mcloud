@@ -43,14 +43,14 @@ func resourceMcloudNomadServerPool() *schema.Resource {
 				Optional: false,
 				Required: true,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"server_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"status": &schema.Schema{
                 Type:     schema.TypeString,

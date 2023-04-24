@@ -16,6 +16,9 @@ import (
 type McloudMattermost struct {
     Fqdn string `json:"fqdn"`
     Name string `json:"name"`
+    PostgresPassword string `json:"postgres_password"`
+    PostgresUsername string `json:"postgres_username"`
+    SecretKey string `json:"secret_key,omitempty"`
     ServerPoolId string `json:"server_pool_id"`
     Sku string `json:"sku"`
     Status string `json:"status"`
@@ -25,6 +28,9 @@ type McloudMattermost struct {
 type McloudMattermostResponse struct {
     Fqdn string `json:"fqdn"`
     Name string `json:"name"`
+    PostgresPassword string `json:"postgres_password"`
+    PostgresUsername string `json:"postgres_username"`
+    SecretKey string `json:"secret_key"`
     ServerPoolId string `json:"server_pool_id"`
     Sku string `json:"sku"`
     Status string `json:"status"`
@@ -43,18 +49,37 @@ func resourceMcloudMattermost() *schema.Resource {
 				Optional: false,
 				Required: true,
 				Computed: false,
-				ForceNew: false,
+				ForceNew: true,
 			},
 			"name": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
+			"postgres_password": &schema.Schema{
+                Type:     schema.TypeString,
+                Sensitive: true,
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
+			"postgres_username": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
+			"secret_key": &schema.Schema{
+                Type:     schema.TypeString,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
+			},
 			"server_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
+				Optional: true,
+				Required: false,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"sku": &schema.Schema{
                 Type:     schema.TypeString,
@@ -95,6 +120,8 @@ func resourceMcloudMattermostCreate(ctx context.Context, d *schema.ResourceData,
 	instance := McloudMattermost{
         Fqdn: d.Get("fqdn").(string),
         Name: d.Get("name").(string),
+        PostgresPassword: d.Get("postgres_password").(string),
+        PostgresUsername: d.Get("postgres_username").(string),
         ServerPoolId: d.Get("server_pool_id").(string),
         Sku: d.Get("sku").(string),
         Status: d.Get("status").(string),
@@ -142,6 +169,9 @@ func resourceMcloudMattermostCreate(ctx context.Context, d *schema.ResourceData,
 	d.SetId(pk)
     d.Set("fqdn", mcloudMattermostResponse.Fqdn)
     d.Set("name", mcloudMattermostResponse.Name)
+    d.Set("postgres_password", mcloudMattermostResponse.PostgresPassword)
+    d.Set("postgres_username", mcloudMattermostResponse.PostgresUsername)
+    d.Set("secret_key", mcloudMattermostResponse.SecretKey)
     d.Set("server_pool_id", mcloudMattermostResponse.ServerPoolId)
     d.Set("sku", mcloudMattermostResponse.Sku)
     d.Set("status", mcloudMattermostResponse.Status)
@@ -191,6 +221,9 @@ func resourceMcloudMattermostRead(ctx context.Context, d *schema.ResourceData, m
 	}
     d.Set("fqdn", mcloudMattermostResponse.Fqdn)
     d.Set("name", mcloudMattermostResponse.Name)
+    d.Set("postgres_password", mcloudMattermostResponse.PostgresPassword)
+    d.Set("postgres_username", mcloudMattermostResponse.PostgresUsername)
+    d.Set("secret_key", mcloudMattermostResponse.SecretKey)
     d.Set("server_pool_id", mcloudMattermostResponse.ServerPoolId)
     d.Set("sku", mcloudMattermostResponse.Sku)
     d.Set("status", mcloudMattermostResponse.Status)

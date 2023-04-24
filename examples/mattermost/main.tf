@@ -21,6 +21,8 @@ resource "mcloud_server_pool_hcloud" "test" {
   name = "mattermost-test"
   instance_type = "cpx11"
   instance_count = 1
+  location = "spread"
+  consul_cluster_id = mcloud_consul_cluster.foo.id
 }
 
 resource "mcloud_pki_ca" "test" {
@@ -33,6 +35,9 @@ resource "mcloud_mattermost" "test" {
   fqdn           = "mattermost-test.makrotan.com"
   sku            = "dev"
   version        = "7.7"
+
+  postgres_username = "foo"
+  postgres_password = "bar"
 }
 
 output "out" {

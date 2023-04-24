@@ -21,7 +21,7 @@ type McloudNomadCluster struct {
     AdminKey string `json:"admin_key,omitempty"`
     ConsulClusterId string `json:"consul_cluster_id"`
     EncryptionKey string `json:"encryption_key,omitempty"`
-    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
+    IpScopeId string `json:"ip_scope_id"`
     MasterDomain string `json:"master_domain,omitempty"`
     MasterServerPoolId string `json:"master_server_pool_id"`
     Name string `json:"name"`
@@ -30,6 +30,7 @@ type McloudNomadCluster struct {
     UiBasicAuthPassword string `json:"ui_basic_auth_password,omitempty"`
     UiBasicAuthUser string `json:"ui_basic_auth_user,omitempty"`
     VaultClusterId string `json:"vault_cluster_id"`
+    VaultToken string `json:"vault_token,omitempty"`
     Version string `json:"version"`
 }
 
@@ -41,7 +42,7 @@ type McloudNomadClusterResponse struct {
     AdminKey string `json:"admin_key"`
     ConsulClusterId string `json:"consul_cluster_id"`
     EncryptionKey string `json:"encryption_key"`
-    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
+    IpScopeId string `json:"ip_scope_id"`
     MasterDomain string `json:"master_domain"`
     MasterServerPoolId string `json:"master_server_pool_id"`
     Name string `json:"name"`
@@ -50,6 +51,7 @@ type McloudNomadClusterResponse struct {
     UiBasicAuthPassword string `json:"ui_basic_auth_password"`
     UiBasicAuthUser string `json:"ui_basic_auth_user"`
     VaultClusterId string `json:"vault_cluster_id"`
+    VaultToken string `json:"vault_token"`
     Version string `json:"version"`
 }
 
@@ -62,22 +64,18 @@ func resourceMcloudNomadCluster() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"access_key_primary": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"access_key_secondary": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"admin_ca": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"admin_cert": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"admin_key": &schema.Schema{
@@ -90,17 +88,16 @@ func resourceMcloudNomadCluster() *schema.Resource {
 				Optional: false,
 				Required: true,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"encryption_key": &schema.Schema{
                 Type:     schema.TypeString,
-                Sensitive: true,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
-			"firewall_whitelist_ipv4": &schema.Schema{
+			"ip_scope_id": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
+				Optional: true,
+				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
@@ -110,10 +107,10 @@ func resourceMcloudNomadCluster() *schema.Resource {
 			},
 			"master_server_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
+				Optional: true,
+				Required: false,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -121,10 +118,10 @@ func resourceMcloudNomadCluster() *schema.Resource {
 			},
 			"pki_ca_id": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
+				Optional: true,
+				Required: false,
 				Computed: false,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			"status": &schema.Schema{
                 Type:     schema.TypeString,
@@ -146,10 +143,15 @@ func resourceMcloudNomadCluster() *schema.Resource {
 			},
 			"vault_cluster_id": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
+				Optional: true,
+				Required: false,
 				Computed: false,
 				ForceNew: false,
+			},
+			"vault_token": &schema.Schema{
+                Type:     schema.TypeString,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"version": &schema.Schema{
                 Type:     schema.TypeString,
@@ -174,7 +176,7 @@ func resourceMcloudNomadClusterCreate(ctx context.Context, d *schema.ResourceDat
 	pk := d.Get("name").(string)
 	instance := McloudNomadCluster{
         ConsulClusterId: d.Get("consul_cluster_id").(string),
-        FirewallWhitelistIpv4: d.Get("firewall_whitelist_ipv4").(string),
+        IpScopeId: d.Get("ip_scope_id").(string),
         MasterServerPoolId: d.Get("master_server_pool_id").(string),
         Name: d.Get("name").(string),
         PkiCaId: d.Get("pki_ca_id").(string),
@@ -229,7 +231,7 @@ func resourceMcloudNomadClusterCreate(ctx context.Context, d *schema.ResourceDat
     d.Set("admin_key", mcloudNomadClusterResponse.AdminKey)
     d.Set("consul_cluster_id", mcloudNomadClusterResponse.ConsulClusterId)
     d.Set("encryption_key", mcloudNomadClusterResponse.EncryptionKey)
-    d.Set("firewall_whitelist_ipv4", mcloudNomadClusterResponse.FirewallWhitelistIpv4)
+    d.Set("ip_scope_id", mcloudNomadClusterResponse.IpScopeId)
     d.Set("master_domain", mcloudNomadClusterResponse.MasterDomain)
     d.Set("master_server_pool_id", mcloudNomadClusterResponse.MasterServerPoolId)
     d.Set("name", mcloudNomadClusterResponse.Name)
@@ -238,6 +240,7 @@ func resourceMcloudNomadClusterCreate(ctx context.Context, d *schema.ResourceDat
     d.Set("ui_basic_auth_password", mcloudNomadClusterResponse.UiBasicAuthPassword)
     d.Set("ui_basic_auth_user", mcloudNomadClusterResponse.UiBasicAuthUser)
     d.Set("vault_cluster_id", mcloudNomadClusterResponse.VaultClusterId)
+    d.Set("vault_token", mcloudNomadClusterResponse.VaultToken)
     d.Set("version", mcloudNomadClusterResponse.Version)
 
 	return diags
@@ -289,7 +292,7 @@ func resourceMcloudNomadClusterRead(ctx context.Context, d *schema.ResourceData,
     d.Set("admin_key", mcloudNomadClusterResponse.AdminKey)
     d.Set("consul_cluster_id", mcloudNomadClusterResponse.ConsulClusterId)
     d.Set("encryption_key", mcloudNomadClusterResponse.EncryptionKey)
-    d.Set("firewall_whitelist_ipv4", mcloudNomadClusterResponse.FirewallWhitelistIpv4)
+    d.Set("ip_scope_id", mcloudNomadClusterResponse.IpScopeId)
     d.Set("master_domain", mcloudNomadClusterResponse.MasterDomain)
     d.Set("master_server_pool_id", mcloudNomadClusterResponse.MasterServerPoolId)
     d.Set("name", mcloudNomadClusterResponse.Name)
@@ -298,6 +301,7 @@ func resourceMcloudNomadClusterRead(ctx context.Context, d *schema.ResourceData,
     d.Set("ui_basic_auth_password", mcloudNomadClusterResponse.UiBasicAuthPassword)
     d.Set("ui_basic_auth_user", mcloudNomadClusterResponse.UiBasicAuthUser)
     d.Set("vault_cluster_id", mcloudNomadClusterResponse.VaultClusterId)
+    d.Set("vault_token", mcloudNomadClusterResponse.VaultToken)
     d.Set("version", mcloudNomadClusterResponse.Version)
 
 	return diags

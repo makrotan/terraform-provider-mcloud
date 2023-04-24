@@ -17,7 +17,7 @@ type McloudConsulCluster struct {
     AccessKeyPrimary string `json:"access_key_primary,omitempty"`
     AccessKeySecondary string `json:"access_key_secondary,omitempty"`
     EncryptionKey string `json:"encryption_key,omitempty"`
-    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
+    IpScopeId string `json:"ip_scope_id"`
     MasterDomain string `json:"master_domain,omitempty"`
     MasterServerPoolId string `json:"master_server_pool_id"`
     Name string `json:"name"`
@@ -32,7 +32,7 @@ type McloudConsulClusterResponse struct {
     AccessKeyPrimary string `json:"access_key_primary"`
     AccessKeySecondary string `json:"access_key_secondary"`
     EncryptionKey string `json:"encryption_key"`
-    FirewallWhitelistIpv4 string `json:"firewall_whitelist_ipv4"`
+    IpScopeId string `json:"ip_scope_id"`
     MasterDomain string `json:"master_domain"`
     MasterServerPoolId string `json:"master_server_pool_id"`
     Name string `json:"name"`
@@ -62,7 +62,7 @@ func resourceMcloudConsulCluster() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
-			"firewall_whitelist_ipv4": &schema.Schema{
+			"ip_scope_id": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: true,
 				Required: false,
@@ -78,7 +78,7 @@ func resourceMcloudConsulCluster() *schema.Resource {
 				Optional: false,
 				Required: true,
 				Computed: false,
-				ForceNew: false,
+				ForceNew: true,
 			},
 			"name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -130,7 +130,7 @@ func resourceMcloudConsulClusterCreate(ctx context.Context, d *schema.ResourceDa
 
 	pk := d.Get("name").(string)
 	instance := McloudConsulCluster{
-        FirewallWhitelistIpv4: d.Get("firewall_whitelist_ipv4").(string),
+        IpScopeId: d.Get("ip_scope_id").(string),
         MasterServerPoolId: d.Get("master_server_pool_id").(string),
         Name: d.Get("name").(string),
         PkiCaId: d.Get("pki_ca_id").(string),
@@ -180,7 +180,7 @@ func resourceMcloudConsulClusterCreate(ctx context.Context, d *schema.ResourceDa
     d.Set("access_key_primary", mcloudConsulClusterResponse.AccessKeyPrimary)
     d.Set("access_key_secondary", mcloudConsulClusterResponse.AccessKeySecondary)
     d.Set("encryption_key", mcloudConsulClusterResponse.EncryptionKey)
-    d.Set("firewall_whitelist_ipv4", mcloudConsulClusterResponse.FirewallWhitelistIpv4)
+    d.Set("ip_scope_id", mcloudConsulClusterResponse.IpScopeId)
     d.Set("master_domain", mcloudConsulClusterResponse.MasterDomain)
     d.Set("master_server_pool_id", mcloudConsulClusterResponse.MasterServerPoolId)
     d.Set("name", mcloudConsulClusterResponse.Name)
@@ -235,7 +235,7 @@ func resourceMcloudConsulClusterRead(ctx context.Context, d *schema.ResourceData
     d.Set("access_key_primary", mcloudConsulClusterResponse.AccessKeyPrimary)
     d.Set("access_key_secondary", mcloudConsulClusterResponse.AccessKeySecondary)
     d.Set("encryption_key", mcloudConsulClusterResponse.EncryptionKey)
-    d.Set("firewall_whitelist_ipv4", mcloudConsulClusterResponse.FirewallWhitelistIpv4)
+    d.Set("ip_scope_id", mcloudConsulClusterResponse.IpScopeId)
     d.Set("master_domain", mcloudConsulClusterResponse.MasterDomain)
     d.Set("master_server_pool_id", mcloudConsulClusterResponse.MasterServerPoolId)
     d.Set("name", mcloudConsulClusterResponse.Name)

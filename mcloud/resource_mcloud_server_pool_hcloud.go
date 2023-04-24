@@ -14,6 +14,7 @@ import (
 )
 
 type McloudServerPoolHcloud struct {
+    ConsulClusterId string `json:"consul_cluster_id"`
     InstanceCount int `json:"instance_count"`
     InstanceType string `json:"instance_type"`
     IpBlockId string `json:"ip_block_id,omitempty"`
@@ -23,6 +24,7 @@ type McloudServerPoolHcloud struct {
 }
 
 type McloudServerPoolHcloudResponse struct {
+    ConsulClusterId string `json:"consul_cluster_id"`
     InstanceCount int `json:"instance_count"`
     InstanceType string `json:"instance_type"`
     IpBlockId string `json:"ip_block_id"`
@@ -38,6 +40,13 @@ func resourceMcloudServerPoolHcloud() *schema.Resource {
 		UpdateContext: resourceMcloudServerPoolHcloudUpdate,
 		DeleteContext: resourceMcloudServerPoolHcloudDelete,
 		Schema: map[string]*schema.Schema{
+			"consul_cluster_id": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
 			"instance_count": &schema.Schema{
 			    Type:     schema.TypeInt,
 				Optional: false,
@@ -90,6 +99,7 @@ func resourceMcloudServerPoolHcloudCreate(ctx context.Context, d *schema.Resourc
 
 	pk := d.Get("name").(string)
 	instance := McloudServerPoolHcloud{
+        ConsulClusterId: d.Get("consul_cluster_id").(string),
         InstanceCount: d.Get("instance_count").(int),
         InstanceType: d.Get("instance_type").(string),
         Location: d.Get("location").(string),
@@ -136,6 +146,7 @@ func resourceMcloudServerPoolHcloudCreate(ctx context.Context, d *schema.Resourc
 	}
 
 	d.SetId(pk)
+    d.Set("consul_cluster_id", mcloudServerPoolHcloudResponse.ConsulClusterId)
     d.Set("instance_count", mcloudServerPoolHcloudResponse.InstanceCount)
     d.Set("instance_type", mcloudServerPoolHcloudResponse.InstanceType)
     d.Set("ip_block_id", mcloudServerPoolHcloudResponse.IpBlockId)
@@ -185,6 +196,7 @@ func resourceMcloudServerPoolHcloudRead(ctx context.Context, d *schema.ResourceD
 	if err != nil {
 		return diag.FromErr(err)
 	}
+    d.Set("consul_cluster_id", mcloudServerPoolHcloudResponse.ConsulClusterId)
     d.Set("instance_count", mcloudServerPoolHcloudResponse.InstanceCount)
     d.Set("instance_type", mcloudServerPoolHcloudResponse.InstanceType)
     d.Set("ip_block_id", mcloudServerPoolHcloudResponse.IpBlockId)

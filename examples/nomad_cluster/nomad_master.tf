@@ -8,9 +8,6 @@ terraform {
 }
 
 variable "mcloud_token" {}
-variable "firewall_whitelist_ipv4" {
-  default = ""
-}
 
 provider "mcloud" {
   api_token = var.mcloud_token
@@ -21,58 +18,39 @@ resource "mcloud_server_pool_hcloud" "test" {
   name = "nomad-test"
   instance_type = "cpx11"
   instance_count = 2
+  location = "spread"
+  consul_cluster_id = mcloud_consul_cluster.test.id
 }
 
-resource "mcloud_server_pool_hcloud" "client_a" {
-  name = "nomad-client-A"
-  instance_type = "cpx11"
-  instance_count = 1
-}
 
 resource "mcloud_pki_ca" "test" {
   name = "nomad-test"
 }
 
-resource "mcloud_consul_cluster" "test" {
-  name = "consul-test"
-  master_server_pool_id = mcloud_server_pool_hcloud.test.id
-  firewall_whitelist_ipv4 = var.firewall_whitelist_ipv4
-  pki_ca_id = mcloud_pki_ca.test.id
-  version = "1.11.5"
-}
-
-resource "mcloud_vault_cluster" "test" {
-  name = "vault-test"
-  version = "1.12.2-1"
-  master_server_pool_id = mcloud_server_pool_hcloud.test.id
-  pki_ca_id = mcloud_pki_ca.test.id
-  firewall_whitelist_ipv4 = var.firewall_whitelist_ipv4
-}
-
 resource "mcloud_nomad_cluster" "test" {
   name = "nomad-test"
-  version = "1.4.3-1"
+  version = "1.5.3-1"
   consul_cluster_id = mcloud_consul_cluster.test.id
   master_server_pool_id = mcloud_server_pool_hcloud.test.id
   pki_ca_id = mcloud_pki_ca.test.id
-  firewall_whitelist_ipv4 = var.firewall_whitelist_ipv4
+  ip_scope_id = mcloud_ip_scope.nomad.id
   vault_cluster_id = mcloud_vault_cluster.test.id
+
+  # we are using the same server pools for everything, so we need to take care of not doing things concurrently
+  depends_on = [
+    mcloud_vault_cluster.test,
+    mcloud_consul_cluster.test,
+  ]
 }
 
-resource "mcloud_nomad_server_pool" "client_a" {
-  name = "nomad-client-A"
-  nomad_cluster_id = mcloud_nomad_cluster.test.id
-  server_pool_id = mcloud_server_pool_hcloud.client_a.id
-}
-
-provider "nomad" {
-  address = "https://${mcloud_nomad_cluster.test.master_domain}"
-  region  = "europe"
-  http_auth = "${mcloud_nomad_cluster.test.ui_basic_auth_user}:${mcloud_nomad_cluster.test.ui_basic_auth_password}"
-  ca_pem = "${mcloud_nomad_cluster.test.admin_ca}"
-  cert_pem = "${mcloud_nomad_cluster.test.admin_cert}"
-  key_pem = "${mcloud_nomad_cluster.test.admin_key}"
-}
+#provider "nomad" {
+#  address = "https://${mcloud_nomad_cluster.test.master_domain}"
+#  region  = "europe"
+#  http_auth = "${mcloud_nomad_cluster.test.ui_basic_auth_user}:${mcloud_nomad_cluster.test.ui_basic_auth_password}"
+#  ca_pem = "${mcloud_nomad_cluster.test.admin_ca}"
+#  cert_pem = "${mcloud_nomad_cluster.test.admin_cert}"
+#  key_pem = "${mcloud_nomad_cluster.test.admin_key}"
+#}
 
 #resource "nomad_job" "app" {
 #  jobspec = <<EOT
@@ -136,7 +114,7 @@ Resources successfully installed:
         Root-Token: ${mcloud_vault_cluster.test.root_token}
 
     Nomad
-        Access: https://${mcloud_nomad_cluster.test.ui_basic_auth_user}:${mcloud_nomad_cluster.test.ui_basic_auth_password}@${mcloud_nomad_cluster.test.master_domain}/ui/
+        Access: https://${mcloud_nomad_cluster.test.ui_basic_auth_user}:${mcloud_nomad_cluster.test.ui_basic_auth_password}@${mcloud_nomad_cluster.test.master_domain}:4747/ui/
         User: ${mcloud_nomad_cluster.test.ui_basic_auth_user}
         Password: ${mcloud_nomad_cluster.test.ui_basic_auth_password}
 EOT

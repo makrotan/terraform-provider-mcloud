@@ -24,6 +24,7 @@ resource "mcloud_server_pool_hcloud" "foo" {
   name = "foo4"
   instance_type = "cpx21"
   instance_count = 2
+  location = "spread"
 }
 
 resource "mcloud_k3s_cluster" "foo" {

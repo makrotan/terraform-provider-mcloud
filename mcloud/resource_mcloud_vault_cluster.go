@@ -17,12 +17,14 @@ type McloudVaultCluster struct {
     AccessKeyPrimary string `json:"access_key_primary,omitempty"`
     AccessKeySecondary string `json:"access_key_secondary,omitempty"`
     IpScopeId string `json:"ip_scope_id"`
+    MasterDomain string `json:"master_domain,omitempty"`
     MasterServerPoolId string `json:"master_server_pool_id"`
     Name string `json:"name"`
     PkiCaId string `json:"pki_ca_id"`
-    RootToken string `json:"root_token"`
-    SealKeys string `json:"seal_keys"`
+    RootToken string `json:"root_token,omitempty"`
     Status string `json:"status"`
+    UiBasicAuthPassword string `json:"ui_basic_auth_password,omitempty"`
+    UiBasicAuthUser string `json:"ui_basic_auth_user,omitempty"`
     Version string `json:"version"`
 }
 
@@ -30,12 +32,14 @@ type McloudVaultClusterResponse struct {
     AccessKeyPrimary string `json:"access_key_primary"`
     AccessKeySecondary string `json:"access_key_secondary"`
     IpScopeId string `json:"ip_scope_id"`
+    MasterDomain string `json:"master_domain"`
     MasterServerPoolId string `json:"master_server_pool_id"`
     Name string `json:"name"`
     PkiCaId string `json:"pki_ca_id"`
     RootToken string `json:"root_token"`
-    SealKeys string `json:"seal_keys"`
     Status string `json:"status"`
+    UiBasicAuthPassword string `json:"ui_basic_auth_password"`
+    UiBasicAuthUser string `json:"ui_basic_auth_user"`
     Version string `json:"version"`
 }
 
@@ -61,12 +65,16 @@ func resourceMcloudVaultCluster() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
+			"master_domain": &schema.Schema{
+                Type:     schema.TypeString,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
+			},
 			"master_server_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: true,
-				Required: false,
+				Optional: false,
+				Required: true,
 				Computed: false,
-				ForceNew: false,
+				ForceNew: true,
 			},
 			"name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -81,17 +89,8 @@ func resourceMcloudVaultCluster() *schema.Resource {
 			},
 			"root_token": &schema.Schema{
                 Type:     schema.TypeString,
-				Optional: true,
-				Required: false,
-				Computed: false,
-				ForceNew: false,
-			},
-			"seal_keys": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: true,
-				Required: false,
-				Computed: false,
-				ForceNew: false,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"status": &schema.Schema{
                 Type:     schema.TypeString,
@@ -100,6 +99,16 @@ func resourceMcloudVaultCluster() *schema.Resource {
 				Required: false,
 				Computed: false,
 				ForceNew: false,
+			},
+			"ui_basic_auth_password": &schema.Schema{
+                Type:     schema.TypeString,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
+			},
+			"ui_basic_auth_user": &schema.Schema{
+                Type:     schema.TypeString,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
 			},
 			"version": &schema.Schema{
                 Type:     schema.TypeString,
@@ -127,8 +136,6 @@ func resourceMcloudVaultClusterCreate(ctx context.Context, d *schema.ResourceDat
         MasterServerPoolId: d.Get("master_server_pool_id").(string),
         Name: d.Get("name").(string),
         PkiCaId: d.Get("pki_ca_id").(string),
-        RootToken: d.Get("root_token").(string),
-        SealKeys: d.Get("seal_keys").(string),
         Status: d.Get("status").(string),
         Version: d.Get("version").(string),
 	}
@@ -175,12 +182,14 @@ func resourceMcloudVaultClusterCreate(ctx context.Context, d *schema.ResourceDat
     d.Set("access_key_primary", mcloudVaultClusterResponse.AccessKeyPrimary)
     d.Set("access_key_secondary", mcloudVaultClusterResponse.AccessKeySecondary)
     d.Set("ip_scope_id", mcloudVaultClusterResponse.IpScopeId)
+    d.Set("master_domain", mcloudVaultClusterResponse.MasterDomain)
     d.Set("master_server_pool_id", mcloudVaultClusterResponse.MasterServerPoolId)
     d.Set("name", mcloudVaultClusterResponse.Name)
     d.Set("pki_ca_id", mcloudVaultClusterResponse.PkiCaId)
     d.Set("root_token", mcloudVaultClusterResponse.RootToken)
-    d.Set("seal_keys", mcloudVaultClusterResponse.SealKeys)
     d.Set("status", mcloudVaultClusterResponse.Status)
+    d.Set("ui_basic_auth_password", mcloudVaultClusterResponse.UiBasicAuthPassword)
+    d.Set("ui_basic_auth_user", mcloudVaultClusterResponse.UiBasicAuthUser)
     d.Set("version", mcloudVaultClusterResponse.Version)
 
 	return diags
@@ -228,12 +237,14 @@ func resourceMcloudVaultClusterRead(ctx context.Context, d *schema.ResourceData,
     d.Set("access_key_primary", mcloudVaultClusterResponse.AccessKeyPrimary)
     d.Set("access_key_secondary", mcloudVaultClusterResponse.AccessKeySecondary)
     d.Set("ip_scope_id", mcloudVaultClusterResponse.IpScopeId)
+    d.Set("master_domain", mcloudVaultClusterResponse.MasterDomain)
     d.Set("master_server_pool_id", mcloudVaultClusterResponse.MasterServerPoolId)
     d.Set("name", mcloudVaultClusterResponse.Name)
     d.Set("pki_ca_id", mcloudVaultClusterResponse.PkiCaId)
     d.Set("root_token", mcloudVaultClusterResponse.RootToken)
-    d.Set("seal_keys", mcloudVaultClusterResponse.SealKeys)
     d.Set("status", mcloudVaultClusterResponse.Status)
+    d.Set("ui_basic_auth_password", mcloudVaultClusterResponse.UiBasicAuthPassword)
+    d.Set("ui_basic_auth_user", mcloudVaultClusterResponse.UiBasicAuthUser)
     d.Set("version", mcloudVaultClusterResponse.Version)
 
 	return diags

@@ -50,7 +50,7 @@ resource "mcloud_consul_cluster" "test" {
   master_server_pool_id = mcloud_server_pool_hcloud.test.id
   firewall_whitelist_ipv4 = var.firewall_whitelist_ipv4
   pki_ca_id = mcloud_pki_ca.test.id
-  version = "1.11.5"
+  version = "1.15.2"
 }
 
 resource "mcloud_ip_scope" "yuga" {

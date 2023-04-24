@@ -29,6 +29,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"mcloud_cockroachdb":        resourceMcloudCockroachdb(),
 			"mcloud_consul_cluster":        resourceMcloudConsulCluster(),
+			"mcloud_consul_loadbalancer":        resourceMcloudConsulLoadbalancer(),
 			"mcloud_erpnext":        resourceMcloudErpnext(),
 			"mcloud_grafana":        resourceMcloudGrafana(),
 			"mcloud_grafana_loki":        resourceMcloudGrafanaLoki(),

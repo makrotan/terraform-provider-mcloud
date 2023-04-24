@@ -1,13 +1,13 @@
 ---
-page_title: "mcloud_nomad_server_pool Resource - terraform-provider-mcloud"
+page_title: "mcloud_consul_loadbalancer Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  NomadServerPool(status, backup_ref, name, nomad_cluster, server_pool)
+  ConsulLoadbalancer(name, status, backup_ref, created, server_pool, ip_scope_admin)
 ---
 
-# Resource `mcloud_nomad_server_pool`
+# Resource `mcloud_consul_loadbalancer`
 
-NomadServerPool(status, backup_ref, name, nomad_cluster, server_pool)
+ConsulLoadbalancer(name, status, backup_ref, created, server_pool, ip_scope_admin)
 
 
 
@@ -15,8 +15,8 @@ NomadServerPool(status, backup_ref, name, nomad_cluster, server_pool)
 
 The following arguments are supported:
 
+- `ip_scope_admin_id` - [string]  
 - `name` - (Required) [string]  
-- `nomad_cluster_id` - (Required) [string]  
 - `server_pool_id` - (Required) [string]  
 - `status` - [string]   (default: `running`)
 

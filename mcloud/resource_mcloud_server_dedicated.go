@@ -17,7 +17,7 @@ type McloudServerDedicated struct {
     Az string `json:"az"`
     Ipv4 string `json:"ipv4"`
     Name string `json:"name"`
-    PoolName string `json:"pool_name"`
+    PoolId string `json:"pool_id"`
     Region string `json:"region"`
     Provider string `json:"provider"`
     ProviderRef string `json:"provider_ref"`
@@ -27,7 +27,7 @@ type McloudServerDedicatedResponse struct {
     Az string `json:"az"`
     Ipv4 string `json:"ipv4"`
     Name string `json:"name"`
-    PoolName string `json:"pool_name"`
+    PoolId string `json:"pool_id"`
     Region string `json:"region"`
     Provider string `json:"provider"`
     ProviderRef string `json:"provider_ref"`
@@ -58,7 +58,7 @@ func resourceMcloudServerDedicated() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
-			"pool_name": &schema.Schema{
+			"pool_id": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
@@ -104,7 +104,7 @@ func resourceMcloudServerDedicatedCreate(ctx context.Context, d *schema.Resource
         Az: d.Get("az").(string),
         Ipv4: d.Get("ipv4").(string),
         Name: d.Get("name").(string),
-        PoolName: d.Get("pool_name").(string),
+        PoolId: d.Get("pool_id").(string),
         Region: d.Get("region").(string),
         Provider: d.Get("server_provider").(string),
         ProviderRef: d.Get("server_provider_ref").(string),
@@ -152,7 +152,7 @@ func resourceMcloudServerDedicatedCreate(ctx context.Context, d *schema.Resource
     d.Set("az", mcloudServerDedicatedResponse.Az)
     d.Set("ipv4", mcloudServerDedicatedResponse.Ipv4)
     d.Set("name", mcloudServerDedicatedResponse.Name)
-    d.Set("pool_name", mcloudServerDedicatedResponse.PoolName)
+    d.Set("pool_id", mcloudServerDedicatedResponse.PoolId)
     d.Set("region", mcloudServerDedicatedResponse.Region)
     d.Set("server_provider", mcloudServerDedicatedResponse.Provider)
     d.Set("server_provider_ref", mcloudServerDedicatedResponse.ProviderRef)
@@ -202,7 +202,7 @@ func resourceMcloudServerDedicatedRead(ctx context.Context, d *schema.ResourceDa
     d.Set("az", mcloudServerDedicatedResponse.Az)
     d.Set("ipv4", mcloudServerDedicatedResponse.Ipv4)
     d.Set("name", mcloudServerDedicatedResponse.Name)
-    d.Set("pool_name", mcloudServerDedicatedResponse.PoolName)
+    d.Set("pool_id", mcloudServerDedicatedResponse.PoolId)
     d.Set("region", mcloudServerDedicatedResponse.Region)
     d.Set("server_provider", mcloudServerDedicatedResponse.Provider)
     d.Set("server_provider_ref", mcloudServerDedicatedResponse.ProviderRef)

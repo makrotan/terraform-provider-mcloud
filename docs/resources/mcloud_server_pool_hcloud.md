@@ -2,12 +2,12 @@
 page_title: "mcloud_server_pool_hcloud Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  ServerPoolHcloud(polymorphic_ctype, name, created, status, ip_block, serverpool_ptr, instance_type, instance_count, location, terraform_state)
+  ServerPoolHcloud(polymorphic_ctype, name, created, status, ip_block, consul_cluster, serverpool_ptr, instance_type, instance_count, location, terraform_state)
 ---
 
 # Resource `mcloud_server_pool_hcloud`
 
-ServerPoolHcloud(polymorphic_ctype, name, created, status, ip_block, serverpool_ptr, instance_type, instance_count, location, terraform_state)
+ServerPoolHcloud(polymorphic_ctype, name, created, status, ip_block, consul_cluster, serverpool_ptr, instance_type, instance_count, location, terraform_state)
 
 
 
@@ -15,6 +15,7 @@ ServerPoolHcloud(polymorphic_ctype, name, created, status, ip_block, serverpool_
 
 The following arguments are supported:
 
+- `consul_cluster_id` - [string]  
 - `instance_count` - (Required) [number]  
 - `instance_type` - (Required) [string] Possible values: `cx11`, `cpx11`, `cx21`, `cpx21` 
 - `location` - (Required) [string] Possible values: `fsn1`, `nbg1`, `hel1`, `spread` 

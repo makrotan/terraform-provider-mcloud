@@ -12,52 +12,52 @@ provider_spec:
 
 resources:
 
-  mcloud_consul_cluster:
-    primary_key: name
-    description: Consul Cluster.
-    url:
-      template: /api/v1/consul-cluster/%s
-      args: ["fields.name"]
-    fields:
-      access_key_primary:
-        type: string
-        computed: true
-        sensitive: true
-      access_key_secondary:
-        type: string
-        computed: true
-        sensitive: true
-      encryption_key:
-        type: string
-        computed: true
-        sensitive: true
-      master_server_pool_id:
-        type: string
-        force_new: true
-      name:
-        type: string
-      firewall_whitelist_ipv4:
-        type: string
-      pki_ca_id:
-        type: string
-        force_new: True
-      status:
-        type: string
-        default: running
-        required: false
-      version:
-        type: string
-      master_domain:
-        type: string
-        computed: true
-      ui_basic_auth_user:
-        type: string
-        computed: true
-        sensitive: true
-      ui_basic_auth_password:
-        type: string
-        computed: true
-        sensitive: true
+#  mcloud_consul_cluster:
+#    primary_key: name
+#    description: Consul Cluster.
+#    url:
+#      template: /api/v1/consul-cluster/%s
+#      args: ["fields.name"]
+#    fields:
+#      access_key_primary:
+#        type: string
+#        computed: true
+#        sensitive: true
+#      access_key_secondary:
+#        type: string
+#        computed: true
+#        sensitive: true
+#      encryption_key:
+#        type: string
+#        computed: true
+#        sensitive: true
+#      master_server_pool_id:
+#        type: string
+#        force_new: true
+#      name:
+#        type: string
+#      firewall_whitelist_ipv4:
+#        type: string
+#      pki_ca_id:
+#        type: string
+#        force_new: True
+#      status:
+#        type: string
+#        default: running
+#        required: false
+#      version:
+#        type: string
+#      master_domain:
+#        type: string
+#        computed: true
+#      ui_basic_auth_user:
+#        type: string
+#        computed: true
+#        sensitive: true
+#      ui_basic_auth_password:
+#        type: string
+#        computed: true
+#        sensitive: true
 
   mcloud_cockroachdb:
     primary_key: name
@@ -185,28 +185,28 @@ resources:
         computed: true
         sensitive: true
 
-  mcloud_mattermost:
-    primary_key: name
-    description: Mattermost Instance.
-    url:
-      template: /api/v1/mattermost/%s
-      args: [ "fields.name" ]
-    fields:
-      name:
-        type: string
-      fqdn:
-        type: string
-      sku:
-        type: string
-      version:
-        type: string
-      server_pool_id:
-        type: string
-        force_new: True
-      status:
-        type: string
-        default: running
-        required: false
+#  mcloud_mattermost:
+#    primary_key: name
+#    description: Mattermost Instance.
+#    url:
+#      template: /api/v1/mattermost/%s
+#      args: [ "fields.name" ]
+#    fields:
+#      name:
+#        type: string
+#      fqdn:
+#        type: string
+#      sku:
+#        type: string
+#      version:
+#        type: string
+#      server_pool_id:
+#        type: string
+#        force_new: True
+#      status:
+#        type: string
+#        default: running
+#        required: false
 
   mcloud_k3s_cluster:
     primary_key: name
@@ -242,91 +242,91 @@ resources:
         sensitive: true
 
 
-  mcloud_nomad_cluster:
-    primary_key: name
-    description: Nomad Cluster.
-    url:
-      template: /api/v1/nomad-cluster/%s
-      args: ["fields.name"]
-    fields:
-      name:
-        type: string
-      master_server_pool_id:
-        type: string
-        force_new: true
-      encryption_key:
-        type: string
-        computed: true
-        sensitive: true
-      status:
-        type: string
-        default: running
-        required: false
-      version:
-        type: string
-      access_key_primary:
-        type: string
-        computed: true
-        sensitive: true
-      access_key_secondary:
-        type: string
-        computed: true
-        sensitive: true
-      firewall_whitelist_ipv4:
-        type: string
-        default: ""
-      pki_ca_id:
-        type: string
-        force_new: True
-      consul_cluster_id:
-        type: string
-        force_new: true
-      vault_cluster_id:
-        type: string
-      # ro
-      master_domain:
-        type: string
-        computed: true
-      ui_basic_auth_user:
-        type: string
-        computed: true
-        sensitive: true
-      ui_basic_auth_password:
-        type: string
-        computed: true
-        sensitive: true
-      admin_ca:
-        type: string
-        computed: true
-        sensitive: true
-      admin_cert:
-        type: string
-        computed: true
-        sensitive: true
-      admin_key:
-        type: string
-        computed: true
-        sensitive: true
+#  mcloud_nomad_cluster:
+#    primary_key: name
+#    description: Nomad Cluster.
+#    url:
+#      template: /api/v1/nomad-cluster/%s
+#      args: ["fields.name"]
+#    fields:
+#      name:
+#        type: string
+#      master_server_pool_id:
+#        type: string
+#        force_new: true
+#      encryption_key:
+#        type: string
+#        computed: true
+#        sensitive: true
+#      status:
+#        type: string
+#        default: running
+#        required: false
+#      version:
+#        type: string
+#      access_key_primary:
+#        type: string
+#        computed: true
+#        sensitive: true
+#      access_key_secondary:
+#        type: string
+#        computed: true
+#        sensitive: true
+#      firewall_whitelist_ipv4:
+#        type: string
+#        default: ""
+#      pki_ca_id:
+#        type: string
+#        force_new: True
+#      consul_cluster_id:
+#        type: string
+#        force_new: true
+#      vault_cluster_id:
+#        type: string
+#      # ro
+#      master_domain:
+#        type: string
+#        computed: true
+#      ui_basic_auth_user:
+#        type: string
+#        computed: true
+#        sensitive: true
+#      ui_basic_auth_password:
+#        type: string
+#        computed: true
+#        sensitive: true
+#      admin_ca:
+#        type: string
+#        computed: true
+#        sensitive: true
+#      admin_cert:
+#        type: string
+#        computed: true
+#        sensitive: true
+#      admin_key:
+#        type: string
+#        computed: true
+#        sensitive: true
 
-  mcloud_nomad_server_pool:
-    primary_key: name
-    description: Nomad Server Pool.
-    url:
-      template: /api/v1/nomad-server-pool/%s
-      args: ["fields.name"]
-    fields:
-      name:
-        type: string
-      nomad_cluster_id:
-        type: string
-        force_new: true
-      server_pool_id:
-        type: string
-        force_new: true
-      status:
-        type: string
-        default: running
-        required: false
+#  mcloud_nomad_server_pool:
+#    primary_key: name
+#    description: Nomad Server Pool.
+#    url:
+#      template: /api/v1/nomad-server-pool/%s
+#      args: ["fields.name"]
+#    fields:
+#      name:
+#        type: string
+#      nomad_cluster_id:
+#        type: string
+#        force_new: true
+#      server_pool_id:
+#        type: string
+#        force_new: true
+#      status:
+#        type: string
+#        default: running
+#        required: false
 
   mcloud_pki_ca:
     primary_key: name
@@ -464,7 +464,7 @@ resources:
     fields:
       name:
         type: string
-      pool_name:
+      pool_id:
         type: string
       ipv4:
         type: string
@@ -479,69 +479,6 @@ resources:
         type: string
       az:
         type: string
-
-
-  mcloud_vault_cluster:
-    primary_key: name
-    description: Vault Cluster.
-    url:
-      template: /api/v1/vault-cluster/%s
-      args: ["fields.name"]
-    fields:
-      name:
-        type: string
-      master_server_pool_id:
-        type: string
-        force_new: true
-      status:
-        type: string
-        default: running
-        required: false
-      version:
-        type: string
-      access_key_primary:
-        type: string
-        computed: true
-        sensitive: true
-      access_key_secondary:
-        type: string
-        computed: true
-        sensitive: true
-      firewall_whitelist_ipv4:
-        type: string
-        default: ""
-      pki_ca_id:
-        type: string
-        force_new: True
-      # ro
-      master_domain:
-        type: string
-        computed: true
-      ui_basic_auth_user:
-        type: string
-        computed: true
-        sensitive: true
-      ui_basic_auth_password:
-        type: string
-        computed: true
-        sensitive: true
-      root_token:
-        type: string
-        computed: true
-        sensitive: true
-#      admin_ca:
-#        type: string
-#        computed: true
-#        sensitive: true
-#      admin_cert:
-#        type: string
-#        computed: true
-#        sensitive: true
-#      admin_key:
-#        type: string
-#        computed: true
-#        sensitive: true
-
 
   mcloud_yugabytedb:
     primary_key: name

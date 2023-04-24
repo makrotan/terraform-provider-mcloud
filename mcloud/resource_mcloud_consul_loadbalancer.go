@@ -13,41 +13,44 @@ import (
 	"strings"
 )
 
-type McloudServerPoolDedicated struct {
-    ConsulClusterId string `json:"consul_cluster_id"`
-    IpBlockId string `json:"ip_block_id,omitempty"`
+type McloudConsulLoadbalancer struct {
+    IpScopeAdminId string `json:"ip_scope_admin_id"`
     Name string `json:"name"`
+    ServerPoolId string `json:"server_pool_id"`
     Status string `json:"status"`
 }
 
-type McloudServerPoolDedicatedResponse struct {
-    ConsulClusterId string `json:"consul_cluster_id"`
-    IpBlockId string `json:"ip_block_id"`
+type McloudConsulLoadbalancerResponse struct {
+    IpScopeAdminId string `json:"ip_scope_admin_id"`
     Name string `json:"name"`
+    ServerPoolId string `json:"server_pool_id"`
     Status string `json:"status"`
 }
 
-func resourceMcloudServerPoolDedicated() *schema.Resource {
+func resourceMcloudConsulLoadbalancer() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceMcloudServerPoolDedicatedCreate,
-		ReadContext:   resourceMcloudServerPoolDedicatedRead,
-		UpdateContext: resourceMcloudServerPoolDedicatedUpdate,
-		DeleteContext: resourceMcloudServerPoolDedicatedDelete,
+		CreateContext: resourceMcloudConsulLoadbalancerCreate,
+		ReadContext:   resourceMcloudConsulLoadbalancerRead,
+		UpdateContext: resourceMcloudConsulLoadbalancerUpdate,
+		DeleteContext: resourceMcloudConsulLoadbalancerDelete,
 		Schema: map[string]*schema.Schema{
-			"consul_cluster_id": &schema.Schema{
+			"ip_scope_admin_id": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: true,
 				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
-			"ip_block_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Required: false, Computed: true, Optional: false, ForceNew: false,
-			},
 			"name": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true, Computed: false, Optional: false, ForceNew: true,
+			},
+			"server_pool_id": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
 			},
 			"status": &schema.Schema{
                 Type:     schema.TypeString,
@@ -64,16 +67,17 @@ func resourceMcloudServerPoolDedicated() *schema.Resource {
 	}
 }
 
-func resourceMcloudServerPoolDedicatedCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudConsulLoadbalancerCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
 	pk := d.Get("name").(string)
-	instance := McloudServerPoolDedicated{
-        ConsulClusterId: d.Get("consul_cluster_id").(string),
+	instance := McloudConsulLoadbalancer{
+        IpScopeAdminId: d.Get("ip_scope_admin_id").(string),
         Name: d.Get("name").(string),
+        ServerPoolId: d.Get("server_pool_id").(string),
         Status: d.Get("status").(string),
 	}
 
@@ -83,7 +87,7 @@ func resourceMcloudServerPoolDedicatedCreate(ctx context.Context, d *schema.Reso
 	}
 
 	// req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/ssh-key/%s", strings.Trim(provider.HostURL, "/"), pk), strings.NewReader(string(rb)))
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/server-pool-dedicated/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), strings.NewReader(string(rb)))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/consul-loadbalancer/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), strings.NewReader(string(rb)))
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -109,22 +113,22 @@ func resourceMcloudServerPoolDedicatedCreate(ctx context.Context, d *schema.Reso
 		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
 	}
 
-	var mcloudServerPoolDedicatedResponse McloudServerPoolDedicatedResponse
-	err = json.Unmarshal(body, &mcloudServerPoolDedicatedResponse)
+	var mcloudConsulLoadbalancerResponse McloudConsulLoadbalancerResponse
+	err = json.Unmarshal(body, &mcloudConsulLoadbalancerResponse)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	d.SetId(pk)
-    d.Set("consul_cluster_id", mcloudServerPoolDedicatedResponse.ConsulClusterId)
-    d.Set("ip_block_id", mcloudServerPoolDedicatedResponse.IpBlockId)
-    d.Set("name", mcloudServerPoolDedicatedResponse.Name)
-    d.Set("status", mcloudServerPoolDedicatedResponse.Status)
+    d.Set("ip_scope_admin_id", mcloudConsulLoadbalancerResponse.IpScopeAdminId)
+    d.Set("name", mcloudConsulLoadbalancerResponse.Name)
+    d.Set("server_pool_id", mcloudConsulLoadbalancerResponse.ServerPoolId)
+    d.Set("status", mcloudConsulLoadbalancerResponse.Status)
 
 	return diags
 }
 
-func resourceMcloudServerPoolDedicatedRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudConsulLoadbalancerRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 	client := provider.HTTPClient
 
@@ -132,7 +136,7 @@ func resourceMcloudServerPoolDedicatedRead(ctx context.Context, d *schema.Resour
 	var diags diag.Diagnostics
 
 	pk := d.Id()
-	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/server-pool-dedicated/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/consul-loadbalancer/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -150,31 +154,31 @@ func resourceMcloudServerPoolDedicatedRead(ctx context.Context, d *schema.Resour
 	}
 
 	if res.StatusCode == 404 {
-		log.Printf("[WARN] mcloud_server_pool_dedicated %s not present", pk)
+		log.Printf("[WARN] mcloud_consul_loadbalancer %s not present", pk)
 		d.SetId("")
 		return nil
 	} else if res.StatusCode != http.StatusOK {
 		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
 	}
 
-	var mcloudServerPoolDedicatedResponse McloudServerPoolDedicatedResponse
-	err = json.Unmarshal(body, &mcloudServerPoolDedicatedResponse)
-	//err = json.NewDecoder(resp.Body).Decode(McloudServerPoolDedicatedResponse)
+	var mcloudConsulLoadbalancerResponse McloudConsulLoadbalancerResponse
+	err = json.Unmarshal(body, &mcloudConsulLoadbalancerResponse)
+	//err = json.NewDecoder(resp.Body).Decode(McloudConsulLoadbalancerResponse)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-    d.Set("consul_cluster_id", mcloudServerPoolDedicatedResponse.ConsulClusterId)
-    d.Set("ip_block_id", mcloudServerPoolDedicatedResponse.IpBlockId)
-    d.Set("name", mcloudServerPoolDedicatedResponse.Name)
-    d.Set("status", mcloudServerPoolDedicatedResponse.Status)
+    d.Set("ip_scope_admin_id", mcloudConsulLoadbalancerResponse.IpScopeAdminId)
+    d.Set("name", mcloudConsulLoadbalancerResponse.Name)
+    d.Set("server_pool_id", mcloudConsulLoadbalancerResponse.ServerPoolId)
+    d.Set("status", mcloudConsulLoadbalancerResponse.Status)
 
 	return diags
 }
-func resourceMcloudServerPoolDedicatedUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return resourceMcloudServerPoolDedicatedCreate(ctx, d, m)
+func resourceMcloudConsulLoadbalancerUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	return resourceMcloudConsulLoadbalancerCreate(ctx, d, m)
 }
 
-func resourceMcloudServerPoolDedicatedDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudConsulLoadbalancerDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 	client := provider.HTTPClient
 
@@ -182,7 +186,7 @@ func resourceMcloudServerPoolDedicatedDelete(ctx context.Context, d *schema.Reso
 	var diags diag.Diagnostics
 
 // 	pk := d.Id()
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/server-pool-dedicated/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/consul-loadbalancer/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
