@@ -17,6 +17,7 @@ The following arguments are supported:
 
 - `ca_id` - (Required) [string]  
 - `common_name` - (Required) [string]  
+- `hostnames` - [string]  
 - `name` - (Required) [string]  
 
 ## Attributes Reference

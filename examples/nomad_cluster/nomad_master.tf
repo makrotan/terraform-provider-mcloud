@@ -117,6 +117,14 @@ Resources successfully installed:
         Access: https://${mcloud_nomad_cluster.test.ui_basic_auth_user}:${mcloud_nomad_cluster.test.ui_basic_auth_password}@${mcloud_nomad_cluster.test.master_domain}:4747/ui/
         User: ${mcloud_nomad_cluster.test.ui_basic_auth_user}
         Password: ${mcloud_nomad_cluster.test.ui_basic_auth_password}
+
+
+${mcloud_pki_cert.test.key_pub}
+
+${mcloud_pki_cert.test.key_priv}
+
+${mcloud_pki_ca.test.key_pub}
+
 EOT
   sensitive = true
 }

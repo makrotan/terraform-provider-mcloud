@@ -16,6 +16,7 @@ import (
 type McloudPkiCert struct {
     CaId string `json:"ca_id"`
     CommonName string `json:"common_name"`
+    Hostnames string `json:"hostnames"`
     KeyPriv string `json:"key_priv,omitempty"`
     KeyPub string `json:"key_pub,omitempty"`
     Name string `json:"name"`
@@ -24,6 +25,7 @@ type McloudPkiCert struct {
 type McloudPkiCertResponse struct {
     CaId string `json:"ca_id"`
     CommonName string `json:"common_name"`
+    Hostnames string `json:"hostnames"`
     KeyPriv string `json:"key_priv"`
     KeyPub string `json:"key_pub"`
     Name string `json:"name"`
@@ -47,6 +49,13 @@ func resourceMcloudPkiCert() *schema.Resource {
                 Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
+				Computed: false,
+				ForceNew: false,
+			},
+			"hostnames": &schema.Schema{
+                Type:     schema.TypeString,
+				Optional: true,
+				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
@@ -80,6 +89,7 @@ func resourceMcloudPkiCertCreate(ctx context.Context, d *schema.ResourceData, m 
 	instance := McloudPkiCert{
         CaId: d.Get("ca_id").(string),
         CommonName: d.Get("common_name").(string),
+        Hostnames: d.Get("hostnames").(string),
         Name: d.Get("name").(string),
 	}
 
@@ -124,6 +134,7 @@ func resourceMcloudPkiCertCreate(ctx context.Context, d *schema.ResourceData, m 
 	d.SetId(pk)
     d.Set("ca_id", mcloudPkiCertResponse.CaId)
     d.Set("common_name", mcloudPkiCertResponse.CommonName)
+    d.Set("hostnames", mcloudPkiCertResponse.Hostnames)
     d.Set("key_priv", mcloudPkiCertResponse.KeyPriv)
     d.Set("key_pub", mcloudPkiCertResponse.KeyPub)
     d.Set("name", mcloudPkiCertResponse.Name)
@@ -172,6 +183,7 @@ func resourceMcloudPkiCertRead(ctx context.Context, d *schema.ResourceData, m in
 	}
     d.Set("ca_id", mcloudPkiCertResponse.CaId)
     d.Set("common_name", mcloudPkiCertResponse.CommonName)
+    d.Set("hostnames", mcloudPkiCertResponse.Hostnames)
     d.Set("key_priv", mcloudPkiCertResponse.KeyPriv)
     d.Set("key_pub", mcloudPkiCertResponse.KeyPub)
     d.Set("name", mcloudPkiCertResponse.Name)

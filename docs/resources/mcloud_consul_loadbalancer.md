@@ -2,12 +2,12 @@
 page_title: "mcloud_consul_loadbalancer Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  ConsulLoadbalancer(name, status, backup_ref, created, server_pool, ip_scope_admin)
+  ConsulLoadbalancer(name, status, backup_ref, created, server_pool, admin_password, ip_scope_admin)
 ---
 
 # Resource `mcloud_consul_loadbalancer`
 
-ConsulLoadbalancer(name, status, backup_ref, created, server_pool, ip_scope_admin)
+ConsulLoadbalancer(name, status, backup_ref, created, server_pool, admin_password, ip_scope_admin)
 
 
 
@@ -23,3 +23,5 @@ The following arguments are supported:
 ## Attributes Reference
 
 In addition to all the arguments above, the following attributes are exported:
+
+- `admin_password` - [string] 

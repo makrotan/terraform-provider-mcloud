@@ -36,12 +36,23 @@ resource "mcloud_keycloak" "test" {
   sku = "dev"
   pki_ca_id = mcloud_pki_ca.test.id
 
-  themes = jsonencode({
-    mytheme = {
-      url = "https://gitlab.com/path/to/theme.git"
-      username = "gitlab+deploy-token-changeme"
-      password = "changeme"
-    }
+#  themes = jsonencode({
+#    mytheme = {
+#      url = "https://gitlab.com/path/to/theme.git"
+#      username = "gitlab+deploy-token-changeme"
+#      password = "changeme"
+#    }
+#  })
+
+  postgres = jsonencode({
+    host = "yuga-prod.yuga.makrotan.com"
+    port = 5433
+    database = "keycloak_mium"
+    username = "keycloak_mium"
+    password = "changeme"
+    ssl_cert = file("yugabytedb-client-mcloud.pub.pem")
+    ssl_key = file("yugabytedb-client-mcloud.priv.pem")
+    ssl_ca = file("yugabytedb-ca.pem")
   })
 }
 

@@ -108,8 +108,13 @@ resources:
       template: /api/v1/consul-cluster/%s
   mcloud_consul_loadbalancer:
     description: ConsulLoadbalancer(name, status, backup_ref, created, server_pool,
-      ip_scope_admin)
+      admin_password, ip_scope_admin)
     fields:
+      admin_password:
+        computed: true
+        description: ''
+        sensitive: true
+        type: string
       ip_scope_admin_id:
         description: ''
         required: false
@@ -417,7 +422,7 @@ resources:
       template: /api/v1/k3s-cluster/%s
   mcloud_keycloak:
     description: Keycloak(status, backup_ref, name, created, server_pool, admin_password,
-      fqdn, pki_ca, app_port, secret_key, sku, version, themes)
+      fqdn, pki_ca, app_port, secret_key, sku, version, themes, postgres)
     fields:
       admin_password:
         computed: true
@@ -434,6 +439,9 @@ resources:
         description: ''
         required: false
         type: string
+      postgres:
+        required: false
+        sensitive: true
       secret_key:
         computed: true
         description: ''
@@ -660,6 +668,9 @@ resources:
         force_new: true
         type: string
       common_name:
+        type: string
+      hostnames:
+        required: false
         type: string
       key_priv:
         computed: true

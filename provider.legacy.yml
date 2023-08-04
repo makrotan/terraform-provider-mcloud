@@ -389,6 +389,9 @@ resources:
         type: string
       common_name:
         type: string
+      hostnames:
+        type: string
+        required: false
       ca_id:
         type: string
         force_new: true

@@ -18,6 +18,7 @@ type McloudKeycloak struct {
     Fqdn string `json:"fqdn"`
     Name string `json:"name"`
     PkiCaId string `json:"pki_ca_id"`
+    Postgres string `json:"postgres"`
     SecretKey string `json:"secret_key,omitempty"`
     ServerPoolId string `json:"server_pool_id"`
     Sku string `json:"sku"`
@@ -31,6 +32,7 @@ type McloudKeycloakResponse struct {
     Fqdn string `json:"fqdn"`
     Name string `json:"name"`
     PkiCaId string `json:"pki_ca_id"`
+    Postgres string `json:"postgres"`
     SecretKey string `json:"secret_key"`
     ServerPoolId string `json:"server_pool_id"`
     Sku string `json:"sku"`
@@ -64,6 +66,14 @@ func resourceMcloudKeycloak() *schema.Resource {
 			},
 			"pki_ca_id": &schema.Schema{
                 Type:     schema.TypeString,
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
+			"postgres": &schema.Schema{
+                Type:     schema.TypeString,
+                Sensitive: true,
 				Optional: true,
 				Required: false,
 				Computed: false,
@@ -128,6 +138,7 @@ func resourceMcloudKeycloakCreate(ctx context.Context, d *schema.ResourceData, m
         Fqdn: d.Get("fqdn").(string),
         Name: d.Get("name").(string),
         PkiCaId: d.Get("pki_ca_id").(string),
+        Postgres: d.Get("postgres").(string),
         ServerPoolId: d.Get("server_pool_id").(string),
         Sku: d.Get("sku").(string),
         Status: d.Get("status").(string),
@@ -178,6 +189,7 @@ func resourceMcloudKeycloakCreate(ctx context.Context, d *schema.ResourceData, m
     d.Set("fqdn", mcloudKeycloakResponse.Fqdn)
     d.Set("name", mcloudKeycloakResponse.Name)
     d.Set("pki_ca_id", mcloudKeycloakResponse.PkiCaId)
+    d.Set("postgres", mcloudKeycloakResponse.Postgres)
     d.Set("secret_key", mcloudKeycloakResponse.SecretKey)
     d.Set("server_pool_id", mcloudKeycloakResponse.ServerPoolId)
     d.Set("sku", mcloudKeycloakResponse.Sku)
@@ -231,6 +243,7 @@ func resourceMcloudKeycloakRead(ctx context.Context, d *schema.ResourceData, m i
     d.Set("fqdn", mcloudKeycloakResponse.Fqdn)
     d.Set("name", mcloudKeycloakResponse.Name)
     d.Set("pki_ca_id", mcloudKeycloakResponse.PkiCaId)
+    d.Set("postgres", mcloudKeycloakResponse.Postgres)
     d.Set("secret_key", mcloudKeycloakResponse.SecretKey)
     d.Set("server_pool_id", mcloudKeycloakResponse.ServerPoolId)
     d.Set("sku", mcloudKeycloakResponse.Sku)

@@ -14,6 +14,7 @@ import (
 )
 
 type McloudConsulLoadbalancer struct {
+    AdminPassword string `json:"admin_password,omitempty"`
     IpScopeAdminId string `json:"ip_scope_admin_id"`
     Name string `json:"name"`
     ServerPoolId string `json:"server_pool_id"`
@@ -21,6 +22,7 @@ type McloudConsulLoadbalancer struct {
 }
 
 type McloudConsulLoadbalancerResponse struct {
+    AdminPassword string `json:"admin_password"`
     IpScopeAdminId string `json:"ip_scope_admin_id"`
     Name string `json:"name"`
     ServerPoolId string `json:"server_pool_id"`
@@ -34,6 +36,11 @@ func resourceMcloudConsulLoadbalancer() *schema.Resource {
 		UpdateContext: resourceMcloudConsulLoadbalancerUpdate,
 		DeleteContext: resourceMcloudConsulLoadbalancerDelete,
 		Schema: map[string]*schema.Schema{
+			"admin_password": &schema.Schema{
+                Type:     schema.TypeString,
+                Sensitive: true,
+                Required: false, Computed: true, Optional: false, ForceNew: false,
+			},
 			"ip_scope_admin_id": &schema.Schema{
                 Type:     schema.TypeString,
 				Optional: true,
@@ -120,6 +127,7 @@ func resourceMcloudConsulLoadbalancerCreate(ctx context.Context, d *schema.Resou
 	}
 
 	d.SetId(pk)
+    d.Set("admin_password", mcloudConsulLoadbalancerResponse.AdminPassword)
     d.Set("ip_scope_admin_id", mcloudConsulLoadbalancerResponse.IpScopeAdminId)
     d.Set("name", mcloudConsulLoadbalancerResponse.Name)
     d.Set("server_pool_id", mcloudConsulLoadbalancerResponse.ServerPoolId)
@@ -167,6 +175,7 @@ func resourceMcloudConsulLoadbalancerRead(ctx context.Context, d *schema.Resourc
 	if err != nil {
 		return diag.FromErr(err)
 	}
+    d.Set("admin_password", mcloudConsulLoadbalancerResponse.AdminPassword)
     d.Set("ip_scope_admin_id", mcloudConsulLoadbalancerResponse.IpScopeAdminId)
     d.Set("name", mcloudConsulLoadbalancerResponse.Name)
     d.Set("server_pool_id", mcloudConsulLoadbalancerResponse.ServerPoolId)
