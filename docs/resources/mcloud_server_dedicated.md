@@ -2,12 +2,12 @@
 page_title: "mcloud_server_dedicated Resource - terraform-provider-mcloud"
 subcategory: ""
 description: |-
-  A dedicated server.
+  ServerDedicated(name, status, backup_ref, created, ipv4, ipv6, provider, provider_ref, region, az, pool, memory, cpu_cores, disk_size, price_per_month)
 ---
 
 # Resource `mcloud_server_dedicated`
 
-A dedicated server.
+ServerDedicated(name, status, backup_ref, created, ipv4, ipv6, provider, provider_ref, region, az, pool, memory, cpu_cores, disk_size, price_per_month)
 
 
 
@@ -15,13 +15,19 @@ A dedicated server.
 
 The following arguments are supported:
 
-- `az` - (Required) [string]  
+- `az` - (Required) [string] Possible values: `hetzner-fsn1`, `hetzner-nbg1`, `hetzner-hel1`, `contabo-fra`, `contabo-nbg`, `netcup-nbg`, `hoston-ffm` 
+- `cpu_cores` - [number]  
+- `disk_size` - [number]  
 - `ipv4` - (Required) [string]  
+- `ipv6` - [string]  
+- `memory` - [number]  
 - `name` - (Required) [string]  
-- `pool_id` - (Required) [string]  
-- `region` - (Required) [string]  
-- `server_provider` - (Required) [string]  
-- `server_provider_ref` - [string]  
+- `pool_id` - [string]  
+- `price_per_month` - [number]  
+- `provider_id` - (Required) [string]  
+- `provider_ref` - [string]  
+- `region` - (Required) [string] Possible values: `europe`, `na`, `sa`, `au`, `asia` 
+- `status` - [string]   (default: `running`)
 
 ## Attributes Reference
 

@@ -458,30 +458,30 @@ resources:
 #        required: false
 #        description: "`new`, `running`, `failed`, `deleting` or `deleted`"
 
-  mcloud_server_dedicated:
-    primary_key: name
-    description: A dedicated server.
-    url:
-      template: /api/v1/server-dedicated/%s
-      args: [ "fields.name" ]
-    fields:
-      name:
-        type: string
-      pool_id:
-        type: string
-      ipv4:
-        type: string
-      server_provider:
-        type: string
-        map_to: provider
-      server_provider_ref:
-        type: string
-        required: False
-        map_to: provider_ref
-      region:
-        type: string
-      az:
-        type: string
+#  mcloud_server_dedicated:
+#    primary_key: name
+#    description: A dedicated server.
+#    url:
+#      template: /api/v1/server-dedicated/%s
+#      args: [ "fields.name" ]
+#    fields:
+#      name:
+#        type: string
+#      pool_id:
+#        type: string
+#      ipv4:
+#        type: string
+#      server_provider:
+#        type: string
+#        map_to: provider
+#      server_provider_ref:
+#        type: string
+#        required: False
+#        map_to: provider_ref
+#      region:
+#        type: string
+#      az:
+#        type: string
 
   mcloud_yugabytedb:
     primary_key: name

@@ -14,23 +14,35 @@ import (
 )
 
 type McloudServerDedicated struct {
-    Az string `json:"az"`
-    Ipv4 string `json:"ipv4"`
-    Name string `json:"name"`
-    PoolId string `json:"pool_id"`
-    Region string `json:"region"`
-    Provider string `json:"provider"`
-    ProviderRef string `json:"provider_ref"`
+	Az            string `json:"az"`
+	CpuCores      int    `json:"cpu_cores"`
+	DiskSize      int    `json:"disk_size"`
+	Ipv4          string `json:"ipv4"`
+	Ipv6          string `json:"ipv6"`
+	Memory        int    `json:"memory"`
+	Name          string `json:"name"`
+	PoolId        string `json:"pool_id"`
+	PricePerMonth int    `json:"price_per_month"`
+	Provider      string `json:"provider"`
+	ProviderRef   string `json:"provider_ref"`
+	Region        string `json:"region"`
+	Status        string `json:"status"`
 }
 
 type McloudServerDedicatedResponse struct {
-    Az string `json:"az"`
-    Ipv4 string `json:"ipv4"`
-    Name string `json:"name"`
-    PoolId string `json:"pool_id"`
-    Region string `json:"region"`
-    Provider string `json:"provider"`
-    ProviderRef string `json:"provider_ref"`
+	Az            string `json:"az"`
+	CpuCores      int    `json:"cpu_cores"`
+	DiskSize      int    `json:"disk_size"`
+	Ipv4          string `json:"ipv4"`
+	Ipv6          string `json:"ipv6"`
+	Memory        int    `json:"memory"`
+	Name          string `json:"name"`
+	PoolId        string `json:"pool_id"`
+	PricePerMonth int    `json:"price_per_month"`
+	Provider      string `json:"provider"`
+	ProviderRef   string `json:"provider_ref"`
+	Region        string `json:"region"`
+	Status        string `json:"status"`
 }
 
 func resourceMcloudServerDedicated() *schema.Resource {
@@ -41,46 +53,89 @@ func resourceMcloudServerDedicated() *schema.Resource {
 		DeleteContext: resourceMcloudServerDedicatedDelete,
 		Schema: map[string]*schema.Schema{
 			"az": &schema.Schema{
-                Type:     schema.TypeString,
+				Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
+				Computed: false,
+				ForceNew: false,
+			},
+			"cpu_cores": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
+			"disk_size": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
 			"ipv4": &schema.Schema{
-                Type:     schema.TypeString,
+				Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
+				Computed: false,
+				ForceNew: false,
+			},
+			"ipv6": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
+			"memory": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
 			"name": &schema.Schema{
-                Type:     schema.TypeString,
-                Required: true, Computed: false, Optional: false, ForceNew: true,
+				Type:     schema.TypeString,
+				Required: true, Computed: false, Optional: false, ForceNew: true,
 			},
 			"pool_id": &schema.Schema{
-                Type:     schema.TypeString,
+				Type:     schema.TypeString,
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
+			"price_per_month": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Required: false,
+				Computed: false,
+				ForceNew: false,
+			},
+			"provider_id": &schema.Schema{
+				Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
+				Computed: false,
+				ForceNew: false,
+			},
+			"provider_ref": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Required: false,
 				Computed: false,
 				ForceNew: false,
 			},
 			"region": &schema.Schema{
-                Type:     schema.TypeString,
+				Type:     schema.TypeString,
 				Optional: false,
 				Required: true,
 				Computed: false,
 				ForceNew: false,
 			},
-			"server_provider": &schema.Schema{
-                Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
-			},
-			"server_provider_ref": &schema.Schema{
-                Type:     schema.TypeString,
+			"status": &schema.Schema{
+				Type:     schema.TypeString,
+				Default:  "running",
 				Optional: true,
 				Required: false,
 				Computed: false,
@@ -101,13 +156,19 @@ func resourceMcloudServerDedicatedCreate(ctx context.Context, d *schema.Resource
 
 	pk := d.Get("name").(string)
 	instance := McloudServerDedicated{
-        Az: d.Get("az").(string),
-        Ipv4: d.Get("ipv4").(string),
-        Name: d.Get("name").(string),
-        PoolId: d.Get("pool_id").(string),
-        Region: d.Get("region").(string),
-        Provider: d.Get("server_provider").(string),
-        ProviderRef: d.Get("server_provider_ref").(string),
+		Az:            d.Get("az").(string),
+		CpuCores:      d.Get("cpu_cores").(int),
+		DiskSize:      d.Get("disk_size").(int),
+		Ipv4:          d.Get("ipv4").(string),
+		Ipv6:          d.Get("ipv6").(string),
+		Memory:        d.Get("memory").(int),
+		Name:          d.Get("name").(string),
+		PoolId:        d.Get("pool_id").(string),
+		PricePerMonth: d.Get("price_per_month").(int),
+		Provider:      d.Get("provider_id").(string),
+		ProviderRef:   d.Get("provider_ref").(string),
+		Region:        d.Get("region").(string),
+		Status:        d.Get("status").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -149,13 +210,19 @@ func resourceMcloudServerDedicatedCreate(ctx context.Context, d *schema.Resource
 	}
 
 	d.SetId(pk)
-    d.Set("az", mcloudServerDedicatedResponse.Az)
-    d.Set("ipv4", mcloudServerDedicatedResponse.Ipv4)
-    d.Set("name", mcloudServerDedicatedResponse.Name)
-    d.Set("pool_id", mcloudServerDedicatedResponse.PoolId)
-    d.Set("region", mcloudServerDedicatedResponse.Region)
-    d.Set("server_provider", mcloudServerDedicatedResponse.Provider)
-    d.Set("server_provider_ref", mcloudServerDedicatedResponse.ProviderRef)
+	d.Set("az", mcloudServerDedicatedResponse.Az)
+	d.Set("cpu_cores", mcloudServerDedicatedResponse.CpuCores)
+	d.Set("disk_size", mcloudServerDedicatedResponse.DiskSize)
+	d.Set("ipv4", mcloudServerDedicatedResponse.Ipv4)
+	d.Set("ipv6", mcloudServerDedicatedResponse.Ipv6)
+	d.Set("memory", mcloudServerDedicatedResponse.Memory)
+	d.Set("name", mcloudServerDedicatedResponse.Name)
+	d.Set("pool_id", mcloudServerDedicatedResponse.PoolId)
+	d.Set("price_per_month", mcloudServerDedicatedResponse.PricePerMonth)
+	d.Set("provider_id", mcloudServerDedicatedResponse.Provider)
+	d.Set("provider_ref", mcloudServerDedicatedResponse.ProviderRef)
+	d.Set("region", mcloudServerDedicatedResponse.Region)
+	d.Set("status", mcloudServerDedicatedResponse.Status)
 
 	return diags
 }
@@ -168,7 +235,7 @@ func resourceMcloudServerDedicatedRead(ctx context.Context, d *schema.ResourceDa
 	var diags diag.Diagnostics
 
 	pk := d.Id()
-	req, err := http.NewRequest("GET",  fmt.Sprintf("%s/api/v1/server-dedicated/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/server-dedicated/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -199,13 +266,19 @@ func resourceMcloudServerDedicatedRead(ctx context.Context, d *schema.ResourceDa
 	if err != nil {
 		return diag.FromErr(err)
 	}
-    d.Set("az", mcloudServerDedicatedResponse.Az)
-    d.Set("ipv4", mcloudServerDedicatedResponse.Ipv4)
-    d.Set("name", mcloudServerDedicatedResponse.Name)
-    d.Set("pool_id", mcloudServerDedicatedResponse.PoolId)
-    d.Set("region", mcloudServerDedicatedResponse.Region)
-    d.Set("server_provider", mcloudServerDedicatedResponse.Provider)
-    d.Set("server_provider_ref", mcloudServerDedicatedResponse.ProviderRef)
+	d.Set("az", mcloudServerDedicatedResponse.Az)
+	d.Set("cpu_cores", mcloudServerDedicatedResponse.CpuCores)
+	d.Set("disk_size", mcloudServerDedicatedResponse.DiskSize)
+	d.Set("ipv4", mcloudServerDedicatedResponse.Ipv4)
+	d.Set("ipv6", mcloudServerDedicatedResponse.Ipv6)
+	d.Set("memory", mcloudServerDedicatedResponse.Memory)
+	d.Set("name", mcloudServerDedicatedResponse.Name)
+	d.Set("pool_id", mcloudServerDedicatedResponse.PoolId)
+	d.Set("price_per_month", mcloudServerDedicatedResponse.PricePerMonth)
+	d.Set("provider_id", mcloudServerDedicatedResponse.Provider)
+	d.Set("provider_ref", mcloudServerDedicatedResponse.ProviderRef)
+	d.Set("region", mcloudServerDedicatedResponse.Region)
+	d.Set("status", mcloudServerDedicatedResponse.Status)
 
 	return diags
 }
@@ -220,7 +293,7 @@ func resourceMcloudServerDedicatedDelete(ctx context.Context, d *schema.Resource
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-// 	pk := d.Id()
+	// 	pk := d.Id()
 	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/server-dedicated/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)

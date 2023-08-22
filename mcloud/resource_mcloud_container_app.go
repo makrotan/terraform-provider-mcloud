@@ -13,37 +13,35 @@ import (
 	"strings"
 )
 
-type McloudErpnext struct {
-	AdminPassword string `json:"admin_password,omitempty"`
-	Fqdn          string `json:"fqdn"`
-	Name          string `json:"name"`
-	ServerPoolId  string `json:"server_pool_id"`
-	Sku           string `json:"sku"`
-	Status        string `json:"status"`
-	Version       string `json:"version"`
+type McloudContainerApp struct {
+	Definition   string `json:"definition"`
+	Fqdn         string `json:"fqdn"`
+	Name         string `json:"name"`
+	ServerPoolId string `json:"server_pool_id"`
+	Status       string `json:"status"`
 }
 
-type McloudErpnextResponse struct {
-	AdminPassword string `json:"admin_password"`
-	Fqdn          string `json:"fqdn"`
-	Name          string `json:"name"`
-	ServerPoolId  string `json:"server_pool_id"`
-	Sku           string `json:"sku"`
-	Status        string `json:"status"`
-	Version       string `json:"version"`
+type McloudContainerAppResponse struct {
+	Definition   string `json:"definition"`
+	Fqdn         string `json:"fqdn"`
+	Name         string `json:"name"`
+	ServerPoolId string `json:"server_pool_id"`
+	Status       string `json:"status"`
 }
 
-func resourceMcloudErpnext() *schema.Resource {
+func resourceMcloudContainerApp() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceMcloudErpnextCreate,
-		ReadContext:   resourceMcloudErpnextRead,
-		UpdateContext: resourceMcloudErpnextUpdate,
-		DeleteContext: resourceMcloudErpnextDelete,
+		CreateContext: resourceMcloudContainerAppCreate,
+		ReadContext:   resourceMcloudContainerAppRead,
+		UpdateContext: resourceMcloudContainerAppUpdate,
+		DeleteContext: resourceMcloudContainerAppDelete,
 		Schema: map[string]*schema.Schema{
-			"admin_password": &schema.Schema{
-				Type:      schema.TypeString,
-				Sensitive: true,
-				Required:  false, Computed: true, Optional: false, ForceNew: false,
+			"definition": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: false,
+				Required: true,
+				Computed: false,
+				ForceNew: false,
 			},
 			"fqdn": &schema.Schema{
 				Type:     schema.TypeString,
@@ -63,25 +61,11 @@ func resourceMcloudErpnext() *schema.Resource {
 				Computed: false,
 				ForceNew: false,
 			},
-			"sku": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
-				Computed: false,
-				ForceNew: false,
-			},
 			"status": &schema.Schema{
 				Type:     schema.TypeString,
 				Default:  "running",
 				Optional: true,
 				Required: false,
-				Computed: false,
-				ForceNew: false,
-			},
-			"version": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: false,
-				Required: true,
 				Computed: false,
 				ForceNew: false,
 			},
@@ -92,20 +76,19 @@ func resourceMcloudErpnext() *schema.Resource {
 	}
 }
 
-func resourceMcloudErpnextCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudContainerAppCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
 	pk := d.Get("name").(string)
-	instance := McloudErpnext{
+	instance := McloudContainerApp{
+		Definition:   d.Get("definition").(string),
 		Fqdn:         d.Get("fqdn").(string),
 		Name:         d.Get("name").(string),
 		ServerPoolId: d.Get("server_pool_id").(string),
-		Sku:          d.Get("sku").(string),
 		Status:       d.Get("status").(string),
-		Version:      d.Get("version").(string),
 	}
 
 	rb, err := json.Marshal(instance)
@@ -114,7 +97,7 @@ func resourceMcloudErpnextCreate(ctx context.Context, d *schema.ResourceData, m 
 	}
 
 	// req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/ssh-key/%s", strings.Trim(provider.HostURL, "/"), pk), strings.NewReader(string(rb)))
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/erpnext/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), strings.NewReader(string(rb)))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/container-app/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), strings.NewReader(string(rb)))
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -140,25 +123,23 @@ func resourceMcloudErpnextCreate(ctx context.Context, d *schema.ResourceData, m 
 		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
 	}
 
-	var mcloudErpnextResponse McloudErpnextResponse
-	err = json.Unmarshal(body, &mcloudErpnextResponse)
+	var mcloudContainerAppResponse McloudContainerAppResponse
+	err = json.Unmarshal(body, &mcloudContainerAppResponse)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	d.SetId(pk)
-	d.Set("admin_password", mcloudErpnextResponse.AdminPassword)
-	d.Set("fqdn", mcloudErpnextResponse.Fqdn)
-	d.Set("name", mcloudErpnextResponse.Name)
-	d.Set("server_pool_id", mcloudErpnextResponse.ServerPoolId)
-	d.Set("sku", mcloudErpnextResponse.Sku)
-	d.Set("status", mcloudErpnextResponse.Status)
-	d.Set("version", mcloudErpnextResponse.Version)
+	d.Set("definition", mcloudContainerAppResponse.Definition)
+	d.Set("fqdn", mcloudContainerAppResponse.Fqdn)
+	d.Set("name", mcloudContainerAppResponse.Name)
+	d.Set("server_pool_id", mcloudContainerAppResponse.ServerPoolId)
+	d.Set("status", mcloudContainerAppResponse.Status)
 
 	return diags
 }
 
-func resourceMcloudErpnextRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudContainerAppRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 	client := provider.HTTPClient
 
@@ -166,7 +147,7 @@ func resourceMcloudErpnextRead(ctx context.Context, d *schema.ResourceData, m in
 	var diags diag.Diagnostics
 
 	pk := d.Id()
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/erpnext/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/container-app/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -184,34 +165,32 @@ func resourceMcloudErpnextRead(ctx context.Context, d *schema.ResourceData, m in
 	}
 
 	if res.StatusCode == 404 {
-		log.Printf("[WARN] mcloud_erpnext %s not present", pk)
+		log.Printf("[WARN] mcloud_container_app %s not present", pk)
 		d.SetId("")
 		return nil
 	} else if res.StatusCode != http.StatusOK {
 		return diag.FromErr(fmt.Errorf("status: %d, body: %s", res.StatusCode, body))
 	}
 
-	var mcloudErpnextResponse McloudErpnextResponse
-	err = json.Unmarshal(body, &mcloudErpnextResponse)
-	//err = json.NewDecoder(resp.Body).Decode(McloudErpnextResponse)
+	var mcloudContainerAppResponse McloudContainerAppResponse
+	err = json.Unmarshal(body, &mcloudContainerAppResponse)
+	//err = json.NewDecoder(resp.Body).Decode(McloudContainerAppResponse)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	d.Set("admin_password", mcloudErpnextResponse.AdminPassword)
-	d.Set("fqdn", mcloudErpnextResponse.Fqdn)
-	d.Set("name", mcloudErpnextResponse.Name)
-	d.Set("server_pool_id", mcloudErpnextResponse.ServerPoolId)
-	d.Set("sku", mcloudErpnextResponse.Sku)
-	d.Set("status", mcloudErpnextResponse.Status)
-	d.Set("version", mcloudErpnextResponse.Version)
+	d.Set("definition", mcloudContainerAppResponse.Definition)
+	d.Set("fqdn", mcloudContainerAppResponse.Fqdn)
+	d.Set("name", mcloudContainerAppResponse.Name)
+	d.Set("server_pool_id", mcloudContainerAppResponse.ServerPoolId)
+	d.Set("status", mcloudContainerAppResponse.Status)
 
 	return diags
 }
-func resourceMcloudErpnextUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return resourceMcloudErpnextCreate(ctx, d, m)
+func resourceMcloudContainerAppUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	return resourceMcloudContainerAppCreate(ctx, d, m)
 }
 
-func resourceMcloudErpnextDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceMcloudContainerAppDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	provider := m.(*Client)
 	client := provider.HTTPClient
 
@@ -219,7 +198,7 @@ func resourceMcloudErpnextDelete(ctx context.Context, d *schema.ResourceData, m 
 	var diags diag.Diagnostics
 
 	// 	pk := d.Id()
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/erpnext/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
+	req, err := http.NewRequest("DELETE", fmt.Sprintf("%s/api/v1/container-app/%s", strings.Trim(provider.HostURL, "/"), d.Get("name").(string)), nil)
 	if err != nil {
 		return diag.FromErr(err)
 	}

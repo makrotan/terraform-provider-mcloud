@@ -5,6 +5,34 @@ provider_spec:
   auth_type: bearer_token
   fields: {}
 resources:
+  mcloud_backup_policy:
+    description: BackupPolicy(name, status, ref, keep_backup_count, schedule, scheduler_job)
+    fields:
+      keep_backup_count:
+        default: 7
+        required: false
+        type: number
+      name:
+        force_new: true
+        type: string
+      ref:
+        description: ''
+        type: string
+      schedule:
+        required: false
+        type: string
+      scheduler_job_id:
+        computed: true
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/backup-policy/%s
   mcloud_cockroachdb:
     description: CockroachDB Instance.
     fields:
@@ -134,6 +162,32 @@ resources:
       args:
       - fields.name
       template: /api/v1/consul-loadbalancer/%s
+  mcloud_container_app:
+    description: ContainerApp(status, backup_ref, name, created, server_pool, definition,
+      fqdn, app_port)
+    fields:
+      definition:
+        description: ''
+        type: string
+      fqdn:
+        description: ''
+        type: string
+      name:
+        force_new: true
+        type: string
+      server_pool_id:
+        description: ''
+        required: false
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/container-app/%s
   mcloud_erpnext:
     description: Erpnext(name, status, backup_ref, sku, fqdn, admin_password, created,
       version, app_port, server_pool)
@@ -146,7 +200,6 @@ resources:
         type: string
       fqdn:
         description: ''
-        force_new: true
         type: string
       name:
         force_new: true
@@ -170,6 +223,84 @@ resources:
       args:
       - fields.name
       template: /api/v1/erpnext/%s
+  mcloud_gitlab:
+    description: Gitlab(status, backup_ref, name, created, server_pool, admin_username,
+      admin_password, fqdn, app_port, shared_runners_registration_token, meta, version)
+    fields:
+      admin_password:
+        computed: true
+        description: ''
+        sensitive: true
+        type: string
+      admin_username:
+        computed: true
+        description: ''
+        type: string
+      fqdn:
+        description: ''
+        type: string
+      meta:
+        description: ''
+        required: false
+        type: map
+      name:
+        force_new: true
+        type: string
+      server_pool_id:
+        description: ''
+        required: false
+        type: string
+      shared_runners_registration_token:
+        computed: true
+        sensitive: true
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      version:
+        description: 'Possible values: `16.2.3-ce.0`'
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/gitlab/%s
+  mcloud_gitlab_runner:
+    description: GitlabRunner(status, backup_ref, name, created, server_pool, gitlab,
+      version, meta, tags)
+    fields:
+      gitlab_id:
+        description: ''
+        required: false
+        type: string
+      meta:
+        description: ''
+        required: false
+        type: map
+      name:
+        force_new: true
+        type: string
+      server_pool_id:
+        description: ''
+        required: false
+        type: string
+      status:
+        default: running
+        required: false
+        type: string
+      tags:
+        description: ''
+        required: false
+        type: string
+      version:
+        description: 'Possible values: `16.1.1`'
+        type: string
+    primary_key: name
+    url:
+      args:
+      - fields.name
+      template: /api/v1/gitlab-runner/%s
   mcloud_grafana:
     description: Grafana(status, backup_ref, name, created, server_pool, admin_password,
       fqdn, app_port, version)
@@ -687,23 +818,55 @@ resources:
       - fields.name
       template: /api/v1/pki-cert/%s
   mcloud_server_dedicated:
-    description: A dedicated server.
+    description: ServerDedicated(name, status, backup_ref, created, ipv4, ipv6, provider,
+      provider_ref, region, az, pool, memory, cpu_cores, disk_size, price_per_month)
     fields:
       az:
+        description: 'Possible values: `hetzner-fsn1`, `hetzner-nbg1`, `hetzner-hel1`,
+          `contabo-fra`, `contabo-nbg`, `netcup-nbg`, `hoston-ffm`'
         type: string
+      cpu_cores:
+        description: ''
+        required: false
+        type: number
+      disk_size:
+        description: ''
+        required: false
+        type: number
       ipv4:
+        description: ''
         type: string
+      ipv6:
+        description: ''
+        required: false
+        type: string
+      memory:
+        description: ''
+        required: false
+        type: number
       name:
+        force_new: true
         type: string
       pool_id:
+        description: ''
+        required: false
         type: string
-      region:
-        type: string
-      server_provider:
+      price_per_month:
+        description: ''
+        required: false
+        type: number
+      provider_id:
         map_to: provider
         type: string
-      server_provider_ref:
-        map_to: provider_ref
+      provider_ref:
+        description: ''
+        required: false
+        type: string
+      region:
+        description: 'Possible values: `europe`, `na`, `sa`, `au`, `asia`'
+        type: string
+      status:
+        default: running
         required: false
         type: string
     primary_key: name
@@ -713,13 +876,18 @@ resources:
       template: /api/v1/server-dedicated/%s
   mcloud_server_pool_dedicated:
     description: ServerPoolDedicated(polymorphic_ctype, name, created, status, ip_block,
-      consul_cluster, serverpool_ptr)
+      description, consul_cluster, servers, total_memory, total_cpu, total_disk, total_price_per_month,
+      serverpool_ptr)
     fields:
       consul_cluster_id: &id001
         force_new: false
         required: false
         type: string
-      ip_block_id: &id002
+      description: &id002
+        force_new: false
+        required: false
+        type: string
+      ip_block_id: &id003
         computed: true
         force_new: false
         required: false
@@ -727,10 +895,35 @@ resources:
       name:
         force_new: true
         type: string
+      servers: &id004
+        computed: true
+        force_new: false
+        required: false
+        type: number
       status:
         default: running
         required: false
         type: string
+      total_cpu: &id005
+        computed: true
+        force_new: false
+        required: false
+        type: number
+      total_disk: &id006
+        computed: true
+        force_new: false
+        required: false
+        type: number
+      total_memory: &id007
+        computed: true
+        force_new: false
+        required: false
+        type: number
+      total_price_per_month: &id008
+        computed: true
+        force_new: false
+        required: false
+        type: number
     primary_key: name
     url:
       args:
@@ -738,26 +931,34 @@ resources:
       template: /api/v1/server-pool-dedicated/%s
   mcloud_server_pool_hcloud:
     description: ServerPoolHcloud(polymorphic_ctype, name, created, status, ip_block,
-      consul_cluster, serverpool_ptr, instance_type, instance_count, location, terraform_state)
+      description, consul_cluster, servers, total_memory, total_cpu, total_disk, total_price_per_month,
+      serverpool_ptr, instance_type, instance_count, location, terraform_state)
     fields:
       consul_cluster_id: *id001
+      description: *id002
       instance_count:
         description: ''
         type: number
       instance_type:
-        description: 'Possible values: `cx11`, `cpx11`, `cx21`, `cpx21`'
+        description: 'Possible values: `cx11`, `cpx11`, `cx21`, `cpx21`, `cx31`, `cpx31`,
+          `cx41`, `cpx41`, `cx51`, `cpx51`, `cax11`, `cax21`, `cax31`, `cax41`'
         type: string
-      ip_block_id: *id002
+      ip_block_id: *id003
       location:
         description: 'Possible values: `fsn1`, `nbg1`, `hel1`, `spread`'
         type: string
       name:
         force_new: true
         type: string
+      servers: *id004
       status:
         default: running
         required: false
         type: string
+      total_cpu: *id005
+      total_disk: *id006
+      total_memory: *id007
+      total_price_per_month: *id008
     primary_key: name
     url:
       args:
