@@ -1,14 +1,25 @@
 name: release
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - master
+#  push:
+#    tags:
+#      - "v*"
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Set up Git
+        run: |
+          git config --global user.email "bot@makrotan.com"
+          git config --global user.name "Makrotan Bot"
+      - name: Create Tag
+        run: |
+          git tag v0.4.$GITHUB_RUN_ID
+          git push origin --tags
       - name: Unshallow
         run: git fetch --prune --unshallow
       - name: Set up Go

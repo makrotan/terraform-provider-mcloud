@@ -1,19 +1,19 @@
-name: tag-master
-on:
-  push:
-    branches:
-      - master
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Set up Git
-        run: |
-          git config --global user.email "bot@makrotan.com"
-          git config --global user.name "Makrotan Bot"
-      - name: Create Tag
-        run: |
-          git tag v0.4.$GITHUB_RUN_ID
-          git push origin --tags
+#name: tag-master
+#on:
+#  push:
+#    branches:
+#      - master
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#      - name: Set up Git
+#        run: |
+#          git config --global user.email "bot@makrotan.com"
+#          git config --global user.name "Makrotan Bot"
+#      - name: Create Tag
+#        run: |
+#          git tag v0.4.$GITHUB_RUN_ID
+#          git push origin --tags
